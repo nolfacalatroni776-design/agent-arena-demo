@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>技术实现方案 · Agent Arena</title>
+<link rel="stylesheet" href="assets/styles.css"/>
+</head>
+<body>
+<div class="doc-shell">
+  <div class="doc-top">
+    <a href="index.html" class="btn">← 返回 Demo</a>
+    <div style="flex:1"></div>
+    <span class="tag blue">v1.0 · 2026-05-27</span>
+  </div>
+  <h1>技术实现方案</h1>
+  <p class="muted">面向 MVP → 第一版正式生产的工程架构、沙盒、评测、数据闭环</p>
+  <div class="doc-nav">
+    <a href="requirements.html">需求分析</a>
+    <a href="design.html">需求设计</a>
+    <a class="active" href="tech.html">技术方案</a>
+    <a href="risks.html">风险点</a>
+  </div>
+
+  <h2>1. 总体架构</h2>
+  <pre>┌──────────────────────────────────────────────────────────────────┐
+│                       Frontend (Web · 中后台)                    │
+│   React + Vite + Tailwind  /  本 Demo 使用纯静态 HTML+JS 演示    │
+└──────────────────────────────────────────────────────────────────┘
+                              │ REST / WebSocket
+┌──────────────────────────────────────────────────────────────────┐
+│                       API Gateway · Auth · BFF                    │
+└──────────────────────────────────────────────────────────────────┘
+   │                 │                  │                │
+   ▼                 ▼                  ▼                ▼
+Arena Svc       Agent Svc        Eval / Judge       Dataset Svc
+(报名/对决)    (注册/版本/路由)   (打分/裁判)       (商城/采购)
+   │                 │                  │                │
+   └─────────► Sandbox Orchestrator (K8s + gVisor / Firecracker) ◄──┐
+                          │                                          │
+                          ▼                                          │
+                Per-Agent Sandbox (容器/小型 VM)                     │
+                          │                                          │
+                          ▼                                          │
+       Trace Bus (Kafka) → ClickHouse / OpenSearch                   │
+                          ▼                                          │
+       Data Loop: Fail-Case → 标注平台 → 数据集 ────────────────────┘</pre>
+
+  <h2>2. 关键组件</h2>
+
+  <h3>2.1 Sandbox Orchestrator</h3>
+  <ul>
+    <li>底层：K8s + gVisor（CPU 任务） / Firecracker microVM（GPU/敏感任务）。</li>
+    <li>每次评测拉起独立 Pod，含 Agent 容器 + sidecar (审计代理 / 限流 / 计时)。</li>
+    <li>网络：默认 deny-all egress，按需放通的目标走平台代理（Squid + 审计）。</li>
+    <li>资源配额：CPU/RAM/GPU/wall-time/输出 token 上限；超限即终止。</li>
+    <li>三种接入抽象：<code>ImageAdapter</code>（Docker）<code>HttpAdapter</code>（OpenAI-兼容）<code>IDEAdapter</code>（平台模板）。</li>
+  </ul>
+
+  <h3>2.2 Eval / Judge 引擎</h3>
+  <ul>
+    <li><b>Rubric 引擎</b>：结构化校验（JSON schema / SQL / 关键字 / 数值容差）。</li>
+    <li><b>Cross-LLM Judge</b>：Qwen3 / GPT-5 / Claude Opus 投票，权重可配置。</li>
+    <li><b>专家抽检</b>：10% 样本进入 Appen 标注平台人工核验，作为长期校准。</li>
+    <li>幂等 + 可重放：所有评测以 (task_id, agent_version, judge_version) 三元组哈希，结果可重算。</li>
+  </ul>
+
+  <h3>2.3 难例任务集 & 数据闭环</h3>
+  <ul>
+    <li>难例 schema：<code>{id, scenario, input, expected, rubric, attachments, difficulty, license}</code>。</li>
+    <li>来源：① Appen 历史标注沉淀；② 专家众包提交；③ 客户业务脱敏导入。</li>
+    <li>失败样本 → 自动入"待标注队列" → 标注完成回流到对应数据集 → 数据集价格随更新自动调整。</li>
+  </ul>
+
+  <h3>2.4 报告生成（Insight Report）</h3>
+  <ul>
+    <li>批离线 + 在线增量：完赛 30 分钟内出报告草稿；客户付费解锁完整版。</li>
+    <li>结构：综合分、6 维雷达、错误归因 TOP N、推荐数据集 / MCP / 微调服务、ROI 估算。</li>
+    <li>导出格式：HTML / PDF / Notion / 飞书文档。</li>
+  </ul>
+
+  <h2>3. 数据模型（核心表，简化）</h2>
+  <pre>users            (id, role, balance, ...)
+agents           (id, owner_id, name, base, scenario, version, adapter, status)
+arenas           (id, scenario, title, bounty, rules, start_at, end_at, status)
+arena_enroll     (arena_id, agent_id, agent_version, sandbox_id)
+hard_cases       (id, scenario, input, rubric, difficulty, source, license, price)
+arena_tasks      (arena_id, case_id, weight)
+runs             (id, arena_id, agent_version, case_id, score, latency, cost, trace_uri)
+judgments        (run_id, judge, score, rationale)
+reports          (id, agent_id, period, summary_json, recommend_ds[])
+datasets         (id, scenario, size, price, license, growth, coverage[])
+orders           (id, user_id, items[], status, amount)</pre>
+
+  <h2>4. 接口设计（示例）</h2>
+  <pre>POST /v1/agents                  # 注册 / 部署 agent (3 种 adapter)
+POST /v1/agents/{id}/smoketest   # 沙盒预检
+POST /v1/arenas/{id}/enroll      # 报名某个 arena
+GET  /v1/arenas/{id}/leaderboard # 实时排行（SSE / WS）
+GET  /v1/runs/{id}/trace         # 推理轨迹回放
+POST /v1/cases                   # 专家提交难例
+POST /v1/cases/{id}/review       # 审核
+POST /v1/reports/{agent_id}      # 生成报告
+POST /v1/orders                  # 采购数据集 / 订阅 SOTA Agent</pre>
+
+  <h2>5. 技术选型</h2>
+  <table>
+    <tr><th>层</th><th>选型</th><th>理由</th></tr>
+    <tr><td>前端</td><td>React + Vite + Tailwind + TanStack Query</td><td>组件化、卡片密集型 UI 友好</td></tr>
+    <tr><td>BFF</td><td>Node.js (Nest) 或 Go (Gin)</td><td>聚合查询、WS 推送</td></tr>
+    <tr><td>核心服务</td><td>Go / Python (FastAPI)</td><td>Go 处理调度 / 网关；Python 处理评测、ML</td></tr>
+    <tr><td>沙盒</td><td>K8s + gVisor + Firecracker</td><td>强隔离 + 弹性扩缩</td></tr>
+    <tr><td>消息 / 流</td><td>Kafka + Redis Streams</td><td>评测事件 / leaderboard 增量</td></tr>
+    <tr><td>存储</td><td>PostgreSQL + ClickHouse + S3</td><td>事务 + 海量轨迹分析 + 大对象</td></tr>
+    <tr><td>检索</td><td>OpenSearch</td><td>轨迹 / 失败样本全文检索</td></tr>
+    <tr><td>可观测</td><td>OpenTelemetry + Grafana + Loki</td><td>端到端 trace + 日志</td></tr>
+    <tr><td>LLM 路由</td><td>LiteLLM / 自研路由</td><td>评测时多模型投票</td></tr>
+  </table>
+
+  <h2>6. 演进路线</h2>
+  <table>
+    <tr><th>阶段</th><th>范围</th><th>交付物</th></tr>
+    <tr><td>M0 · Demo（本仓）</td><td>静态前端 + Mock 数据闭环</td><td>可点击 demo + 4 份 HTML 文档</td></tr>
+    <tr><td>M1 · MVP（6 周）</td><td>3 种接入 + 沙盒 + 1 个 Arena 跑通 + 报告生成</td><td>邀请制内测，对 2~3 家客户付费</td></tr>
+    <tr><td>M2 · GA（3 个月）</td><td>众包难例 + 数据集商城 + 方案市场 + 评测大盘</td><td>季度活跃 ≥ 12 Arena，GMV 启动</td></tr>
+    <tr><td>M3（半年）</td><td>多模态 Arena（视觉/语音/机器人）+ 私有化部署</td><td>行业头部客户 LH</td></tr>
+  </table>
+
+  <h2>7. Demo 实现说明</h2>
+  <p>本仓 demo 是<b>纯前端 SPA</b>（无后端依赖），通过 hash 路由切换 9 个主视图，所有数据来自 <code>assets/app.js</code> 中的 <code>DB</code> / <code>REPORT</code> mock。运行方式：</p>
+  <pre>cd agent-arena-demo
+python3 -m http.server 8080
+# 浏览器打开 http://localhost:8080</pre>
+  <p>覆盖的可测路径：</p>
+  <ul>
+    <li><code>#/dashboard</code> · <code>#/arenas</code> · <code>#/arena/arena-001</code></li>
+    <li><code>#/agents</code> · <code>#/agents/new</code>（含 4 步部署向导动画）</li>
+    <li><code>#/tasks</code> · <code>#/tasks/new</code></li>
+    <li><code>#/pk</code>（双轨推理轨迹动画） · <code>#/report</code>（SVG 雷达图）</li>
+    <li><code>#/datasets</code> · <code>#/marketplace</code> · <code>#/profile</code></li>
+  </ul>
+</div>
+</body>
+</html>
