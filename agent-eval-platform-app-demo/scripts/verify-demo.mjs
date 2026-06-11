@@ -6,6 +6,8 @@ import vm from "node:vm";
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const html = await readFile(join(root, "index.html"), "utf8");
 const design = await readFile(join(root, "docs/final-requirements-design.md"), "utf8");
+const technicalPlan = await readFile(join(root, "docs/agent-integration-runtime-technical-plan.md"), "utf8");
+const architectureSvg = await readFile(join(root, "docs/figures/agent-eval-runtime-architecture.svg"), "utf8");
 const failures = [];
 
 function assert(condition, message) {
@@ -115,6 +117,11 @@ assert(design.includes("Core Product Workflows"), "Final requirements design mis
 assert(design.includes("The product UI does not expose internal requirement numbers"), "Design must include no-number acceptance criterion");
 assert(html.includes('id="docs"'), "Missing standalone docs entry");
 assert(html.includes("平台介绍"), "Docs entry should hold platform introduction copy outside operations UI");
+assert(html.includes("智能体接入与运行测评技术方案"), "Docs should include technical implementation plan entry");
+assert(technicalPlan.includes("智能体接入与运行测评技术框架图"), "Technical plan missing architecture section");
+assert(technicalPlan.includes("多次运行结果偏差处理"), "Technical plan missing repeated-run variance handling");
+assert(technicalPlan.includes("客户价值与自建比较"), "Technical plan missing customer value section");
+assert(architectureSvg.includes("<svg"), "Architecture figure should be rendered as SVG");
 
 if (failures.length) {
   console.error("Verification failed:");

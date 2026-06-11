@@ -1,0 +1,384 @@
+{
+  "title": "智能体接入与运行测评技术框架图",
+  "canvas": { "width": 1280, "height": 780 },
+  "style": {
+    "font_family": "Inter, PingFang SC, Microsoft YaHei, Arial, sans-serif",
+    "font_size": 14,
+    "bg_color": "#ffffff",
+    "palette": ["#F7F6F3", "#E8F1FF", "#E7F3EC", "#F7ECD5", "#EEE7F8"]
+  },
+  "nodes": [
+    {
+      "id": "console",
+      "label": "Web 控制台",
+      "sublabel": "注册 / 运行 / 复核 / 报告",
+      "x": 130,
+      "y": 90,
+      "width": 160,
+      "height": 64,
+      "fill": "#F7F6F3",
+      "stroke": "#D4D1C8"
+    },
+    {
+      "id": "ci",
+      "label": "CLI / CI",
+      "sublabel": "发布门禁 / 夜间回归",
+      "x": 130,
+      "y": 190,
+      "width": 160,
+      "height": 64,
+      "fill": "#F7F6F3",
+      "stroke": "#D4D1C8"
+    },
+    {
+      "id": "collector",
+      "label": "OTel Collector",
+      "sublabel": "线上轨迹 / 观测事件",
+      "x": 130,
+      "y": 290,
+      "width": 160,
+      "height": 64,
+      "fill": "#F7F6F3",
+      "stroke": "#D4D1C8"
+    },
+    {
+      "id": "trace_upload",
+      "label": "轨迹上传",
+      "sublabel": "JSONL / OTel / 批量校验",
+      "x": 130,
+      "y": 390,
+      "width": 160,
+      "height": 64,
+      "fill": "#F7F6F3",
+      "stroke": "#D4D1C8"
+    },
+    {
+      "id": "api_adapter",
+      "label": "API Adapter",
+      "sublabel": "OpenAI 兼容 / 自定义映射",
+      "x": 360,
+      "y": 100,
+      "width": 170,
+      "height": 64,
+      "fill": "#E8F1FF",
+      "stroke": "#B8D4FF"
+    },
+    {
+      "id": "sdk",
+      "label": "SDK Instrumentation",
+      "sublabel": "Python / TS / 框架插桩",
+      "x": 360,
+      "y": 200,
+      "width": 170,
+      "height": 64,
+      "fill": "#E8F1FF",
+      "stroke": "#B8D4FF"
+    },
+    {
+      "id": "mcp_gateway",
+      "label": "MCP / A2A Gateway",
+      "sublabel": "工具中介 / 多智能体对话",
+      "x": 360,
+      "y": 300,
+      "width": 170,
+      "height": 64,
+      "fill": "#E8F1FF",
+      "stroke": "#B8D4FF"
+    },
+    {
+      "id": "browser_gateway",
+      "label": "Browser Gateway",
+      "sublabel": "CDP / 截图操作 / VM",
+      "x": 360,
+      "y": 400,
+      "width": 170,
+      "height": 64,
+      "fill": "#E8F1FF",
+      "stroke": "#B8D4FF"
+    },
+    {
+      "id": "registry",
+      "label": "Target Registry",
+      "sublabel": "版本 / 凭据 / 工具清单",
+      "x": 610,
+      "y": 90,
+      "width": 170,
+      "height": 64,
+      "fill": "#E7F3EC",
+      "stroke": "#B8DAC6"
+    },
+    {
+      "id": "case_service",
+      "label": "Dataset & Case",
+      "sublabel": "不可变快照 / 标签 / 断言",
+      "x": 610,
+      "y": 180,
+      "width": 170,
+      "height": 64,
+      "fill": "#E7F3EC",
+      "stroke": "#B8DAC6"
+    },
+    {
+      "id": "run_service",
+      "label": "Run Service",
+      "sublabel": "配置 / 状态机 / 幂等",
+      "x": 610,
+      "y": 270,
+      "width": 170,
+      "height": 64,
+      "fill": "#E7F3EC",
+      "stroke": "#B8DAC6"
+    },
+    {
+      "id": "scheduler",
+      "label": "Scheduler",
+      "sublabel": "配额 / 优先级 / 预算熔断",
+      "x": 610,
+      "y": 360,
+      "width": 170,
+      "height": 64,
+      "fill": "#E7F3EC",
+      "stroke": "#B8DAC6"
+    },
+    {
+      "id": "eval_service",
+      "label": "Evaluation Service",
+      "sublabel": "重评 / 聚合 / 门禁",
+      "x": 610,
+      "y": 450,
+      "width": 170,
+      "height": 64,
+      "fill": "#E7F3EC",
+      "stroke": "#B8DAC6"
+    },
+    {
+      "id": "runner",
+      "label": "Runner Pool",
+      "sublabel": "Trial 执行 / 重试 / 限流",
+      "x": 860,
+      "y": 120,
+      "width": 170,
+      "height": 64,
+      "fill": "#F7ECD5",
+      "stroke": "#E5C98F"
+    },
+    {
+      "id": "sandbox",
+      "label": "Sandbox Pool",
+      "sublabel": "环境快照 / 重置 / 终态",
+      "x": 860,
+      "y": 220,
+      "width": 170,
+      "height": 64,
+      "fill": "#F7ECD5",
+      "stroke": "#E5C98F"
+    },
+    {
+      "id": "mock_tools",
+      "label": "Mock Tool Layer",
+      "sublabel": "CRM / DB / Browser / API",
+      "x": 860,
+      "y": 320,
+      "width": 170,
+      "height": 64,
+      "fill": "#F7ECD5",
+      "stroke": "#E5C98F"
+    },
+    {
+      "id": "user_sim",
+      "label": "User Simulator",
+      "sublabel": "Persona / 多轮脚本 / 对抗",
+      "x": 860,
+      "y": 420,
+      "width": 170,
+      "height": 64,
+      "fill": "#F7ECD5",
+      "stroke": "#E5C98F"
+    },
+    {
+      "id": "rule_eval",
+      "label": "Rule Evaluators",
+      "sublabel": "断言 / 轨迹规则 / 终态检查",
+      "x": 1100,
+      "y": 140,
+      "width": 170,
+      "height": 64,
+      "fill": "#EEE7F8",
+      "stroke": "#CDBEEB"
+    },
+    {
+      "id": "judge_gateway",
+      "label": "LLM Judge Gateway",
+      "sublabel": "裁判路由 / 成本 / 健康度",
+      "x": 1100,
+      "y": 245,
+      "width": 170,
+      "height": 64,
+      "fill": "#EEE7F8",
+      "stroke": "#CDBEEB"
+    },
+    {
+      "id": "human_review",
+      "label": "Human Review",
+      "sublabel": "金标准 / 仲裁 / 校准",
+      "x": 1100,
+      "y": 350,
+      "width": 170,
+      "height": 64,
+      "fill": "#EEE7F8",
+      "stroke": "#CDBEEB"
+    },
+    {
+      "id": "report_gate",
+      "label": "Report & Gate",
+      "sublabel": "置信区间 / 对比 / 证据包",
+      "x": 1100,
+      "y": 455,
+      "width": 170,
+      "height": 64,
+      "fill": "#EEE7F8",
+      "stroke": "#CDBEEB"
+    },
+    {
+      "id": "postgres",
+      "label": "PostgreSQL",
+      "sublabel": "元数据 / RBAC / 配置",
+      "x": 300,
+      "y": 650,
+      "width": 160,
+      "height": 62,
+      "fill": "#F7F6F3",
+      "stroke": "#D4D1C8"
+    },
+    {
+      "id": "clickhouse",
+      "label": "ClickHouse",
+      "sublabel": "轨迹 / 分数 / 指标明细",
+      "x": 510,
+      "y": 650,
+      "width": 160,
+      "height": 62,
+      "fill": "#F7F6F3",
+      "stroke": "#D4D1C8"
+    },
+    {
+      "id": "object_store",
+      "label": "Object Storage",
+      "sublabel": "截图 / 附件 / 环境快照",
+      "x": 720,
+      "y": 650,
+      "width": 160,
+      "height": 62,
+      "fill": "#F7F6F3",
+      "stroke": "#D4D1C8"
+    },
+    {
+      "id": "event_bus",
+      "label": "Event Bus",
+      "sublabel": "run.* / trial.* / score.*",
+      "x": 930,
+      "y": 650,
+      "width": 160,
+      "height": 62,
+      "fill": "#F7F6F3",
+      "stroke": "#D4D1C8"
+    }
+  ],
+  "edges": [
+    { "from": "console", "to": "api_adapter", "label": "注册 / 调试" },
+    { "from": "ci", "to": "sdk", "label": "触发运行" },
+    { "from": "collector", "to": "sdk", "label": "线上事件" },
+    { "from": "trace_upload", "to": "mcp_gateway", "label": "离线轨迹" },
+    { "from": "api_adapter", "to": "registry" },
+    { "from": "sdk", "to": "registry" },
+    { "from": "mcp_gateway", "to": "registry" },
+    { "from": "browser_gateway", "to": "registry" },
+    { "from": "registry", "to": "run_service" },
+    { "from": "case_service", "to": "run_service" },
+    { "from": "run_service", "to": "scheduler" },
+    { "from": "scheduler", "to": "runner" },
+    { "from": "runner", "to": "sandbox" },
+    { "from": "runner", "to": "mock_tools" },
+    { "from": "runner", "to": "user_sim" },
+    { "from": "runner", "to": "rule_eval", "label": "轨迹 / 终态" },
+    { "from": "eval_service", "to": "rule_eval" },
+    { "from": "eval_service", "to": "judge_gateway" },
+    { "from": "eval_service", "to": "human_review" },
+    { "from": "rule_eval", "to": "report_gate" },
+    { "from": "judge_gateway", "to": "report_gate" },
+    { "from": "human_review", "to": "report_gate" },
+    { "from": "run_service", "to": "event_bus", "style": "dashed" },
+    { "from": "runner", "to": "clickhouse", "style": "dashed", "label": "steps" },
+    { "from": "sandbox", "to": "object_store", "style": "dashed", "label": "snapshots" },
+    { "from": "eval_service", "to": "postgres", "style": "dashed", "label": "scores" },
+    { "from": "report_gate", "to": "object_store", "style": "dashed", "label": "evidence" }
+  ],
+  "groups": [
+    {
+      "id": "entry_group",
+      "label": "入口与触发",
+      "node_ids": ["console", "ci", "collector", "trace_upload"],
+      "fill": "#FBFAF8",
+      "stroke": "#E4E2DC",
+      "padding": 24
+    },
+    {
+      "id": "access_group",
+      "label": "智能体接入层",
+      "node_ids": ["api_adapter", "sdk", "mcp_gateway", "browser_gateway"],
+      "fill": "#F4F8FF",
+      "stroke": "#D4E4FF",
+      "padding": 24
+    },
+    {
+      "id": "control_group",
+      "label": "控制平面",
+      "node_ids": ["registry", "case_service", "run_service", "scheduler", "eval_service"],
+      "fill": "#F3FAF6",
+      "stroke": "#D4EADC",
+      "padding": 24
+    },
+    {
+      "id": "execution_group",
+      "label": "执行平面",
+      "node_ids": ["runner", "sandbox", "mock_tools", "user_sim"],
+      "fill": "#FCF6EA",
+      "stroke": "#EBD7AA",
+      "padding": 24
+    },
+    {
+      "id": "evaluation_group",
+      "label": "评估与治理",
+      "node_ids": ["rule_eval", "judge_gateway", "human_review", "report_gate"],
+      "fill": "#F7F2FC",
+      "stroke": "#DCCFF0",
+      "padding": 24
+    },
+    {
+      "id": "data_group",
+      "label": "数据与事件底座",
+      "node_ids": ["postgres", "clickhouse", "object_store", "event_bus"],
+      "fill": "#FBFAF8",
+      "stroke": "#E4E2DC",
+      "padding": 28
+    }
+  ],
+  "labels": [
+    {
+      "text": "智能体接入与运行测评技术框架",
+      "x": 640,
+      "y": 34,
+      "font_size": 22,
+      "color": "#2F3437",
+      "anchor": "middle"
+    },
+    {
+      "text": "执行与评估解耦：历史轨迹可重评；环境、数据集、被测对象和评估器全版本化。",
+      "x": 640,
+      "y": 744,
+      "font_size": 14,
+      "color": "#6F6F6F",
+      "anchor": "middle"
+    }
+  ]
+}

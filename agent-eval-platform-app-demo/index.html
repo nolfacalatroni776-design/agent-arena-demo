@@ -721,31 +721,37 @@
     }
 
     [data-tip]::after {
-      content: attr(data-tip);
-      position: absolute;
-      z-index: 50;
+      display: none !important;
+    }
+
+    .floating-tip {
+      position: fixed;
+      z-index: 120;
       left: 0;
-      bottom: calc(100% + 9px);
-      width: min(340px, 82vw);
+      top: 0;
+      width: max-content;
+      max-width: min(340px, calc(100vw - 24px));
+      box-sizing: border-box;
       border-radius: 8px;
       background: #2f3437;
       color: #ffffff;
       padding: 9px 10px;
       box-shadow: var(--shadow);
       opacity: 0;
+      visibility: hidden;
       transform: translateY(4px);
+      transition: opacity 0.12s ease, transform 0.12s ease, visibility 0.12s ease;
       pointer-events: none;
       white-space: normal;
+      overflow-wrap: anywhere;
       font-size: 12px;
       line-height: 1.45;
       font-weight: 650;
-      display: none;
     }
 
-    [data-tip]:hover::after,
-    [data-tip]:focus-visible::after {
-      display: block;
+    .floating-tip.show {
       opacity: 1;
+      visibility: visible;
       transform: translateY(0);
     }
 
@@ -866,7 +872,7 @@
         <button data-view="online"><span class="emoji">◌</span><span>在线监控</span><small id="onlineQueue">26</small></button>
         <button data-view="data-loop"><span class="emoji">↻</span><span>数据闭环</span><small id="workOrders">12</small></button>
         <button data-view="admin"><span class="emoji">⚙</span><span>管理</span><small>正常</small></button>
-        <button data-view="docs"><span class="emoji">?</span><span>文档</span><small>6</small></button>
+        <button data-view="docs"><span class="emoji">?</span><span>文档</span><small>7</small></button>
       </nav>
 
       <div class="sidebar-note">
@@ -1403,7 +1409,7 @@
             <h1>文档</h1>
             <div class="page-meta">
               <span class="prop">受众 · 平台用户</span>
-              <span class="prop">6 篇文档</span>
+              <span class="prop">7 篇文档</span>
               <span class="prop">最近复核 · 2026-06-11</span>
             </div>
           </div>
@@ -1428,6 +1434,11 @@
               <h4>数据模型</h4>
               <p>核心对象、生命周期规则、版本化和归属关系。</p>
               <span class="badge blue">当前</span>
+            </div>
+            <div class="doc-card" data-tip="面向研发和交付团队，说明智能体接入、运行编排、轨迹采集、评估打分和报告门禁链路。">
+              <h4>智能体接入与运行测评技术方案</h4>
+              <p>接入模式、运行主链路、数据模型、事件接口、重复试验和治理控制。</p>
+              <span class="badge blue">技术方案</span>
             </div>
             <div class="doc-card" data-tip="重复试验、沙箱重置、执行器重试和预算停止的内部实施指南。">
               <h4>运行编排</h4>
@@ -1456,11 +1467,15 @@
   </div>
 
   <div class="toast" id="toast" role="status"></div>
+  <div class="floating-tip" id="floatingTip" role="tooltip" aria-hidden="true"></div>
 
   <script>
     const views = Array.from(document.querySelectorAll(".view"));
     const navButtons = Array.from(document.querySelectorAll("[data-view]"));
     const toast = document.getElementById("toast");
+    const floatingTip = document.getElementById("floatingTip");
+    let activeTipTrigger = null;
+    let tipFrame = null;
 
     function showToast(message) {
       toast.textContent = message;
@@ -1474,8 +1489,58 @@
       document.querySelectorAll(".nav button[data-view]").forEach((button) => {
         button.classList.toggle("active", button.dataset.view === id);
       });
+      hideFloatingTip();
       document.querySelector(".topbar").scrollIntoView({ behavior: "smooth", block: "start" });
     }
+
+    function placeFloatingTip(trigger) {
+      const text = trigger.dataset.tip;
+      if (!text) return;
+      activeTipTrigger = trigger;
+      floatingTip.textContent = text;
+      floatingTip.setAttribute("aria-hidden", "false");
+      floatingTip.classList.add("show");
+      floatingTip.style.left = "0px";
+      floatingTip.style.top = "0px";
+
+      if (tipFrame) cancelAnimationFrame(tipFrame);
+      tipFrame = requestAnimationFrame(() => {
+        if (activeTipTrigger !== trigger) return;
+        const margin = 12;
+        const gap = 10;
+        const triggerRect = trigger.getBoundingClientRect();
+        const tipRect = floatingTip.getBoundingClientRect();
+        const maxLeft = Math.max(margin, window.innerWidth - margin - tipRect.width);
+        let left = Math.min(triggerRect.left, maxLeft);
+        left = Math.max(margin, left);
+        let top = triggerRect.top - tipRect.height - gap;
+        if (top < margin) top = triggerRect.bottom + gap;
+        top = Math.min(top, Math.max(margin, window.innerHeight - margin - tipRect.height));
+        floatingTip.style.left = `${left}px`;
+        floatingTip.style.top = `${top}px`;
+      });
+    }
+
+    function hideFloatingTip() {
+      activeTipTrigger = null;
+      if (tipFrame) cancelAnimationFrame(tipFrame);
+      tipFrame = null;
+      floatingTip.classList.remove("show");
+      floatingTip.setAttribute("aria-hidden", "true");
+    }
+
+    document.querySelectorAll("[data-tip]").forEach((trigger) => {
+      trigger.addEventListener("mouseenter", () => placeFloatingTip(trigger));
+      trigger.addEventListener("focus", () => placeFloatingTip(trigger));
+      trigger.addEventListener("mouseleave", hideFloatingTip);
+      trigger.addEventListener("blur", hideFloatingTip);
+    });
+
+    window.addEventListener("scroll", hideFloatingTip, true);
+    window.addEventListener("resize", hideFloatingTip);
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") hideFloatingTip();
+    });
 
     navButtons.forEach((button) => {
       button.addEventListener("click", () => activateView(button.dataset.view));

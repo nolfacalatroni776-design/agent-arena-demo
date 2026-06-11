@@ -97,6 +97,55 @@ async function runViewport(client, width, height, label) {
   if (metrics.forbiddenFr) failures.push(`${label} UI exposes FR requirement numbers`);
   if (metrics.tipCount < 20) failures.push(`${label} expected contextual tooltips, found ${metrics.tipCount}`);
 
+  const tooltip = await evaluate(client, `new Promise((resolve) => {
+    const finish = () => {
+      const tip = document.querySelector('#floatingTip');
+      if (!tip) {
+        resolve({ missing: true });
+        return;
+      }
+      const rect = tip.getBoundingClientRect();
+      resolve({
+        missing: false,
+        hidden: tip.getAttribute('aria-hidden'),
+        text: tip.textContent.trim(),
+        left: rect.left,
+        right: rect.right,
+        top: rect.top,
+        bottom: rect.bottom,
+        viewportWidth: window.innerWidth,
+        viewportHeight: window.innerHeight
+      });
+    };
+    const fallback = setTimeout(finish, 1200);
+    document.querySelector('[data-view="targets"]')?.click();
+    setTimeout(() => {
+      const trigger = document.querySelector('#targets .side-panel .help[data-tip]');
+      if (!trigger) {
+        clearTimeout(fallback);
+        resolve({ missing: true });
+        return;
+      }
+      trigger.dispatchEvent(new MouseEvent('mouseenter'));
+      trigger.focus();
+      setTimeout(() => {
+        clearTimeout(fallback);
+        finish();
+      }, 120);
+    }, 520);
+  })`);
+
+  if (tooltip.missing) failures.push(`${label} tooltip trigger or floating layer missing`);
+  if (tooltip.hidden !== "false") failures.push(`${label} tooltip should be visible during hover/focus`);
+  if (!tooltip.text?.includes("接入配置可选择")) failures.push(`${label} tooltip text missing`);
+  if (tooltip.left < -1 || tooltip.right > tooltip.viewportWidth + 1) {
+    failures.push(`${label} tooltip horizontal overflow: left=${tooltip.left}, right=${tooltip.right}, viewport=${tooltip.viewportWidth}`);
+  }
+  if (tooltip.top < -1 || tooltip.bottom > tooltip.viewportHeight + 1) {
+    failures.push(`${label} tooltip vertical overflow: top=${tooltip.top}, bottom=${tooltip.bottom}, viewport=${tooltip.viewportHeight}`);
+  }
+  await evaluate(client, `document.querySelector('#targets .side-panel .help[data-tip]')?.dispatchEvent(new MouseEvent('mouseleave'))`);
+
   const flow = await evaluate(client, `(() => {
     const click = (selector) => document.querySelector(selector)?.click();
     click('[data-view="targets"]');
