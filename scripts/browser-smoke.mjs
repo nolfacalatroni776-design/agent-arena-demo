@@ -25,6 +25,18 @@ async function waitForJsonEndpoint() {
   throw new Error("Chrome DevTools endpoint did not become ready");
 }
 
+async function removeTempDir(path) {
+  for (let attempt = 0; attempt < 10; attempt += 1) {
+    try {
+      await rm(path, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
+      return;
+    } catch (error) {
+      if (attempt === 9) throw error;
+      await wait(150);
+    }
+  }
+}
+
 function connect(webSocketDebuggerUrl) {
   const socket = new WebSocket(webSocketDebuggerUrl);
   let id = 0;
@@ -156,8 +168,8 @@ try {
   client.close();
 } finally {
   chrome.kill("SIGTERM");
-  await wait(250);
-  await rm(userDataDir, { recursive: true, force: true });
+  await wait(600);
+  await removeTempDir(userDataDir);
 }
 
 if (failures.length > 0) {
