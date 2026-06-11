@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent Arena 需求设计</title>
+  <style>
+    :root { --ink:#171a1f; --muted:#606875; --line:#d9dde4; --bg:#f7f8fa; --panel:#fff; --teal:#0f766e; --amber:#b7791f; --red:#b42318; --indigo:#4f46e5; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height:1.55; letter-spacing:0; }
+    header { background:#11151c; color:#fff; padding:36px 28px; }
+    header h1 { margin:0; font-size:28px; }
+    header p { margin:10px 0 0; color:#c7d0dd; max-width:980px; }
+    main { width:min(1180px, calc(100% - 32px)); margin:24px auto 56px; display:grid; gap:18px; }
+    section { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:20px; }
+    h2 { margin:0 0 12px; font-size:20px; }
+    h3 { margin:18px 0 8px; font-size:16px; }
+    p { margin:0 0 10px; }
+    ul, ol { margin:8px 0 0 20px; padding:0; }
+    li { margin:6px 0; }
+    table { width:100%; border-collapse:collapse; margin-top:10px; background:#fff; }
+    th, td { border:1px solid var(--line); padding:10px; text-align:left; vertical-align:top; }
+    th { background:#f1f4f7; color:#4a5360; }
+    .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+    .card { border:1px solid var(--line); border-radius:8px; padding:14px; background:#fbfcfd; }
+    .badge { display:inline-block; padding:3px 8px; border-radius:999px; background:#d9f2ee; color:var(--teal); font-size:12px; font-weight:800; }
+    .flow { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:8px; align-items:stretch; }
+    .step { border:1px solid var(--line); border-radius:8px; padding:12px; background:#fbfcfd; min-height:118px; }
+    .step strong { display:block; color:var(--teal); margin-bottom:6px; }
+    .toc a { display:inline-block; margin:0 10px 8px 0; color:var(--teal); font-weight:700; text-decoration:none; }
+    @media (max-width:960px) { .grid, .flow { grid-template-columns:1fr; } table { display:block; overflow-x:auto; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Agent Arena 需求设计文档</h1>
+    <p>将需求分析转化为可落地的信息架构、核心对象、页面功能、交互流程和 Demo 验收标准。</p>
+  </header>
+  <main>
+    <section class="toc">
+      <a href="../index.html">返回 Demo</a>
+      <a href="agent-eval-research-report.html">Agent 测评研究报告</a>
+      <a href="requirements-analysis.html">需求分析</a>
+      <a href="technical-implementation.html">技术方案</a>
+      <a href="risk-register.html">风险点</a>
+      <a href="professional-user-test.html">测试报告</a>
+    </section>
+
+    <section>
+      <h2>1. 产品定位</h2>
+      <p>Agent Arena 是数据标注平台面向 Agent 时代的业务拓展模块。它既是客户评测与选型平台，也是训练数据需求发现系统：通过真实难例竞技识别 Agent 缺陷，再把缺陷转化为 Appen 可交付的数据产品。</p>
+      <div class="grid">
+        <div class="card"><span class="badge">对客户</span><h3>评测与选型</h3><p>低成本验证 Agent 在真实场景中的表现，获得可解释排名与采购建议。</p></div>
+        <div class="card"><span class="badge">对开发者</span><h3>曝光与优化</h3><p>通过奖金池和排行榜吸引 Agent 开发者，提供轨迹级问题定位。</p></div>
+        <div class="card"><span class="badge">对平台</span><h3>数据增长</h3><p>持续收集高价值难例、金标轨迹、偏好数据和失败分类。</p></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>2. 信息架构</h2>
+      <table>
+        <thead><tr><th>一级模块</th><th>用户目标</th><th>Demo 页面体现</th></tr></thead>
+        <tbody>
+          <tr><td>运营总览</td><td>理解赛季状态、排行榜、任务供给和商业转化。</td><td>指标卡、赛季排行榜、赛季节奏、场景拓扑。</td></tr>
+          <tr><td>Agent 工坊</td><td>部署自有 Agent 或构建新 Agent。</td><td>接入表单、模板生成、已接入 Agent 表。</td></tr>
+          <tr><td>难例市场</td><td>提交有奖难例并进入审核队列。</td><td>任务表单、审核队列、任务池分层。</td></tr>
+          <tr><td>竞技运行</td><td>选择任务包和 Agent，运行评测，查看日志和分项分。</td><td>运行配置、mock 日志、失败模式热区。</td></tr>
+          <tr><td>分析报告</td><td>理解 Agent 问题、根因、解决方案和数据建议。</td><td>诊断、解决方案、数据建议、轨迹证据四个 tab。</td></tr>
+          <tr><td>方案推荐</td><td>按业务场景选择合适 Agent。</td><td>筛选器、推荐卡片、选型按钮。</td></tr>
+          <tr><td>数据商店</td><td>把报告建议转为训练数据采购短名单。</td><td>六类数据产品卡片、短名单计数。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>3. 端到端主流程</h2>
+      <div class="flow">
+        <div class="step"><strong>1. 接入 Agent</strong>客户选择 API、镜像、托管沙盒或私有 VPC，并完成健康检查。</div>
+        <div class="step"><strong>2. 供给难例</strong>专家提交真实任务、金标轨迹、verifier 和奖励建议。</div>
+        <div class="step"><strong>3. 运行竞技</strong>平台在公开集和隐藏集上并行运行多个 Agent。</div>
+        <div class="step"><strong>4. 排名发奖</strong>根据综合评分、隐藏集审计和人工复核生成排名。</div>
+        <div class="step"><strong>5. 诊断缺陷</strong>聚合轨迹失败模式，输出根因与修复建议。</div>
+        <div class="step"><strong>6. 数据转化</strong>推荐 Appen 数据产品与 Agent 解决方案。</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>4. 核心对象模型</h2>
+      <table>
+        <thead><tr><th>对象</th><th>关键字段</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>Agent</td><td>name, owner, deploy_mode, endpoint, tools, permissions, scenarios, health_status</td><td>参赛主体，可来自客户、平台模板或第三方开发者。</td></tr>
+          <tr><td>Task</td><td>title, scenario, instruction, environment, hidden_level, verifier, rubric, bounty, gold_trajectory</td><td>可公开练习，也可作为隐藏排名集或训练数据候选。</td></tr>
+          <tr><td>Arena Run</td><td>season, agents, tasks, sample_strategy, logs, traces, scores, audit_status</td><td>一次评测运行，产生排名和报告数据。</td></tr>
+          <tr><td>Trace</td><td>task_id, agent_id, observation, action, tool_result, state_delta, final_answer, verifier_result</td><td>问题诊断和训练数据生成的核心资产。</td></tr>
+          <tr><td>Failure</td><td>taxonomy, severity, evidence, root_cause, business_impact, suggested_dataset</td><td>把技术失败翻译成商业可行动建议。</td></tr>
+          <tr><td>Dataset Product</td><td>type, coverage, price_band, sample_count, delivery_format, fit_reason</td><td>Appen 可销售的数据产品单元。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>5. 评分设计</h2>
+      <p>综合评分建议由自动 verifier、人工 rubric、偏好对战和运营约束共同构成。不同赛季可配置权重。</p>
+      <table>
+        <thead><tr><th>维度</th><th>默认权重</th><th>计算方式</th><th>用途</th></tr></thead>
+        <tbody>
+          <tr><td>任务成功率</td><td>35%</td><td>程序化 verifier + 专家复核</td><td>衡量最终目标是否完成。</td></tr>
+          <tr><td>工具调用正确率</td><td>20%</td><td>工具顺序、参数、状态理解、异常处理</td><td>衡量 Agent 执行可靠性。</td></tr>
+          <tr><td>安全合规率</td><td>20%</td><td>高风险动作、PII、权限越界、拒绝策略</td><td>适合企业客户采购决策。</td></tr>
+          <tr><td>成本效率</td><td>10%</td><td>token、工具调用、运行时长、重试次数</td><td>用于商业落地评估。</td></tr>
+          <tr><td>用户体验/偏好</td><td>15%</td><td>专家 pairwise preference 或 rubric</td><td>覆盖非确定性任务质量。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>6. 页面级验收标准</h2>
+      <table>
+        <thead><tr><th>页面</th><th>验收标准</th></tr></thead>
+        <tbody>
+          <tr><td>总览</td><td>用户能在 30 秒内理解平台价值链：Agent、任务、竞技、报告、数据采购。</td></tr>
+          <tr><td>Agent 工坊</td><td>用户能提交一个 mock Agent，并看到它进入已接入列表。</td></tr>
+          <tr><td>难例市场</td><td>用户能提交一个 mock 难例，并看到它进入审核队列。</td></tr>
+          <tr><td>竞技运行</td><td>用户能点击运行，并看到日志滚动、评测结果和失败模式。</td></tr>
+          <tr><td>分析报告</td><td>用户能切换诊断、方案、数据、轨迹四个视角，并从报告进入采购短名单。</td></tr>
+          <tr><td>方案推荐</td><td>用户能看到按场景推荐的 Agent 方案。</td></tr>
+          <tr><td>数据商店</td><td>用户能把多个数据包加入短名单，并看到短名单数量变化。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>7. 视觉与交互原则</h2>
+      <ul>
+        <li>定位为企业运营工具，采用克制、信息密度高、可扫描的后台风格，而不是营销落地页。</li>
+        <li>核心色使用深色侧栏、白色内容区、青绿色行动色，并用琥珀、红色、靛蓝承载状态含义。</li>
+        <li>卡片只用于独立信息块和重复项，页面主体以表格、表单、日志和报告面板为主。</li>
+        <li>所有关键流程都有即时反馈：toast、列表新增、日志滚动、短名单计数。</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

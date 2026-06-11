@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent Arena 需求分析</title>
+  <style>
+    :root { --ink:#171a1f; --muted:#606875; --line:#d9dde4; --bg:#f7f8fa; --panel:#fff; --teal:#0f766e; --amber:#b7791f; --red:#b42318; --indigo:#4f46e5; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height:1.55; letter-spacing:0; }
+    header { background:#11151c; color:#fff; padding:36px 28px; }
+    header h1 { margin:0; font-size:28px; }
+    header p { margin:10px 0 0; color:#c7d0dd; max-width:980px; }
+    main { width:min(1180px, calc(100% - 32px)); margin:24px auto 56px; display:grid; gap:18px; }
+    section { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:20px; }
+    h2 { margin:0 0 12px; font-size:20px; }
+    h3 { margin:18px 0 8px; font-size:16px; }
+    p { margin:0 0 10px; }
+    ul, ol { margin:8px 0 0 20px; padding:0; }
+    li { margin:6px 0; }
+    table { width:100%; border-collapse:collapse; margin-top:10px; background:#fff; }
+    th, td { border:1px solid var(--line); padding:10px; text-align:left; vertical-align:top; }
+    th { background:#f1f4f7; color:#4a5360; }
+    .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+    .card { border:1px solid var(--line); border-radius:8px; padding:14px; background:#fbfcfd; }
+    .badge { display:inline-block; padding:3px 8px; border-radius:999px; background:#d9f2ee; color:var(--teal); font-size:12px; font-weight:800; }
+    .note { color:var(--muted); font-size:13px; }
+    .toc a { display:inline-block; margin:0 10px 8px 0; color:var(--teal); font-weight:700; text-decoration:none; }
+    @media (max-width:860px) { .grid { grid-template-columns:1fr; } table { display:block; overflow-x:auto; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Agent Arena 需求分析文档</h1>
+    <p>面向数据标注/采集平台的业务拓展：通过 Agent 竞技评测形成真实难例供给、Agent 问题诊断、训练数据产品转化和 Agent 方案推荐闭环。</p>
+  </header>
+  <main>
+    <section class="toc">
+      <a href="../index.html">返回 Demo</a>
+      <a href="agent-eval-research-report.html">Agent 测评研究报告</a>
+      <a href="requirements-design.html">需求设计</a>
+      <a href="technical-implementation.html">技术方案</a>
+      <a href="risk-register.html">风险点</a>
+      <a href="professional-user-test.html">测试报告</a>
+    </section>
+
+    <section>
+      <h2>1. 目标与背景</h2>
+      <p>平台现有核心能力是训练数据标注和采集。随着企业从“训练底层模型”转向“部署可执行任务的 Agent”，数据需求也从孤立样本扩展到任务、环境、工具调用轨迹、偏好对战、失败分类和可验证 verifier。Agent Arena 的核心产品机会，是把真实 Agent 在业务场景中的失败暴露出来，并将失败转化为可销售、可持续迭代的训练数据集。</p>
+      <p>本 demo 的目标不是做一个展示页，而是让专业用户完整体验：部署/构建 Agent、专家提交难例、沙盒竞技、排行榜奖金、问题报告、解决方案推荐、Appen 数据集采购短名单。</p>
+    </section>
+
+    <section>
+      <h2>2. 外部调研摘要</h2>
+      <p class="note">调研日期：2026-05-27。以下为公开来源与产品/论文信息的归纳，具体实现需在后续商业化前复核各项目的最新状态与许可边界。</p>
+      <table>
+        <thead>
+          <tr><th>参考对象</th><th>关键观察</th><th>对本平台的启发</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>THU-ZJAI Real-World AI Source</td>
+            <td>README 展示了 Real-World AI Arena、Best Practice Champion、HITL、Task Set 等概念，强调真实业务源、专家实践与任务集沉淀。</td>
+            <td>Agent Arena 不应只做排行榜；需要把专家、难例、最佳实践和任务集商品化打通。</td>
+          </tr>
+          <tr>
+            <td>CREAO Community</td>
+            <td>面向社区的 AI/Agent 竞赛与榜单形态，强调用户参与、任务挑战、排行和社区激励。</td>
+            <td>适合采用赛季制、奖励池、公开榜与隐藏集，吸引开发者和专家持续供给任务。</td>
+          </tr>
+          <tr>
+            <td>AgentBench</td>
+            <td>提出用多环境、多任务评估 LLM as Agent，包括网页、游戏、工具使用等能力。</td>
+            <td>评测维度应覆盖规划、工具调用、环境交互、长期任务和失败恢复。</td>
+          </tr>
+          <tr>
+            <td>WebArena / OSWorld</td>
+            <td>强调真实网页环境、真实电脑环境中的开放式任务，关注可执行动作和环境状态。</td>
+            <td>沙盒要记录环境状态、动作轨迹、工具结果和验证证据，而非只看最终文本。</td>
+          </tr>
+          <tr>
+            <td>GAIA / τ-bench / SWE-bench</td>
+            <td>分别强调通用助手、多轮工具代理和代码修复真实任务，均需要可验证结果或人工审计。</td>
+            <td>平台应支持程序化 verifier、专家 rubric、偏好对战和人工复核混合评测。</td>
+          </tr>
+          <tr>
+            <td>Chatbot Arena</td>
+            <td>人类偏好对战可产生可解释排名和市场认知，但并不直接证明任务执行成功。</td>
+            <td>偏好对战可用于非确定性任务，但要和自动 verifier、隐藏集审计组合。</td>
+          </tr>
+          <tr>
+            <td>Appen 官方 Agentic AI / Training Data 页面</td>
+            <td>Appen 已有 AI training data、agentic task、trajectory、failure taxonomy、RAG evaluation、RL environment 等相关叙事。</td>
+            <td>Arena 可成为 Appen 数据产品前置诊断入口，直接导向任务集、轨迹集、偏好集和失败分类服务。</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>来源与不确定性</h3>
+      <ul>
+        <li>来源类型：GitHub 项目 README、公开社区站点、公开 benchmark 论文/项目页、Appen 官方产品叙事页面。</li>
+        <li>确定性较高：Agent 评测需要真实环境、可执行任务、轨迹记录、隐藏集和人工/程序化混合评测；这些在多个 benchmark 和评测平台中重复出现。</li>
+        <li>产品推断：把 Arena 失败诊断映射为 Appen 训练数据 SKU 是基于 Appen 数据业务能力与 Agent 评测缺口的商业设计推断，需要通过客户访谈和销售 pilot 验证。</li>
+        <li>需复核项：CREAO 社区的具体赛季机制、外部项目最新功能、开源许可、引用素材可商用性，以及任何真实客户数据进入任务池的授权边界。</li>
+      </ul>
+      <table>
+        <thead><tr><th>来源</th><th>链接</th><th>用于本方案的部分</th></tr></thead>
+        <tbody>
+          <tr><td>THU-ZJAI Real-World-AI_Source</td><td><a href="https://github.com/THU-ZJAI/Real-World-AI_Source">GitHub</a></td><td>真实场景 Arena、专家实践、HITL 和任务集沉淀。</td></tr>
+          <tr><td>CREAO Community</td><td><a href="https://community.creao.ai/">community.creao.ai</a></td><td>社区化挑战、赛季、排行榜和参与激励的产品形态参考。</td></tr>
+          <tr><td>AgentBench</td><td><a href="https://arxiv.org/abs/2308.03688">arXiv:2308.03688</a></td><td>多环境、多轮、工具/决策型 Agent 评测。</td></tr>
+          <tr><td>WebArena</td><td><a href="https://arxiv.org/abs/2307.13854">arXiv:2307.13854</a></td><td>真实网页环境、长程任务、功能正确性评测。</td></tr>
+          <tr><td>OSWorld</td><td><a href="https://arxiv.org/abs/2404.07972">arXiv:2404.07972</a></td><td>真实电脑环境、GUI grounding、执行式评测。</td></tr>
+          <tr><td>GAIA</td><td><a href="https://arxiv.org/abs/2311.12983">arXiv:2311.12983</a></td><td>通用助手在推理、多模态、网页浏览和工具使用上的综合任务。</td></tr>
+          <tr><td>τ-bench</td><td><a href="https://arxiv.org/abs/2406.12045">arXiv:2406.12045</a></td><td>多轮用户交互、领域 API 工具和业务政策遵循。</td></tr>
+          <tr><td>Chatbot Arena</td><td><a href="https://arxiv.org/abs/2403.04132">arXiv:2403.04132</a></td><td>人类偏好对战、众包投票和排行榜统计方法。</td></tr>
+          <tr><td>Appen AI Training Data</td><td><a href="https://www.appen.com/ai-data">appen.com/ai-data</a></td><td>AI training data、数据产品支柱和企业级数据服务。</td></tr>
+          <tr><td>Appen Agentic AI</td><td><a href="https://www.appen.com/agentic-ai">appen.com/agentic-ai</a></td><td>Task & Verifier、Golden Trajectories、Failure Taxonomy、RL Environments、RAG Evaluation。</td></tr>
+          <tr><td>Appen Trajectory Analysis</td><td><a href="https://www.appen.com/agentic-ai-trajectory-analysis">appen.com/agentic-ai-trajectory-analysis</a></td><td>轨迹级失败分类、counterfactual correction 和改进闭环。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>3. 用户与 Jobs To Be Done</h2>
+      <div class="grid">
+        <div class="card">
+          <span class="badge">企业 AI 负责人</span>
+          <h3>核心任务</h3>
+          <p>在采购或自研 Agent 前，希望通过真实业务难例验证效果、成本、安全和可落地性。</p>
+          <ul>
+            <li>对比多个 Agent 的场景排名。</li>
+            <li>获得可解释的问题分析报告。</li>
+            <li>确认需要采购哪些训练数据。</li>
+          </ul>
+        </div>
+        <div class="card">
+          <span class="badge">Agent 开发者</span>
+          <h3>核心任务</h3>
+          <p>把自有 Agent 部署进沙盒，用难例集定位失败，并通过排行榜获得曝光与奖金。</p>
+          <ul>
+            <li>快速接入 API、镜像或平台模板。</li>
+            <li>查看轨迹级失败证据。</li>
+            <li>获得下一步优化建议。</li>
+          </ul>
+        </div>
+        <div class="card">
+          <span class="badge">众包专家</span>
+          <h3>核心任务</h3>
+          <p>提交真实难例、金标轨迹和评价 rubric，按质量获得奖励。</p>
+          <ul>
+            <li>提交任务、环境、预期结果和失败点。</li>
+            <li>维护高价值隐藏集。</li>
+            <li>参与人工复核和偏好对战。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>4. 需求范围</h2>
+      <h3>4.1 必须覆盖的基础场景</h3>
+      <ol>
+        <li>支持客户部署自有 Agent 或构建新 Agent，在云端/沙盒环境运行多个场景的难例任务 PK 或评测，并根据排名获得奖金。</li>
+        <li>支持众包专家用户有奖提供难例任务，平台审核后进入公开集、隐藏集或数据产品候选池。</li>
+        <li>评估不同 Agent 在实际任务中暴露出的多方面问题，结合多个难例任务输出问题分析报告和解决方案。</li>
+        <li>引导用户采购 Appen 面向底层大模型/Agent 的训练数据集，包括任务集、轨迹集、偏好集、失败分类和 verifier。</li>
+        <li>通过 Agent 竞技面向用户推荐不同场景下优秀的 Agent 解决方案。</li>
+      </ol>
+
+      <h3>4.2 补充设计需求</h3>
+      <table>
+        <thead><tr><th>模块</th><th>需求</th><th>成功标准</th></tr></thead>
+        <tbody>
+          <tr><td>沙盒接入</td><td>支持 API Endpoint、容器镜像、云端托管、客户私有 VPC。</td><td>健康检查、权限检查、工具清单校验可视化。</td></tr>
+          <tr><td>任务市场</td><td>支持任务规格、环境、金标答案、金标轨迹、verifier、rubric、奖励。</td><td>专家可提交并进入审核队列。</td></tr>
+          <tr><td>竞技评测</td><td>支持多 Agent、多任务包、公开集/隐藏集、程序化和人工评测。</td><td>输出实时日志、分项分、排行榜和奖金。</td></tr>
+          <tr><td>诊断报告</td><td>按失败分类聚合轨迹，给出根因、影响、修复路径。</td><td>报告能直接映射到数据产品采购建议。</td></tr>
+          <tr><td>方案推荐</td><td>按场景、约束、排名、成本和安全策略推荐 Agent。</td><td>用户能从“业务问题”走到“Agent 选型”。</td></tr>
+          <tr><td>商业转化</td><td>把诊断缺口转化为 Appen 数据产品短名单。</td><td>客户能看到清晰的数据包、价值和采购入口。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>5. 核心指标</h2>
+      <table>
+        <thead><tr><th>指标类别</th><th>指标</th><th>解释</th></tr></thead>
+        <tbody>
+          <tr><td>供给</td><td>有效难例通过率、专家复购率、隐藏集污染率</td><td>衡量任务市场是否能持续供给高质量任务。</td></tr>
+          <tr><td>评测</td><td>任务成功率、工具调用正确率、安全合规率、成本效率、人工复核一致性</td><td>衡量排行榜是否可信。</td></tr>
+          <tr><td>商业</td><td>数据产品短名单数、报告转商机率、训练数据采购金额</td><td>衡量 Arena 到 Appen 数据业务的转化。</td></tr>
+          <tr><td>用户体验</td><td>接入时长、首次完成评测时长、报告可行动性评分</td><td>衡量专业用户是否可以快速获得价值。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>6. 非目标与边界</h2>
+      <ul>
+        <li>Demo 阶段不接入真实客户数据，所有数据均为 mock。</li>
+        <li>Demo 阶段不实现真实沙盒隔离、容器调度和支付发奖，仅展示完整用户体验与产品逻辑。</li>
+        <li>排行榜仅用于说明评测框架，不代表真实 Agent 能力。</li>
+        <li>文档中的外部项目参考仅用于产品设计启发，商业化前需做法律与许可复核。</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

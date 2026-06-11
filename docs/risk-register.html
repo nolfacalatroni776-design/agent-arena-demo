@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent Arena 风险点</title>
+  <style>
+    :root { --ink:#171a1f; --muted:#606875; --line:#d9dde4; --bg:#f7f8fa; --panel:#fff; --teal:#0f766e; --amber:#b7791f; --red:#b42318; --green:#16803c; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height:1.55; letter-spacing:0; }
+    header { background:#11151c; color:#fff; padding:36px 28px; }
+    header h1 { margin:0; font-size:28px; }
+    header p { margin:10px 0 0; color:#c7d0dd; max-width:980px; }
+    main { width:min(1180px, calc(100% - 32px)); margin:24px auto 56px; display:grid; gap:18px; }
+    section { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:20px; }
+    h2 { margin:0 0 12px; font-size:20px; }
+    p { margin:0 0 10px; }
+    ul { margin:8px 0 0 20px; padding:0; }
+    li { margin:6px 0; }
+    table { width:100%; border-collapse:collapse; margin-top:10px; background:#fff; }
+    th, td { border:1px solid var(--line); padding:10px; text-align:left; vertical-align:top; }
+    th { background:#f1f4f7; color:#4a5360; }
+    .badge { display:inline-block; padding:3px 8px; border-radius:999px; font-size:12px; font-weight:800; }
+    .high { background:#fde7e7; color:var(--red); }
+    .mid { background:#fff3d4; color:var(--amber); }
+    .low { background:#e1f7e8; color:var(--green); }
+    .toc a { display:inline-block; margin:0 10px 8px 0; color:var(--teal); font-weight:700; text-decoration:none; }
+    @media (max-width:900px) { table { display:block; overflow-x:auto; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Agent Arena 风险点与缓解方案</h1>
+    <p>覆盖评测可信度、数据安全、沙盒安全、商业闭环、专家供给、法律合规和产品落地风险。</p>
+  </header>
+  <main>
+    <section class="toc">
+      <a href="../index.html">返回 Demo</a>
+      <a href="agent-eval-research-report.html">Agent 测评研究报告</a>
+      <a href="requirements-analysis.html">需求分析</a>
+      <a href="requirements-design.html">需求设计</a>
+      <a href="technical-implementation.html">技术方案</a>
+      <a href="professional-user-test.html">测试报告</a>
+    </section>
+
+    <section>
+      <h2>1. 风险总览</h2>
+      <table>
+        <thead><tr><th>风险</th><th>等级</th><th>表现</th><th>缓解方案</th><th>负责人</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>排行榜不可信</td>
+            <td><span class="badge high">高</span></td>
+            <td>任务泄露、隐藏集污染、刷榜、样本量不足导致排名不能代表真实能力。</td>
+            <td>隐藏集隔离、赛季任务版本化、异常检测、人工抽查、置信区间、按场景分榜。</td>
+            <td>评测算法 + 运营</td>
+          </tr>
+          <tr>
+            <td>沙盒逃逸与供应链攻击</td>
+            <td><span class="badge high">高</span></td>
+            <td>客户镜像或 Agent 代码访问宿主机、窃取任务、攻击内网或挖矿。</td>
+            <td>gVisor/Firecracker、最小权限、网络代理、镜像扫描、资源限额、运行时监控。</td>
+            <td>平台安全</td>
+          </tr>
+          <tr>
+            <td>客户数据泄露</td>
+            <td><span class="badge high">高</span></td>
+            <td>真实工单、CRM、财务数据进入任务池后被第三方 Agent 或专家看到。</td>
+            <td>默认 mock/合成数据，真实数据脱敏、客户级隔离、数据使用授权、审计日志。</td>
+            <td>数据治理</td>
+          </tr>
+          <tr>
+            <td>Verifier 设计错误</td>
+            <td><span class="badge high">高</span></td>
+            <td>Agent 通过了 verifier 但业务目标未完成，或被错误判失败。</td>
+            <td>verifier 单测、反例集、人工复核、rubric 多人一致性、gold trajectory 对照。</td>
+            <td>任务设计</td>
+          </tr>
+          <tr>
+            <td>专家供给不足</td>
+            <td><span class="badge mid">中</span></td>
+            <td>高质量难例、金标轨迹和复核样本无法持续增长。</td>
+            <td>按难度分层定价、专家等级、质量返工机制、任务模板、赛季主题运营。</td>
+            <td>众包运营</td>
+          </tr>
+          <tr>
+            <td>报告结论不可追溯</td>
+            <td><span class="badge mid">中</span></td>
+            <td>LLM 生成的诊断听起来合理但无法回链到轨迹证据。</td>
+            <td>报告模板强制引用任务 ID、轨迹片段、失败标签和统计口径；区分事实和推断。</td>
+            <td>产品 + 工程</td>
+          </tr>
+          <tr>
+            <td>数据产品转化弱</td>
+            <td><span class="badge mid">中</span></td>
+            <td>用户看完报告但不理解为什么要采购训练数据。</td>
+            <td>失败类型到 SKU 的映射表、ROI 估算、样例数据预览、低门槛 pilot 包。</td>
+            <td>销售 + 产品</td>
+          </tr>
+          <tr>
+            <td>法律与许可风险</td>
+            <td><span class="badge mid">中</span></td>
+            <td>参考外部 benchmark、采集网页任务、使用第三方 Agent 结果可能涉及许可和 ToS。</td>
+            <td>商业化前做法律审查；外部项目仅作为启发；任务环境优先自建或获得授权。</td>
+            <td>法务</td>
+          </tr>
+          <tr>
+            <td>成本失控</td>
+            <td><span class="badge mid">中</span></td>
+            <td>Agent 长时间循环、工具调用过多、浏览器/GUI 沙盒成本高。</td>
+            <td>任务级预算、超时、最大步数、并发队列、成本分摊到赛季报名费或客户项目。</td>
+            <td>工程 + 财务</td>
+          </tr>
+          <tr>
+            <td>用户误解 Demo 能力</td>
+            <td><span class="badge low">低</span></td>
+            <td>静态 demo 被误认为已接入真实 Agent 或真实数据。</td>
+            <td>文档标注 mock 数据和非生产能力；销售演示时说明阶段边界。</td>
+            <td>产品</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>2. 隐私与数据治理要求</h2>
+      <ul>
+        <li>所有真实客户数据进入任务池前必须签署用途授权，并执行脱敏、采样和审计。</li>
+        <li>隐藏集任务不得向参赛 Agent 开发者暴露原始答案、verifier 细节和专家轨迹。</li>
+        <li>专家用户只可访问被分配任务所需的最小信息，敏感字段默认脱敏。</li>
+        <li>报告中的轨迹证据需要按客户、项目、角色做访问控制。</li>
+        <li>训练数据产品交付前必须明确客户是否允许跨客户泛化使用。</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>3. 评测可信度控制</h2>
+      <table>
+        <thead><tr><th>问题</th><th>控制策略</th></tr></thead>
+        <tbody>
+          <tr><td>任务太简单</td><td>设定难例准入标准：多工具、长上下文、状态变化、异常返回、合规边界至少命中两项。</td></tr>
+          <tr><td>任务太主观</td><td>主观任务采用 pairwise preference，并标注偏好理由；不与二元 verifier 混为一谈。</td></tr>
+          <tr><td>Agent 过拟合公开集</td><td>公开集只用于调试；正式排名依赖隐藏集和赛季新题。</td></tr>
+          <tr><td>人工复核不一致</td><td>双人标注、冲突仲裁、专家一致性评分、rubric 示例校准。</td></tr>
+          <tr><td>单一综合分掩盖短板</td><td>必须展示分项分和场景榜，避免“总分高但不适合客户场景”。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>4. 上线前 Gate</h2>
+      <ul>
+        <li>完成 3 个行业场景、每个场景至少 50 个公开任务和 30 个隐藏任务。</li>
+        <li>至少 2 类 Agent 接入方式通过端到端测试：API Endpoint 和容器镜像。</li>
+        <li>每个场景至少有 20 条专家金标轨迹，用于报告和训练数据样例。</li>
+        <li>完成沙盒安全评估、提示注入红队和隐藏集泄露演练。</li>
+        <li>报告中的数据产品建议通过销售团队访谈验证，至少获得 3 个客户 pilot 意向。</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

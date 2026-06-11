@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent Arena 技术实现方案</title>
+  <style>
+    :root { --ink:#171a1f; --muted:#606875; --line:#d9dde4; --bg:#f7f8fa; --panel:#fff; --teal:#0f766e; --amber:#b7791f; --red:#b42318; --indigo:#4f46e5; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height:1.55; letter-spacing:0; }
+    header { background:#11151c; color:#fff; padding:36px 28px; }
+    header h1 { margin:0; font-size:28px; }
+    header p { margin:10px 0 0; color:#c7d0dd; max-width:980px; }
+    main { width:min(1180px, calc(100% - 32px)); margin:24px auto 56px; display:grid; gap:18px; }
+    section { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:20px; }
+    h2 { margin:0 0 12px; font-size:20px; }
+    h3 { margin:18px 0 8px; font-size:16px; }
+    p { margin:0 0 10px; }
+    ul, ol { margin:8px 0 0 20px; padding:0; }
+    li { margin:6px 0; }
+    table { width:100%; border-collapse:collapse; margin-top:10px; background:#fff; }
+    th, td { border:1px solid var(--line); padding:10px; text-align:left; vertical-align:top; }
+    th { background:#f1f4f7; color:#4a5360; }
+    pre { overflow:auto; background:#11151c; color:#dbe7ef; padding:14px; border-radius:8px; }
+    code { font-family:ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+    .card { border:1px solid var(--line); border-radius:8px; padding:14px; background:#fbfcfd; }
+    .badge { display:inline-block; padding:3px 8px; border-radius:999px; background:#d9f2ee; color:var(--teal); font-size:12px; font-weight:800; }
+    .toc a { display:inline-block; margin:0 10px 8px 0; color:var(--teal); font-weight:700; text-decoration:none; }
+    @media (max-width:900px) { .grid { grid-template-columns:1fr; } table { display:block; overflow-x:auto; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Agent Arena 技术实现方案</h1>
+    <p>从当前静态 demo 到生产级 Agent 竞技平台的架构、数据模型、评测运行、报告生成、安全和阶段计划。</p>
+  </header>
+  <main>
+    <section class="toc">
+      <a href="../index.html">返回 Demo</a>
+      <a href="agent-eval-research-report.html">Agent 测评研究报告</a>
+      <a href="requirements-analysis.html">需求分析</a>
+      <a href="requirements-design.html">需求设计</a>
+      <a href="risk-register.html">风险点</a>
+      <a href="professional-user-test.html">测试报告</a>
+    </section>
+
+    <section>
+      <h2>1. 当前 Demo 实现</h2>
+      <p>当前交付是一个无需构建步骤的纯静态 HTML demo，包含业务主流程交互和 mock 数据。文件结构如下：</p>
+      <pre><code>agent竞技场/
+  index.html
+  docs/
+    requirements-analysis.html
+    requirements-design.html
+    technical-implementation.html
+    risk-register.html
+    professional-user-test.html</code></pre>
+      <p>打开 <code>index.html</code> 即可体验：部署 Agent、提交难例、运行竞技、查看分析报告、推荐 Agent、加入数据产品短名单。</p>
+    </section>
+
+    <section>
+      <h2>2. 目标生产架构</h2>
+      <div class="grid">
+        <div class="card"><span class="badge">前端</span><h3>Console Web</h3><p>React/Next.js 或 Vue/Nuxt，包含控制台、报告查看、任务市场和数据商店。</p></div>
+        <div class="card"><span class="badge">后端</span><h3>Arena API</h3><p>Agent 接入、任务管理、赛季管理、评分、报告、结算、权限。</p></div>
+        <div class="card"><span class="badge">运行</span><h3>Sandbox Runner</h3><p>Kubernetes Job、Firecracker/gVisor、Browser/GUI 环境、工具代理和日志采集。</p></div>
+      </div>
+      <table>
+        <thead><tr><th>组件</th><th>职责</th><th>建议技术</th></tr></thead>
+        <tbody>
+          <tr><td>Identity & RBAC</td><td>企业客户、开发者、专家、平台运营权限隔离。</td><td>Auth0/Okta/自研 IAM，PostgreSQL RBAC。</td></tr>
+          <tr><td>Agent Registry</td><td>保存 Agent 接入信息、工具声明、运行策略和版本。</td><td>PostgreSQL + Secret Manager。</td></tr>
+          <tr><td>Task Marketplace</td><td>难例提交、审核、版本、隐藏集分层、奖励。</td><td>PostgreSQL + Object Storage。</td></tr>
+          <tr><td>Sandbox Runner</td><td>执行 Agent、连接模拟工具、浏览器或桌面环境。</td><td>Kubernetes, Docker, Playwright, VNC, gVisor/Firecracker。</td></tr>
+          <tr><td>Trace Store</td><td>保存 observation、action、tool result、state delta、截图、录屏。</td><td>S3/GCS + PostgreSQL metadata + ClickHouse events。</td></tr>
+          <tr><td>Scoring Service</td><td>程序化 verifier、rubric、pairwise preference、成本计算。</td><td>Python/FastAPI workers + queue。</td></tr>
+          <tr><td>Report Generator</td><td>失败分类、根因分析、数据包推荐。</td><td>LLM-assisted pipeline + deterministic templates。</td></tr>
+          <tr><td>Commerce Bridge</td><td>数据产品短名单、报价、CRM 线索。</td><td>CRM integration, CPQ, billing workflow。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>3. Agent 接入协议</h2>
+      <p>生产系统建议提供三种接入方式，逐步降低客户进入门槛。</p>
+      <table>
+        <thead><tr><th>方式</th><th>适合用户</th><th>关键要求</th></tr></thead>
+        <tbody>
+          <tr><td>API Endpoint</td><td>已有 Agent 服务的客户/开发者。</td><td>统一请求/响应 schema、签名鉴权、超时和速率限制。</td></tr>
+          <tr><td>Container Image</td><td>需要完整运行时依赖的团队。</td><td>镜像扫描、资源限制、出网策略、工具代理注入。</td></tr>
+          <tr><td>Platform Builder</td><td>没有成熟 Agent 的业务团队。</td><td>模板、工具选择、guardrail、系统提示和测试集联动。</td></tr>
+        </tbody>
+      </table>
+      <pre><code>{
+  "agent_id": "agent_omni_desk",
+  "version": "2026.05.s2",
+  "input": {
+    "task_id": "task_refund_policy_017",
+    "instruction": "Resolve the customer refund request...",
+    "tools": ["order.lookup", "policy.search", "crm.update"]
+  },
+  "output": {
+    "final_answer": "...",
+    "actions": [
+      {"tool": "order.lookup", "arguments": {"order_id": "O-193"}, "timestamp": 1779871200}
+    ]
+  }
+}</code></pre>
+    </section>
+
+    <section>
+      <h2>4. 任务与 Verifier 设计</h2>
+      <p>任务不应只是 prompt，而应包含环境、工具、验收和金标轨迹。</p>
+      <table>
+        <thead><tr><th>字段</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>instruction</td><td>用户可见任务说明，含业务目标与限制。</td></tr>
+          <tr><td>environment_seed</td><td>数据库、网页、文件、GUI 状态、工具响应的初始化种子。</td></tr>
+          <tr><td>allowed_tools</td><td>Agent 可以调用的工具列表和权限范围。</td></tr>
+          <tr><td>verifier</td><td>二元成功/失败、分项评分或专家 rubric。</td></tr>
+          <tr><td>gold_trajectory</td><td>专家推荐动作序列，用于训练和诊断。</td></tr>
+          <tr><td>failure_tags</td><td>预期容易失败的原因，如澄清不足、工具误读、越权动作。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>5. 评测运行流程</h2>
+      <ol>
+        <li>赛季创建：选择场景、任务包、公开/隐藏比例、评分权重、奖金池。</li>
+        <li>Agent 报名：提交接入方式、版本、工具声明、权限策略和预算上限。</li>
+        <li>沙盒预检：镜像扫描、API 可达性、工具 schema、权限和成本阈值检查。</li>
+        <li>任务抽样：对公开集、隐藏集、专家审计集分层抽样，避免任务泄露。</li>
+        <li>并行执行：runner 调用 Agent，记录每一步 observation、action、tool result、state delta。</li>
+        <li>评分合并：程序化 verifier、专家 rubric、偏好对战和成本指标合并为综合分。</li>
+        <li>审计与防作弊：隐藏集异常、重复答案、可疑流量、过拟合模式和人工抽查。</li>
+        <li>输出结果：排行榜、奖金、失败模式、报告和数据产品推荐。</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>6. 报告生成 Pipeline</h2>
+      <table>
+        <thead><tr><th>阶段</th><th>输入</th><th>输出</th><th>控制点</th></tr></thead>
+        <tbody>
+          <tr><td>轨迹聚合</td><td>Trace events, verifier results</td><td>任务级结果表</td><td>去重、脱敏、权限过滤。</td></tr>
+          <tr><td>失败分类</td><td>失败轨迹、专家标签</td><td>Failure taxonomy</td><td>保留证据链接，不只给 LLM 总结。</td></tr>
+          <tr><td>根因分析</td><td>失败分类、任务元数据、工具状态</td><td>根因和影响估计</td><td>区分事实、推断和估计。</td></tr>
+          <tr><td>数据匹配</td><td>失败类型、客户行业、任务场景</td><td>数据产品推荐</td><td>与 Appen SKU 映射表绑定。</td></tr>
+          <tr><td>报告发布</td><td>模板、图表、证据</td><td>HTML/PDF/在线报告</td><td>客户数据隔离和审批流。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>7. 数据产品 SKU 建议</h2>
+      <p>以下 SKU 参考 Appen 公开 Agentic AI 数据服务叙事，并结合 Arena 评测产生的失败证据做产品化映射。生产化时建议维护一张可配置的“失败类型 → 数据 SKU → 样例交付物 → 报价规则”映射表。</p>
+      <table>
+        <thead><tr><th>SKU</th><th>内容</th><th>触发购买信号</th></tr></thead>
+        <tbody>
+          <tr><td>Task & Verifier Design Pack</td><td>任务规格、环境、自动 verifier、rubric。</td><td>客户缺少可验证任务集，评测无法规模化。</td></tr>
+          <tr><td>Golden Trajectory Pack</td><td>专家动作轨迹、工具调用、状态证据。</td><td>Agent 规划和工具调用错误明显。</td></tr>
+          <tr><td>Failure Taxonomy Review</td><td>轨迹级失败根因标注。</td><td>客户知道失败多，但不知道如何采集训练数据。</td></tr>
+          <tr><td>Pairwise Preference Data</td><td>专家偏好对战数据和 judge 训练样本。</td><td>任务质量难以用二元 verifier 判断。</td></tr>
+          <tr><td>High-Risk Action Red Team</td><td>越权、PII、退款、数据导出的拒绝和确认样本。</td><td>安全合规率低或企业客户关注风控。</td></tr>
+          <tr><td>GUI Grounding Dataset</td><td>桌面/网页截图、坐标动作、验收状态。</td><td>Agent 在浏览器或桌面环境中定位不稳定。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>8. 阶段计划</h2>
+      <table>
+        <thead><tr><th>阶段</th><th>周期</th><th>交付</th></tr></thead>
+        <tbody>
+          <tr><td>Demo/MVP 0</td><td>1-2 周</td><td>静态交互 demo、PRD、数据模型、10 个 mock 任务、销售验证脚本。</td></tr>
+          <tr><td>MVP 1</td><td>4-6 周</td><td>Agent Registry、任务市场、基础 runner、程序化 verifier、排行榜。</td></tr>
+          <tr><td>Beta</td><td>8-12 周</td><td>隐藏集、专家复核、轨迹存储、报告生成、数据 SKU 推荐。</td></tr>
+          <tr><td>GA</td><td>12-20 周</td><td>企业级权限、私有部署、结算发奖、CRM/Commerce 集成、SLA。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>9. 验证策略</h2>
+      <ul>
+        <li>前端：Playwright E2E 覆盖主流程、响应式布局和可访问性扫描。</li>
+        <li>Runner：用固定 seed 的 mock Agent 做回归，确保评分可复现。</li>
+        <li>Verifier：每个 verifier 配套反例、边界例和人工审计样本。</li>
+        <li>报告：报告中的每个结论必须可回链到任务、轨迹或专家标签。</li>
+        <li>安全：沙盒逃逸、数据泄露、提示注入和隐藏集污染做专项红队测试。</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

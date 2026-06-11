@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent Eval OS 专业用户测试报告</title>
+  <style>
+    :root { --ink:#171a1f; --muted:#606875; --line:#d9dde4; --bg:#f7f8fa; --panel:#fff; --teal:#0f766e; --amber:#b7791f; --red:#b42318; --green:#16803c; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height:1.55; letter-spacing:0; }
+    header { background:#11151c; color:#fff; padding:36px 28px; }
+    header h1 { margin:0; font-size:28px; }
+    header p { margin:10px 0 0; color:#c7d0dd; max-width:980px; }
+    main { width:min(1180px, calc(100% - 32px)); margin:24px auto 56px; display:grid; gap:18px; }
+    section { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:20px; }
+    h2 { margin:0 0 12px; font-size:20px; }
+    h3 { margin:18px 0 8px; font-size:16px; }
+    p { margin:0 0 10px; }
+    ul, ol { margin:8px 0 0 20px; padding:0; }
+    li { margin:6px 0; }
+    table { width:100%; border-collapse:collapse; margin-top:10px; background:#fff; }
+    th, td { border:1px solid var(--line); padding:10px; text-align:left; vertical-align:top; }
+    th { background:#f1f4f7; color:#4a5360; }
+    .badge { display:inline-block; padding:3px 8px; border-radius:999px; font-size:12px; font-weight:800; background:#e1f7e8; color:var(--green); }
+    .fail { background:#fde7e7; color:var(--red); }
+    .warn { background:#fff3d4; color:var(--amber); }
+    .toc a { display:inline-block; margin:0 10px 8px 0; color:var(--teal); font-weight:700; text-decoration:none; }
+    @media (max-width:900px) { table { display:block; overflow-x:auto; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Agent Eval OS 专业用户测试报告</h1>
+    <p>从企业 AI 负责人、Agent 开发者、众包专家、平台运营和治理负责人五类视角验证 demo 主流程是否完整可体验、可追溯、可面向客户演示。</p>
+  </header>
+  <main>
+    <section class="toc">
+      <a href="../index.html">返回 Demo</a>
+      <a href="agent-eval-research-report.html">Agent 测评研究报告</a>
+      <a href="requirements-analysis.html">需求分析</a>
+      <a href="requirements-design.html">需求设计</a>
+      <a href="technical-implementation.html">技术方案</a>
+      <a href="risk-register.html">风险点</a>
+    </section>
+
+    <section>
+      <h2>1. 测试结论</h2>
+      <p><span class="badge">通过</span> 当前静态 demo 可以让专业用户完整体验未来两年终态主流程：Agent Registry、难例市场、任务与环境工坊、Arena Orchestrator、Trace Lake、Scoring Engine、分析报告、专家运营、方案推荐、数据商店和 Governance & Trust。真实数据已用 mock 数据替代，符合客户演示阶段边界。</p>
+      <p class="note">测试日期：2026-06-11。测试对象：本地 HTTP 服务 <code>http://localhost:4173/</code>、根页面 <code>index.html</code>、测试脚本 <code>scripts/*.mjs</code> 及 <code>docs/*.html</code>。</p>
+      <p>验证命令：<code>npm test</code>、<code>npm run test:browser</code>、<code>git diff --check</code>、Chrome headless 桌面/移动截图。</p>
+    </section>
+
+    <section>
+      <h2>2. 用户旅程测试</h2>
+      <table>
+        <thead><tr><th>角色</th><th>目标</th><th>操作路径</th><th>预期结果</th><th>状态</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>企业 AI 负责人</td>
+            <td>判断平台是否能帮助选择 Agent 和采购训练数据。</td>
+            <td>总览 → 竞技运行 → Trace Lake → 分析报告 → 方案推荐 → 数据商店。</td>
+            <td>看到排名、失败模式、轨迹证据、解决方案、推荐 Agent 和数据产品短名单。</td>
+            <td><span class="badge">通过</span></td>
+          </tr>
+          <tr>
+            <td>Agent 开发者</td>
+            <td>部署自有 Agent 并参与评测。</td>
+            <td>Agent 工坊 → 填写部署表单 → 部署到竞技池 → 竞技运行。</td>
+            <td>新 Agent 出现在已接入列表，参赛流程清晰。</td>
+            <td><span class="badge">通过</span></td>
+          </tr>
+          <tr>
+            <td>众包专家</td>
+            <td>提交有奖难例。</td>
+            <td>难例市场 → 填写任务标题、场景、描述、verifier、奖励 → 专家运营。</td>
+            <td>难例进入审核队列，任务池数量增加，并能进入共识审核与 SKU 打包路径。</td>
+            <td><span class="badge">通过</span></td>
+          </tr>
+          <tr>
+            <td>平台运营</td>
+            <td>观察赛季状态和商业转化。</td>
+            <td>总览 → 赛季节奏 → 任务池分层 → 评分引擎 → 数据商店。</td>
+            <td>能看到参赛 Agent、任务池、奖金池、评分门禁、数据转化机会和数据 SKU。</td>
+            <td><span class="badge">通过</span></td>
+          </tr>
+          <tr>
+            <td>治理负责人</td>
+            <td>判断评测是否可信、可审计、可向客户交付证明。</td>
+            <td>治理信任 → 运行信任审计 → 审计日志 → 客户可交付证明。</td>
+            <td>能看到隐藏集金库、泄漏探针、运行证明、数据授权、judge 校准和导出证明。</td>
+            <td><span class="badge">通过</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>3. 功能测试用例</h2>
+      <table>
+        <thead><tr><th>ID</th><th>模块</th><th>步骤</th><th>验收点</th><th>状态</th></tr></thead>
+        <tbody>
+          <tr><td>T01</td><td>导航</td><td>点击左侧 12 个模块。</td><td>对应视图显示，导航高亮切换。</td><td><span class="badge">通过</span></td></tr>
+          <tr><td>T02</td><td>Agent 工坊</td><td>提交 RetailOps Pilot。</td><td>Agent 表格新增记录，总览 Agent 数 +1，toast 提示。</td><td><span class="badge">通过</span></td></tr>
+          <tr><td>T03</td><td>Agent 工坊</td><td>点击生成模板草案。</td><td>规格文本更新，包含模板、安全策略、评测重点。</td><td><span class="badge">通过</span></td></tr>
+          <tr><td>T04</td><td>难例市场</td><td>提交“退款政策冲突下的 CRM 修正”。</td><td>审核队列新增记录，任务数 +1。</td><td><span class="badge">通过</span></td></tr>
+          <tr><td>T05</td><td>环境工坊</td><td>点击编译环境。</td><td>可执行环境数 +1，verifier 覆盖与 reset 稳定性刷新。</td><td><span class="badge">通过</span></td></tr>
+          <tr><td>T06</td><td>竞技运行</td><td>选择赛季策略和风险集后运行竞技评测。</td><td>日志逐步追加，展示 runner、trace、judge、report、governance 阶段。</td><td><span class="badge">通过</span></td></tr>
+          <tr><td>T07</td><td>轨迹证据</td><td>点击重放失败轨迹。</td><td>事件流追加 gold trace、judge、SKU link 证据。</td><td><span class="badge">通过</span></td></tr>
+          <tr><td>T08</td><td>评分引擎</td><td>拖动评分权重。</td><td>权重百分比、综合分和发布门禁即时刷新。</td><td><span class="badge">通过</span></td></tr>
+          <tr><td>T09</td><td>分析报告</td><td>切换四个报告 tab。</td><td>诊断、解决方案、数据建议、轨迹证据分别显示。</td><td><span class="badge">通过</span></td></tr>
+          <tr><td>T10</td><td>专家运营</td><td>点击通过/结算/分派。</td><td>按钮进入已处理状态，专家队列数下降，toast 提示。</td><td><span class="badge">通过</span></td></tr>
+          <tr><td>T11</td><td>方案推荐</td><td>调整场景与约束并刷新推荐。</td><td>匹配分和 toast 根据筛选条件更新。</td><td><span class="badge">通过</span></td></tr>
+          <tr><td>T12</td><td>数据商店</td><td>点击多个数据包“加入短名单”。</td><td>短名单计数持续增加，toast 提示。</td><td><span class="badge">通过</span></td></tr>
+          <tr><td>T13</td><td>治理信任</td><td>点击运行信任审计。</td><td>可信就绪度更新为 92%，审计日志追加证明。</td><td><span class="badge">通过</span></td></tr>
+          <tr><td>T14</td><td>主流程</td><td>点击顶部“跑通主流程”。</td><td>自动依次展示接入、供题、环境、竞技、证据、评分、报告、专家、推荐、采购、治理。</td><td><span class="badge">通过</span></td></tr>
+          <tr><td>T15</td><td>文档</td><td>点击侧栏 HTML 交付文档。</td><td>研究报告、需求分析、设计、技术方案、风险、测试报告可打开。</td><td><span class="badge">通过</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>4. 需求覆盖审计</h2>
+      <table>
+        <thead><tr><th>用户要求</th><th>Demo/文档覆盖</th><th>证据</th></tr></thead>
+        <tbody>
+          <tr><td>支持客户部署自有 Agent / 构建新 Agent。</td><td>已覆盖。</td><td>Agent 工坊：部署表单、构建模板、已接入 Agent 表。</td></tr>
+          <tr><td>把环境构建作为一等产品对象。</td><td>已覆盖。</td><td>环境工坊：Task DSL、状态种子、API/GUI/MCP、verifier、gold trace、hidden level。</td></tr>
+          <tr><td>云端/沙盒环境运行多个场景实际难例任务 PK 或评测。</td><td>已覆盖 mock 体验。</td><td>竞技运行：任务包、参赛 Agent、运行日志、分项分、失败模式、发布门禁。</td></tr>
+          <tr><td>评测结果可追溯。</td><td>已覆盖。</td><td>轨迹证据：observation、action、tool call/result、state delta、截图、成本和 replay bundle。</td></tr>
+          <tr><td>终态测评框架。</td><td>已覆盖。</td><td>评分引擎：programmatic verifier、LLM judge、人类 rubric、pairwise、安全、成本、稳定性。</td></tr>
+          <tr><td>根据排名获得奖金。</td><td>已覆盖。</td><td>总览排行榜显示奖金池和单 Agent 奖金。</td></tr>
+          <tr><td>难例任务由众包专家有奖提供。</td><td>已覆盖。</td><td>难例市场：奖励、提交审核、任务池分层。</td></tr>
+          <tr><td>专家运营闭环。</td><td>已覆盖。</td><td>专家运营：提交、复核、共识、赏金、专家等级和 SKU 打包。</td></tr>
+          <tr><td>评估 Agent 多方面问题并输出分析报告和解决方案。</td><td>已覆盖。</td><td>分析报告：失败诊断、解决方案、训练数据建议、轨迹证据。</td></tr>
+          <tr><td>引导采购 Appen 训练数据集。</td><td>已覆盖。</td><td>数据商店与报告短名单：Task & Verifier、Trajectory、Failure Taxonomy、GUI、Safety Red Team 等 SKU。</td></tr>
+          <tr><td>通过竞技推荐不同场景优秀 Agent 方案。</td><td>已覆盖。</td><td>方案推荐：按业务场景和约束展示推荐卡。</td></tr>
+          <tr><td>治理与可信控制。</td><td>已覆盖。</td><td>治理信任：隐藏集金库、泄漏探针、运行证明、数据授权、审计日志、客户证明。</td></tr>
+          <tr><td>参考 Real-World AI、CREAO、其它 Agent Arena。</td><td>已覆盖。</td><td>需求分析文档调研摘要中纳入这些参考与 benchmark。</td></tr>
+          <tr><td>最终输出包括平台 demo、需求分析、需求设计、技术方案、风险点，均为 HTML。</td><td>已覆盖。</td><td><code>index.html</code> 与 <code>docs/*.html</code>。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>5. 自动化与视觉验证</h2>
+      <table>
+        <thead><tr><th>验证项</th><th>命令/证据</th><th>结果</th></tr></thead>
+        <tbody>
+          <tr><td>静态结构</td><td><code>npm test</code></td><td><span class="badge">通过</span> 12 个 view、12 个 nav、15 个跳转、本地文档链接全部有效。</td></tr>
+          <tr><td>浏览器交互</td><td><code>npm run test:browser</code></td><td><span class="badge">通过</span> 桌面/移动无横向溢出，环境编译、轨迹重放、评分权重、治理审计均可触发。</td></tr>
+          <tr><td>格式检查</td><td><code>git diff --check</code></td><td><span class="badge">通过</span> 未发现空白错误。</td></tr>
+          <tr><td>桌面截图</td><td><code>docs/demo-desktop.png</code></td><td><span class="badge">通过</span> 1440px 宽度下导航、总览、飞轮、排行榜可读。</td></tr>
+          <tr><td>移动截图</td><td><code>docs/demo-mobile.png</code></td><td><span class="badge">通过</span> 390px 宽度下顶部按钮、导航、指标卡不裁切。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>6. 已知限制</h2>
+      <ul>
+        <li>当前是静态 demo，没有真实后端、真实 Agent、真实沙盒、真实支付和真实数据。</li>
+        <li>排行榜、分数、奖金和数据产品价格均为 mock，用于产品体验验证。</li>
+        <li>外部调研摘要是产品设计证据，不构成法律或商业尽调结论。</li>
+        <li>下一阶段应接入真实 runner、trace storage、专家审核后台、客户权限和部署流水线。</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

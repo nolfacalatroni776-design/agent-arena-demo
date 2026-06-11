@@ -1,0 +1,1310 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent 测评平台未来两年终态研究报告</title>
+  <style>
+    :root {
+      --ink: #15171d;
+      --muted: #5f6876;
+      --subtle: #eef1f4;
+      --line: #d8dde5;
+      --paper: #fbfcfd;
+      --panel: #ffffff;
+      --night: #10141d;
+      --night-2: #1a2130;
+      --teal: #0f766e;
+      --cyan: #1d8fa3;
+      --indigo: #4f46e5;
+      --violet: #7c3aed;
+      --amber: #b7791f;
+      --red: #b42318;
+      --green: #16803c;
+      --blue: #2563eb;
+      --radius: 8px;
+      --font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font);
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+
+    a { color: inherit; }
+
+    .hero {
+      background: var(--night);
+      color: #fff;
+      padding: 34px 28px 26px;
+      border-bottom: 1px solid #2a3344;
+    }
+
+    .hero-inner,
+    .content {
+      width: min(1240px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: #9fb2c8;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    h1, h2, h3, h4, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 12px;
+      font-size: clamp(30px, 4vw, 54px);
+      line-height: 1.08;
+      max-width: 980px;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      color: #d8e1ec;
+      max-width: 980px;
+      font-size: 17px;
+      margin-bottom: 18px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: #c9d4e3;
+      font-size: 13px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 28px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.06);
+      white-space: nowrap;
+    }
+
+    .toc {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      background: rgba(251,252,253,.96);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+    }
+
+    .toc-inner {
+      width: min(1240px, calc(100% - 32px));
+      margin: 0 auto;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 10px 0;
+    }
+
+    .toc a {
+      flex: 0 0 auto;
+      padding: 8px 10px;
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .toc a:hover {
+      background: var(--subtle);
+      color: var(--ink);
+    }
+
+    .content {
+      display: grid;
+      gap: 0;
+    }
+
+    .band {
+      padding: 30px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .band.dark {
+      background: var(--night);
+      color: #fff;
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      padding-left: max(16px, calc((100vw - 1240px) / 2));
+      padding-right: max(16px, calc((100vw - 1240px) / 2));
+      border-bottom-color: #2b3447;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      font-size: 26px;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    h3 {
+      font-size: 17px;
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+
+    h4 {
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .lead {
+      max-width: 920px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .dark .lead { color: #c6d1df; }
+
+    .note {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .dark .note { color: #aab8cb; }
+
+    .grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .grid.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      min-width: 0;
+    }
+
+    .dark .card {
+      background: #151b27;
+      border-color: #2c3548;
+    }
+
+    .metric {
+      display: grid;
+      gap: 6px;
+    }
+
+    .metric strong {
+      font-size: 30px;
+      line-height: 1;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .dark .metric span { color: #b5c1d2; }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      width: fit-content;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      background: #dff2ef;
+      color: var(--teal);
+    }
+
+    .tag.blue { background: #e4ecff; color: var(--blue); }
+    .tag.indigo { background: #ecebff; color: var(--indigo); }
+    .tag.amber { background: #fff3d4; color: var(--amber); }
+    .tag.red { background: #fde7e7; color: var(--red); }
+    .tag.green { background: #e1f7e8; color: var(--green); }
+    .tag.violet { background: #f1e7ff; color: var(--violet); }
+
+    .verdict {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .verdict-main {
+      padding: 20px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .verdict-main h2 {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    .callout {
+      border-left: 4px solid var(--teal);
+      padding: 12px 14px;
+      background: #f4fbf9;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .callout strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 900px;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+      font-size: 13px;
+    }
+
+    th {
+      background: #f1f4f7;
+      color: #475364;
+      font-weight: 900;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+    td:last-child, th:last-child { border-right: 0; }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: 160px repeat(4, minmax(0, 1fr));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .matrix div {
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 12px;
+      min-height: 88px;
+      font-size: 13px;
+    }
+
+    .matrix div:nth-child(5n) { border-right: 0; }
+    .matrix div:nth-last-child(-n+5) { border-bottom: 0; }
+    .matrix .head { background: #f1f4f7; font-weight: 900; color: #465161; min-height: auto; }
+    .matrix .axis { background: #fbfcfd; font-weight: 900; }
+
+    .architecture {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .lane {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+      min-height: 220px;
+    }
+
+    .lane .block {
+      border: 1px solid #dfe5ec;
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 13px;
+    }
+
+    .lane:nth-child(1) h3 { color: var(--teal); }
+    .lane:nth-child(2) h3 { color: var(--blue); }
+    .lane:nth-child(3) h3 { color: var(--indigo); }
+    .lane:nth-child(4) h3 { color: var(--amber); }
+    .lane:nth-child(5) h3 { color: var(--green); }
+
+    .flywheel {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+      counter-reset: fly;
+    }
+
+    .fly-step {
+      position: relative;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      min-height: 132px;
+    }
+
+    .fly-step:before {
+      counter-increment: fly;
+      content: counter(fly);
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--night);
+      color: #fff;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    .bar-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 180px 1fr 42px;
+      gap: 10px;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .bar-track {
+      height: 12px;
+      background: #e9edf2;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--teal);
+    }
+
+    .bar-fill.blue { background: var(--blue); }
+    .bar-fill.indigo { background: var(--indigo); }
+    .bar-fill.amber { background: var(--amber); }
+    .bar-fill.green { background: var(--green); }
+    .bar-fill.red { background: var(--red); }
+    .bar-fill.violet { background: var(--violet); }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .phase {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      min-height: 210px;
+    }
+
+    .phase .date {
+      color: var(--teal);
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .source {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      padding: 12px;
+      font-size: 13px;
+    }
+
+    .source a {
+      color: var(--teal);
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .source a:hover { text-decoration: underline; }
+
+    ul, ol {
+      margin: 8px 0 0 20px;
+      padding: 0;
+    }
+
+    li { margin: 6px 0; }
+
+    .compact li { margin: 4px 0; }
+
+    .print-note {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 1060px) {
+      .grid.cols-4,
+      .architecture,
+      .timeline,
+      .flywheel { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .verdict { grid-template-columns: 1fr; }
+      .matrix { grid-template-columns: 130px repeat(4, minmax(220px, 1fr)); overflow-x: auto; }
+    }
+
+    @media (max-width: 760px) {
+      .hero { padding: 28px 16px 22px; }
+      .hero-inner,
+      .content,
+      .toc-inner { width: min(100% - 24px, 1240px); }
+      .grid.cols-2,
+      .grid.cols-3,
+      .grid.cols-4,
+      .architecture,
+      .timeline,
+      .flywheel,
+      .source-grid { grid-template-columns: 1fr; }
+      .section-head { display: block; }
+      .bar-row { grid-template-columns: 1fr; }
+      .bar-row strong { display: none; }
+    }
+
+    @media print {
+      .toc { position: static; }
+      body { background: #fff; }
+      .band { page-break-inside: avoid; }
+      .card, .phase, .lane, .source, .fly-step { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">Research Report | Agent Evaluation Platform</p>
+      <h1>Agent 测评平台未来两年终态研究报告</h1>
+      <p class="hero-copy">以 abaka.ai 及 Appen、Scale、LangSmith、Braintrust、Galileo、LMArena、WebArena、OSWorld、tau-bench 等为参照，倒推 2028 年中 Agent 测评平台应具备的产品终态、需求体系、平台架构和测评框架。</p>
+      <div class="hero-meta">
+        <span class="pill">调研日期：2026-06-11</span>
+        <span class="pill">时间视角：2026-06 至 2028-06</span>
+        <span class="pill">交付物：汇报型可视化 HTML</span>
+        <span class="pill">重点：终态优先，不以 MVP 为边界</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="报告目录">
+    <div class="toc-inner">
+      <a href="../index.html">返回 Demo</a>
+      <a href="#summary">结论</a>
+      <a href="#market">竞品格局</a>
+      <a href="#future">两年终态</a>
+      <a href="#requirements">详细需求</a>
+      <a href="#platform">平台方案</a>
+      <a href="#framework">测评框架</a>
+      <a href="#roadmap">路线图</a>
+      <a href="#sources">来源</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <section id="summary" class="band">
+      <div class="verdict">
+        <div class="verdict-main">
+          <span class="tag">核心判断</span>
+          <h2>不要做“排行榜网站”，要做 Agent 可信执行能力的操作系统。</h2>
+          <p>未来两年，Agent 测评的主战场会从静态 benchmark 迁移到“任务 + 环境 + 轨迹 + 人类专家 + 生产流量 + 训练数据闭环”。单次打分只能证明某个版本在某套题上表现不错，企业真正需要的是持续回答四个问题：哪个 Agent 能完成我的业务、为什么失败、如何修复、需要补什么数据。</p>
+          <div class="callout">
+            <strong>建议定位</strong>
+            Agent Eval OS = 独立可信评测层 + 真实任务环境层 + 轨迹诊断层 + 专家数据生产层 + Agent/数据采购决策层。
+          </div>
+        </div>
+        <div class="grid">
+          <div class="card metric">
+            <strong>5</strong>
+            <span>平台必须同时覆盖的闭环：准入、运行、评分、诊断、改进。</span>
+          </div>
+          <div class="card metric">
+            <strong>3</strong>
+            <span>市场正在合流的能力：数据生产、工程化 eval、真实环境 benchmark。</span>
+          </div>
+          <div class="card metric">
+            <strong>2028</strong>
+            <span>终态不再是“谁分高”，而是“谁在某个行业任务里可托付”。</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="section-head">
+        <div>
+          <h2>高层 Takeaways</h2>
+          <p class="lead">从公开资料看，Abaka 和 Appen 代表“环境与数据生产商”正在前移到 Agent 训练和评测；LangSmith、Braintrust、Galileo 代表“开发者 eval/observability”正在后移到生产监控；Scale 和 LMArena 代表“可信排名”正在解决私有题库、防污染和人类偏好问题。</p>
+        </div>
+      </div>
+      <div class="grid cols-4">
+        <div class="card">
+          <span class="tag">1. 环境是新数据</span>
+          <h3>任务不再只是 prompt</h3>
+          <p>Agent 能力需要在状态可变化的系统中验证。Abaka 的 RL Environment 页面已经把 API、数据库、数据种子、GUI、MCP-compatible interface 写进产品交付。</p>
+        </div>
+        <div class="card">
+          <span class="tag blue">2. 轨迹是核心资产</span>
+          <h3>失败发生在过程里</h3>
+          <p>企业不会只买“最终答案对错”，而会买 action sequence、tool result、state delta、failure taxonomy 和 golden trajectory。</p>
+        </div>
+        <div class="card">
+          <span class="tag amber">3. 信任来自治理</span>
+          <h3>排行榜必须可审计</h3>
+          <p>Scale SEAL 的私有题库、专家生成、透明方法和防过拟合机制，说明“可信评测”本身会成为可销售的产品能力。</p>
+        </div>
+        <div class="card">
+          <span class="tag violet">4. 最终变成采购入口</span>
+          <h3>评测报告要导向行动</h3>
+          <p>报告终点不是“模型得分”，而是 Agent 选型、数据包采购、prompt/tool 改造、风险 gate 和下一轮回归。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="market" class="band">
+      <div class="section-head">
+        <div>
+          <h2>竞品与相邻公司格局</h2>
+          <p class="lead">当前市场不是一个单点品类，而是三类能力正在合并：数据与环境供给、持续评测工程平台、公开/私有 benchmark 与 Arena。未来平台要把三者合到同一工作流。</p>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>类别</th>
+              <th>代表对象</th>
+              <th>公开可验证能力</th>
+              <th>对未来平台的启发</th>
+              <th>主要短板或机会</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="tag">数据 + 环境</span></td>
+              <td>Abaka AI</td>
+              <td>官网展示 Datasets、Abaka Forge Platform、RL Environment、Model Evaluation；RL Environment 强调生产级环境、真实企业仿真、状态化模拟、dense reward、deterministic reset、全栈仿真、MCP-compatible interfaces、六级复杂度任务、judgment-based 与 deterministic 两类评测。</td>
+              <td>Agent 测评平台必须把“环境构建”变成一等产品对象，而不是在后台临时写脚本。</td>
+              <td>公开资料更像服务/平台能力展示，独立第三方排名、连续生产监控、Agent 解决方案市场化仍有想象空间。</td>
+            </tr>
+            <tr>
+              <td><span class="tag">数据 + 评测</span></td>
+              <td>Appen</td>
+              <td>Agentic AI 页面明确包含 Task & Verifier Design、Trajectory Analysis & Failure Mode Taxonomy、Golden Trajectory Creation、Full RL Environment Design、Enterprise RAG Evaluation、SWE-driven workflows。</td>
+              <td>评测产生的失败证据可以直接转化为训练数据 SKU，这是数据平台切入 Agent 时代的主商业闭环。</td>
+              <td>如果只做服务交付，难形成高频 SaaS 使用和跨客户可复用的评测资产网络。</td>
+            </tr>
+            <tr>
+              <td><span class="tag amber">可信排行</span></td>
+              <td>Scale SEAL / Scale Evaluation</td>
+              <td>SEAL Leaderboards 强调私有数据集、专家评测、防 overfitting；Scale Evaluation 页面强调 proprietary evaluation sets、expert human raters、reporting consistency、targeted evaluations。</td>
+              <td>平台可信度来自隐藏集、专家治理、方法公开、版本隔离和置信区间，而不是 UI 上的总分。</td>
+              <td>公开排行更适合模型比较；企业 Agent 还需要客户私有工具、权限、业务政策和生产流量闭环。</td>
+            </tr>
+            <tr>
+              <td><span class="tag blue">持续评测</span></td>
+              <td>LangSmith</td>
+              <td>官方页面定位为 LLM & AI Agent evaluation platform，覆盖 offline/online evals、human feedback、prompt optimization、trajectory/tool call/reasoning 捕获、CI/CD 集成、LLM-as-judge 校准。</td>
+              <td>未来平台必须支持开发期、上线前、生产期和回归期的连续评测，而不是一次性项目评估。</td>
+              <td>更偏工程团队自助，缺少行业专家任务供给、评测环境资产市场和训练数据交付闭环。</td>
+            </tr>
+            <tr>
+              <td><span class="tag blue">持续评测</span></td>
+              <td>Braintrust / Galileo</td>
+              <td>Braintrust 官方描述强调 tracing production、running evals、catching regressions；Galileo 官方描述强调 evaluate、monitor、protect GenAI applications and agents at enterprise scale。</td>
+              <td>“可观测性 + eval”会成为 Agent 平台标配。Trace lake 和 regression gate 是基础设施，不是附加模块。</td>
+              <td>若没有私有任务环境和专家标注网络，难覆盖高价值真实业务难例。</td>
+            </tr>
+            <tr>
+              <td><span class="tag violet">偏好 Arena</span></td>
+              <td>LMArena / Chatbot Arena</td>
+              <td>基于匿名随机对战和用户投票形成 Elo/leaderboard，已扩展到文本、图像、视觉等。</td>
+              <td>开放式任务需要人类偏好信号，但 Agent 执行类任务不能只靠偏好投票，必须结合状态 verifier。</td>
+              <td>偏好高不等于业务成功。企业场景需要权限、安全、成本、合规和可追溯证据。</td>
+            </tr>
+            <tr>
+              <td><span class="tag green">真实环境 benchmark</span></td>
+              <td>WebArena / OSWorld / tau-bench / SWE-bench</td>
+              <td>WebArena 强调 realistic web environment；OSWorld 强调 real computer environment、execution-based evaluation；tau-bench 强调 tool-agent-user interaction、API tools 和 policy guidelines；SWE-bench 代表真实代码修复任务。</td>
+              <td>平台要支持 Web、桌面、API、多轮用户、代码仓库、RAG、企业系统等多种环境族。</td>
+              <td>学术 benchmark 通常不直接解决企业私有任务、数据授权、专家运营和商业转化。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="section-head">
+        <div>
+          <h2>竞争坐标</h2>
+          <p class="lead">横轴是“评测环境是否真实可执行”，纵轴是“能否把评测转化为可改进数据和生产治理”。终态机会在右上角：真实环境、连续评测、专家治理、数据改进、Agent 采购五者合一。</p>
+        </div>
+      </div>
+      <div class="matrix" role="table" aria-label="竞争坐标矩阵">
+        <div class="head"></div>
+        <div class="head">静态问答/偏好</div>
+        <div class="head">工具调用与轨迹</div>
+        <div class="head">真实系统环境</div>
+        <div class="head">生产连续闭环</div>
+
+        <div class="axis">公开 benchmark</div>
+        <div>LMArena、HLE、部分通用榜单。优势是认知强，弱点是业务解释弱。</div>
+        <div>AgentBench、GAIA 等覆盖工具与多步骤，但环境深度有限。</div>
+        <div>WebArena、OSWorld、SWE-bench、tau-bench。强在可执行与可验证。</div>
+        <div>学术项目通常到此为止，缺少客户生产接入。</div>
+
+        <div class="axis">开发者平台</div>
+        <div>Prompt 对比、LLM-as-judge、human feedback。</div>
+        <div>Trace、tool call、conversation eval、CI/CD。</div>
+        <div>可接入自有环境，但通常不提供高质量行业任务资产。</div>
+        <div>LangSmith、Braintrust、Galileo 的优势区。</div>
+
+        <div class="axis">数据服务商</div>
+        <div>RLHF、SFT、偏好数据、红队数据。</div>
+        <div>Trajectory annotation、failure taxonomy、golden trajectory。</div>
+        <div>Abaka、Appen 正在布局 RL environment 和 task/verifier。</div>
+        <div>若产品化不足，容易停留在项目制交付。</div>
+
+        <div class="axis">目标终态</div>
+        <div>保留偏好对战作为开放质量信号。</div>
+        <div>把轨迹证据作为诊断和训练数据核心。</div>
+        <div>建设行业环境库、任务市场、隐藏集、verifier studio。</div>
+        <div>连接生产流量、回归 gate、Agent 推荐和数据采购。</div>
+      </div>
+    </section>
+
+    <section id="future" class="band dark">
+      <div class="section-head">
+        <div>
+          <h2>2028 年中产品终态</h2>
+          <p class="lead">终态平台不是一个“评测页面”，而是企业 Agent 生命周期里的可信控制面。它知道业务目标、环境状态、工具权限、执行轨迹、失败根因、数据缺口和供应商选择。</p>
+        </div>
+      </div>
+      <div class="grid cols-3">
+        <div class="card">
+          <span class="tag">North Star</span>
+          <h3>每个企业任务都有可复现的 Agent 试验场</h3>
+          <p>用户可以把一个业务流程转成任务包、环境种子、工具权限、verifier、golden trajectory 和风险政策，并对任意 Agent 版本持续回归。</p>
+        </div>
+        <div class="card">
+          <span class="tag amber">Trust Layer</span>
+          <h3>每个排行榜都有证据链和置信边界</h3>
+          <p>榜单必须展示隐藏集比例、样本量、置信区间、任务族覆盖、人工一致性、泄露风险和版本声明。</p>
+        </div>
+        <div class="card">
+          <span class="tag green">Revenue Layer</span>
+          <h3>每份报告都能转化为改进动作</h3>
+          <p>报告自动生成四类行动：换哪个 Agent、补什么数据、改哪个工具/权限、在哪个 production gate 阻断。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="section-head">
+        <div>
+          <h2>未来两年用户场景</h2>
+          <p class="lead">面向终态设计时，不应只考虑开发者跑 benchmark。真正高价值用户来自企业 AI 负责人、Agent 开发团队、领域专家、数据交付团队和模型/Agent 供应商。</p>
+        </div>
+      </div>
+      <div class="grid cols-3">
+        <div class="card">
+          <span class="tag">企业 AI 负责人</span>
+          <h3>采购与上线 gate</h3>
+          <ul class="compact">
+            <li>比较 3-8 个 Agent 在私有业务场景中的真实表现。</li>
+            <li>获得可追溯风险报告和上线阈值。</li>
+            <li>确认是否需要购买数据包或专家评测服务。</li>
+          </ul>
+        </div>
+        <div class="card">
+          <span class="tag blue">Agent 开发团队</span>
+          <h3>调试与回归</h3>
+          <ul class="compact">
+            <li>接入 API、容器、MCP server、浏览器或桌面 Agent。</li>
+            <li>查看失败轨迹、工具参数、状态差异和 verifier 结果。</li>
+            <li>在 CI/CD 中设置 regression gate。</li>
+          </ul>
+        </div>
+        <div class="card">
+          <span class="tag amber">领域专家</span>
+          <h3>难例与金标生产</h3>
+          <ul class="compact">
+            <li>提交真实难例、政策规则、golden trajectory 和 rubric。</li>
+            <li>参与冲突仲裁和 LLM judge 校准。</li>
+            <li>按任务价值、复核质量和隐藏集贡献获得激励。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="requirements" class="band">
+      <div class="section-head">
+        <div>
+          <h2>详细需求分析</h2>
+          <p class="lead">需求应围绕“可托付执行”而不是“模型分数”。以下按平台模块列出终态需求，适合后续拆 PRD 和任务。</p>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>模块</th>
+              <th>终态需求</th>
+              <th>关键对象</th>
+              <th>成功标准</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Agent Registry</td>
+              <td>支持 API endpoint、container image、hosted agent、browser agent、desktop agent、MCP server、私有 VPC 接入；管理版本、能力声明、工具权限、预算、风险等级。</td>
+              <td>Agent、Version、Tool Manifest、Credential、Permission Policy</td>
+              <td>任一 Agent 接入后可通过健康检查、权限检查、工具 schema 检查和 dry run。</td>
+            </tr>
+            <tr>
+              <td>Task & Environment Studio</td>
+              <td>把业务流程转成任务 DSL，包含 instruction、environment seed、database state、GUI state、allowed tools、policy、verifier、rubric、gold trajectory、hidden level。</td>
+              <td>Task、Environment、Verifier、Rubric、Policy、Seed、Gold Trace</td>
+              <td>同一任务可 deterministic reset，跨 Agent 复现，且能区分任务失败和环境失败。</td>
+            </tr>
+            <tr>
+              <td>Arena Orchestrator</td>
+              <td>支持公开集、隐藏集、客户私有集、生产抽样集、红队集；支持赛季制、批量回归、A/B、canary、nightly run 和 CI/CD gate。</td>
+              <td>Arena Run、Season、Task Pack、Sample Strategy、Run Budget</td>
+              <td>对同一 Agent 版本输出可复现结果，支持置信区间和任务族分榜。</td>
+            </tr>
+            <tr>
+              <td>Trace Lake</td>
+              <td>记录每一步 observation、thought 摘要、action、tool call、tool result、state delta、screenshot、video、token、latency、cost、policy event。</td>
+              <td>Trace、Step、State Delta、Evidence、Cost Event</td>
+              <td>报告中每个诊断结论都能回链到任务、轨迹、工具结果或专家标签。</td>
+            </tr>
+            <tr>
+              <td>Scoring Engine</td>
+              <td>组合程序化 verifier、LLM-as-judge、人类 rubric、pairwise preference、安全检查、成本效率、稳定性和生产指标；支持 scenario-specific 权重。</td>
+              <td>Score、Metric、Judge、Reviewer、Calibration Set</td>
+              <td>能解释总分来源，并展示评分一致性、judge drift、人工仲裁结果。</td>
+            </tr>
+            <tr>
+              <td>Failure Intelligence</td>
+              <td>建立 Agent failure taxonomy：理解错误、计划错误、工具选择、参数错误、状态追踪、政策违规、恢复失败、幻觉、越权、成本失控。</td>
+              <td>Failure、Root Cause、Severity、Business Impact、Suggested Fix</td>
+              <td>失败聚类能直接生成改进 backlog 和数据采购短名单。</td>
+            </tr>
+            <tr>
+              <td>Expert Operations</td>
+              <td>专家提交难例、创建 verifier、标注轨迹、校准 judge、复核争议；平台管理专家等级、质量抽检、一致性、返工和奖金。</td>
+              <td>Expert、Submission、Review Queue、Consensus、Bounty</td>
+              <td>隐藏集和高价值任务持续增长，专家一致性和泄露风险可监控。</td>
+            </tr>
+            <tr>
+              <td>Data Product Marketplace</td>
+              <td>将失败类型映射到任务包、verifier 包、golden trajectory、preference data、安全红队、GUI grounding、policy dataset、RAG eval dataset。</td>
+              <td>Dataset SKU、Quote、Sample Preview、Delivery Spec</td>
+              <td>报告能解释“为什么买这个数据包”，并展示样例、预估影响和交付范围。</td>
+            </tr>
+            <tr>
+              <td>Agent Solution Marketplace</td>
+              <td>按行业、任务、预算、安全等级、延迟、部署方式推荐 Agent 或 Agent 方案商；支持客户私有榜与公开榜隔离。</td>
+              <td>Solution、Vendor、Scenario Rank、Fit Score、Procurement Note</td>
+              <td>用户从业务问题进入，能得到候选 Agent、风险边界和试点计划。</td>
+            </tr>
+            <tr>
+              <td>Governance & Trust</td>
+              <td>隐藏集隔离、任务泄露检测、模型版本声明、供应商 attest、审计日志、数据授权、PII 脱敏、沙盒安全、反作弊和法律审核。</td>
+              <td>Audit Log、Attestation、Data License、Leak Signal、Access Policy</td>
+              <td>排名、报告和数据交付经得起客户安全、法务和采购审查。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="section-head">
+        <div>
+          <h2>端到端工作流</h2>
+          <p class="lead">终态平台的体验应该是一条飞轮，而不是多个分散功能页。每次评测都产生更好的任务、数据和治理规则。</p>
+        </div>
+      </div>
+      <div class="flywheel">
+        <div class="fly-step">
+          <h3>业务建模</h3>
+          <p>导入业务流程、政策、工具、真实约束和成功定义。</p>
+        </div>
+        <div class="fly-step">
+          <h3>环境生成</h3>
+          <p>创建 API、数据库、GUI、RAG、文件、用户模拟和 deterministic reset。</p>
+        </div>
+        <div class="fly-step">
+          <h3>Agent 运行</h3>
+          <p>并行运行多版本 Agent，记录完整轨迹和成本。</p>
+        </div>
+        <div class="fly-step">
+          <h3>混合评分</h3>
+          <p>组合 verifier、人类专家、LLM judge、偏好和风险检查。</p>
+        </div>
+        <div class="fly-step">
+          <h3>诊断修复</h3>
+          <p>聚类失败，生成工具、prompt、权限和训练数据建议。</p>
+        </div>
+        <div class="fly-step">
+          <h3>持续回归</h3>
+          <p>将高价值失败沉淀为隐藏集和生产 gate，进入下一轮。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="platform" class="band">
+      <div class="section-head">
+        <div>
+          <h2>平台方案蓝图</h2>
+          <p class="lead">建议将平台分为五层：接入层、任务环境层、执行与证据层、评分诊断层、商业决策层。每层都应产品化，而不是项目制脚本。</p>
+        </div>
+      </div>
+      <div class="architecture">
+        <div class="lane">
+          <h3>1. 接入层</h3>
+          <div class="block">Agent Registry</div>
+          <div class="block">API / Container / VPC</div>
+          <div class="block">MCP Gateway</div>
+          <div class="block">Secrets & Permissions</div>
+        </div>
+        <div class="lane">
+          <h3>2. 任务环境层</h3>
+          <div class="block">Task DSL</div>
+          <div class="block">Environment Builder</div>
+          <div class="block">Verifier Studio</div>
+          <div class="block">Hidden Set Vault</div>
+        </div>
+        <div class="lane">
+          <h3>3. 执行证据层</h3>
+          <div class="block">Sandbox Runner</div>
+          <div class="block">Browser / Desktop / API</div>
+          <div class="block">Trace Lake</div>
+          <div class="block">Evidence Graph</div>
+        </div>
+        <div class="lane">
+          <h3>4. 评分诊断层</h3>
+          <div class="block">Eval Engine</div>
+          <div class="block">Human Review Queue</div>
+          <div class="block">Failure Taxonomy</div>
+          <div class="block">Regression Gate</div>
+        </div>
+        <div class="lane">
+          <h3>5. 决策转化层</h3>
+          <div class="block">Executive Report</div>
+          <div class="block">Agent Recommendation</div>
+          <div class="block">Data SKU Mapping</div>
+          <div class="block">CRM / Commerce Bridge</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="section-head">
+        <div>
+          <h2>核心数据模型</h2>
+          <p class="lead">数据模型要服务可复现、可审计、可改进。最重要的不是 Task 或 Score，而是 Trace 与 Evidence 的完整链路。</p>
+        </div>
+      </div>
+      <div class="grid cols-3">
+        <div class="card">
+          <span class="tag">Agent</span>
+          <h3>参赛与上线主体</h3>
+          <p>字段：owner、version、deploy mode、tool manifest、permission policy、model/provider、runtime、budget、risk profile、attestation。</p>
+        </div>
+        <div class="card">
+          <span class="tag blue">Task</span>
+          <h3>可执行业务难例</h3>
+          <p>字段：scenario、instruction、environment seed、policy、allowed tools、success criteria、verifier、rubric、gold trace、hidden level。</p>
+        </div>
+        <div class="card">
+          <span class="tag amber">Environment</span>
+          <h3>可复现系统状态</h3>
+          <p>字段：API schema、database seed、GUI state、mock services、RAG corpus、user simulator、reset script、data license。</p>
+        </div>
+        <div class="card">
+          <span class="tag indigo">Trace</span>
+          <h3>诊断与训练核心资产</h3>
+          <p>字段：observation、action、tool call、tool result、state delta、screenshot、video、latency、token、cost、policy event。</p>
+        </div>
+        <div class="card">
+          <span class="tag red">Failure</span>
+          <h3>可行动问题单元</h3>
+          <p>字段：taxonomy、severity、root cause、evidence link、business impact、fix path、dataset recommendation、owner。</p>
+        </div>
+        <div class="card">
+          <span class="tag green">Dataset SKU</span>
+          <h3>商业转化单元</h3>
+          <p>字段：data type、scenario coverage、sample count、expert level、delivery format、license、expected lift、price band。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="framework" class="band">
+      <div class="section-head">
+        <div>
+          <h2>Agent 测评框架</h2>
+          <p class="lead">建议采用“5 层能力成熟度 + 7 类评分信号 + 10 类失败分类”的框架。这样可以同时服务排行榜、企业选型、工程回归和训练数据采购。</p>
+        </div>
+      </div>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>能力成熟度模型</h3>
+          <div class="bar-list">
+            <div class="bar-row"><span>L0 接入可用</span><div class="bar-track"><div class="bar-fill" style="width: 18%"></div></div><strong>准入</strong></div>
+            <div class="bar-row"><span>L1 任务完成</span><div class="bar-track"><div class="bar-fill blue" style="width: 36%"></div></div><strong>结果</strong></div>
+            <div class="bar-row"><span>L2 过程可靠</span><div class="bar-track"><div class="bar-fill indigo" style="width: 54%"></div></div><strong>轨迹</strong></div>
+            <div class="bar-row"><span>L3 判断合规</span><div class="bar-track"><div class="bar-fill amber" style="width: 72%"></div></div><strong>政策</strong></div>
+            <div class="bar-row"><span>L4 生产可托付</span><div class="bar-track"><div class="bar-fill green" style="width: 90%"></div></div><strong>上线</strong></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>推荐总分公式</h3>
+          <p class="note">权重应按行业和任务族配置，以下是默认企业任务模板。</p>
+          <div class="bar-list">
+            <div class="bar-row"><span>任务成功率</span><div class="bar-track"><div class="bar-fill" style="width: 30%"></div></div><strong>30%</strong></div>
+            <div class="bar-row"><span>过程与工具质量</span><div class="bar-track"><div class="bar-fill blue" style="width: 15%"></div></div><strong>15%</strong></div>
+            <div class="bar-row"><span>判断与政策遵循</span><div class="bar-track"><div class="bar-fill amber" style="width: 15%"></div></div><strong>15%</strong></div>
+            <div class="bar-row"><span>鲁棒性与安全</span><div class="bar-track"><div class="bar-fill red" style="width: 15%"></div></div><strong>15%</strong></div>
+            <div class="bar-row"><span>成本与延迟</span><div class="bar-track"><div class="bar-fill green" style="width: 10%"></div></div><strong>10%</strong></div>
+            <div class="bar-row"><span>人类偏好/体验</span><div class="bar-track"><div class="bar-fill violet" style="width: 10%"></div></div><strong>10%</strong></div>
+            <div class="bar-row"><span>学习速度</span><div class="bar-track"><div class="bar-fill indigo" style="width: 5%"></div></div><strong>5%</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="section-head">
+        <div>
+          <h2>评分信号与 Verifier 组合</h2>
+          <p class="lead">没有一种 verifier 能覆盖所有 Agent 任务。可验证系统执行、主观判断、多轮交互、合规边界和真实用户体验必须混合。</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>信号</th>
+              <th>适用任务</th>
+              <th>实现方式</th>
+              <th>风险控制</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>程序化 verifier</td>
+              <td>订单状态、数据库修改、代码测试、文件生成、RAG 引用命中。</td>
+              <td>SQL/state diff、unit test、API assertion、snapshot comparison。</td>
+              <td>为每个 verifier 建反例集，防止“过 verifier 但业务错”。</td>
+            </tr>
+            <tr>
+              <td>轨迹评分</td>
+              <td>长程任务、工具链、GUI 操作、多系统切换。</td>
+              <td>工具顺序、参数正确性、状态追踪、恢复动作、重复调用率。</td>
+              <td>保留原始轨迹证据，区分环境异常与 Agent 错误。</td>
+            </tr>
+            <tr>
+              <td>人类 rubric</td>
+              <td>复杂判断、客服政策、专业咨询、创意质量。</td>
+              <td>专家标注、双人复核、冲突仲裁、一致性监控。</td>
+              <td>校准样本、盲评、专家等级、低一致性任务重写。</td>
+            </tr>
+            <tr>
+              <td>LLM-as-judge</td>
+              <td>可扩展初筛、解释质量、引用一致性、合规初审。</td>
+              <td>标准化 judge prompt、reference answer、chain-free rationale、judge ensemble。</td>
+              <td>用 human disagreement 队列校准，监控 judge drift。</td>
+            </tr>
+            <tr>
+              <td>Pairwise preference</td>
+              <td>体验、表达、开放式任务、非确定性输出。</td>
+              <td>匿名对战、Bradley-Terry/Elo、偏好理由采集。</td>
+              <td>不能替代任务成功率；需要按用户群、行业和语言分层。</td>
+            </tr>
+            <tr>
+              <td>生产在线 eval</td>
+              <td>上线后的质量漂移、真实用户失败、成本异常。</td>
+              <td>production trace sampling、online judge、事件告警、回归数据集沉淀。</td>
+              <td>隐私脱敏、客户隔离、采样授权、低延迟异步采集。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="section-head">
+        <div>
+          <h2>失败分类 Taxonomy</h2>
+          <p class="lead">失败分类要可训练、可修复、可售卖。每个 failure type 都应映射到修复动作和数据产品。</p>
+        </div>
+      </div>
+      <div class="grid cols-4">
+        <div class="card"><span class="tag red">F1</span><h3>意图理解错误</h3><p>误读用户目标、缺少澄清、忽略约束。</p></div>
+        <div class="card"><span class="tag red">F2</span><h3>计划错误</h3><p>步骤顺序错误、过早结束、长程目标丢失。</p></div>
+        <div class="card"><span class="tag red">F3</span><h3>工具选择错误</h3><p>不用工具、错用工具、工具切换失败。</p></div>
+        <div class="card"><span class="tag red">F4</span><h3>参数与状态错误</h3><p>字段填错、状态未更新、数据库结果误读。</p></div>
+        <div class="card"><span class="tag amber">F5</span><h3>政策合规错误</h3><p>违反退款、权限、风控、专业建议边界。</p></div>
+        <div class="card"><span class="tag amber">F6</span><h3>安全与越权</h3><p>PII 泄露、高风险动作、提示注入、隐藏集窃取。</p></div>
+        <div class="card"><span class="tag blue">F7</span><h3>多轮交互失败</h3><p>用户模拟中失去上下文、不能协商或确认。</p></div>
+        <div class="card"><span class="tag blue">F8</span><h3>恢复能力不足</h3><p>工具报错、环境异常、信息缺失时无法自救。</p></div>
+        <div class="card"><span class="tag violet">F9</span><h3>幻觉与证据缺失</h3><p>编造事实、引用不匹配、无法回链证据。</p></div>
+        <div class="card"><span class="tag green">F10</span><h3>成本效率失控</h3><p>循环调用、token 过高、延迟过长、重试过多。</p></div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="section-head">
+        <div>
+          <h2>数据产品与报告转化</h2>
+          <p class="lead">这是相对 Abaka/LangSmith 类产品可做差异化的地方：把测评结果变成数据采购和 Agent 采购的短名单。</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>失败信号</th>
+              <th>推荐数据产品</th>
+              <th>交付物</th>
+              <th>报告中应如何表达</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>计划/工具调用失败集中</td>
+              <td>Golden Trajectory Pack</td>
+              <td>专家动作序列、工具参数、状态差异、可训练轨迹。</td>
+              <td>展示失败步骤热区，并说明补轨迹数据预计覆盖哪些任务族。</td>
+            </tr>
+            <tr>
+              <td>Verifier 缺失或不稳定</td>
+              <td>Task & Verifier Design Pack</td>
+              <td>任务规格、环境脚本、自动 verifier、rubric、反例集。</td>
+              <td>说明当前无法规模化回归的原因和 verifier 建设优先级。</td>
+            </tr>
+            <tr>
+              <td>政策/安全违规</td>
+              <td>Policy & Red Team Dataset</td>
+              <td>拒绝样本、确认样本、越权攻击、合规边界案例。</td>
+              <td>按风险等级映射上线 gate，给出必须阻断的任务类别。</td>
+            </tr>
+            <tr>
+              <td>主观体验差</td>
+              <td>Pairwise Preference Data</td>
+              <td>专家偏好对战、偏好理由、用户群分层。</td>
+              <td>不要只说“体验一般”，要给出偏好维度和目标人群差异。</td>
+            </tr>
+            <tr>
+              <td>GUI/浏览器定位不稳</td>
+              <td>GUI Grounding Dataset</td>
+              <td>截图、元素定位、坐标动作、目标状态、异常页面。</td>
+              <td>展示操作失败截图和 DOM/视觉定位差异。</td>
+            </tr>
+            <tr>
+              <td>RAG 幻觉或引用错误</td>
+              <td>Enterprise RAG Eval Pack</td>
+              <td>query、gold docs、citation、faithfulness、hallucination labels。</td>
+              <td>拆开 retrieval 和 generation，避免混成一个“答错”。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="roadmap" class="band">
+      <div class="section-head">
+        <div>
+          <h2>未来两年路线图</h2>
+          <p class="lead">虽然本报告按终态思考，但仍建议用“四阶段积木”构建：先建立可信评测骨架，再扩真实环境和专家网络，最后进入生产连续治理和市场化。</p>
+        </div>
+      </div>
+      <div class="timeline">
+        <div class="phase">
+          <div class="date">2026 H2</div>
+          <h3>可信评测骨架</h3>
+          <ul class="compact">
+            <li>Agent Registry + Task DSL + basic runner。</li>
+            <li>三类环境：API、Web、RAG。</li>
+            <li>程序化 verifier + 人类 rubric。</li>
+            <li>报告模板和失败 taxonomy v1。</li>
+          </ul>
+        </div>
+        <div class="phase">
+          <div class="date">2027 H1</div>
+          <h3>真实环境与隐藏集</h3>
+          <ul class="compact">
+            <li>Browser/desktop sandbox 和 MCP gateway。</li>
+            <li>隐藏集 vault、任务泄露检测、置信区间。</li>
+            <li>专家任务市场和金标轨迹生产。</li>
+            <li>数据 SKU mapping v1。</li>
+          </ul>
+        </div>
+        <div class="phase">
+          <div class="date">2027 H2</div>
+          <h3>连续评测与生产回流</h3>
+          <ul class="compact">
+            <li>CI/CD、nightly、canary、online eval。</li>
+            <li>Trace lake + evidence graph。</li>
+            <li>LLM judge 校准与 disagreement queue。</li>
+            <li>行业私有榜和 Agent 推荐。</li>
+          </ul>
+        </div>
+        <div class="phase">
+          <div class="date">2028 H1</div>
+          <h3>Agent Eval OS</h3>
+          <ul class="compact">
+            <li>行业环境库和 task marketplace。</li>
+            <li>Agent solution marketplace。</li>
+            <li>数据产品报价和交付自动化。</li>
+            <li>企业治理、审计、attestation 和采购工作流。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="section-head">
+        <div>
+          <h2>关键风险与设计原则</h2>
+          <p class="lead">Agent 测评平台的核心风险不是“功能不够”，而是评测不可信、报告不可追溯、环境不安全、数据无法授权、商业转化断裂。</p>
+        </div>
+      </div>
+      <div class="grid cols-3">
+        <div class="card">
+          <span class="tag red">高风险</span>
+          <h3>排行榜污染</h3>
+          <p>隐藏集泄露、公开题过拟合、供应商提交特殊版本都会破坏信任。必须强制版本声明、隐藏集隔离、异常检测和第三方审计。</p>
+        </div>
+        <div class="card">
+          <span class="tag red">高风险</span>
+          <h3>沙盒与数据安全</h3>
+          <p>Agent 代码、浏览器环境、客户数据和专家任务必须隔离。默认使用合成/脱敏数据，真实数据进入任务池需授权。</p>
+        </div>
+        <div class="card">
+          <span class="tag amber">中风险</span>
+          <h3>Verifier 误导</h3>
+          <p>自动 verifier 可能奖励错误捷径。每个 verifier 要有反例集、人工抽检和业务 owner 审批。</p>
+        </div>
+        <div class="card">
+          <span class="tag amber">中风险</span>
+          <h3>专家供给不足</h3>
+          <p>高质量难例和金标轨迹是稀缺资产。需要专家等级、奖励、质量仲裁和任务模板提升供给效率。</p>
+        </div>
+        <div class="card">
+          <span class="tag blue">产品原则</span>
+          <h3>证据先于总结</h3>
+          <p>每条报告结论必须回链 evidence。LLM 可以生成解释，但不能成为唯一证据。</p>
+        </div>
+        <div class="card">
+          <span class="tag green">商业原则</span>
+          <h3>诊断必须可购买</h3>
+          <p>所有失败类型都要映射到一项改进动作：数据、工具、权限、prompt、Agent 供应商或上线 gate。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="sources" class="band">
+      <div class="section-head">
+        <div>
+          <h2>来源、日期与不确定性</h2>
+          <p class="lead">以下信息在 2026-06-11 抓取或检索。公司产品页面可能快速变化，报告中对 2028 终态的描述属于基于公开证据的产品推断，不代表任何公司的真实路线图。</p>
+        </div>
+      </div>
+      <div class="source-grid">
+        <div class="source">
+          <h3>Abaka AI 官方页面</h3>
+          <p><a href="https://www.abaka.ai/rl-environment">RL Environment</a>、<a href="https://www.abaka.ai/services/model_evaluation">Model Evaluation</a>、<a href="https://www.abaka.ai/datasets">Datasets</a>、<a href="https://www.abaka.ai/platform">Platform</a>。用于确认 Abaka 的数据、评测、RL 环境、MCP-compatible interfaces、六级复杂度任务和两类评测叙事。</p>
+          <p class="note">不确定性：未验证其客户案例、价格、真实交付深度和内部 roadmap。</p>
+        </div>
+        <div class="source">
+          <h3>Appen 官方 Agentic AI</h3>
+          <p><a href="https://www.appen.com/agentic-ai">Agentic AI Training Data & Evaluation</a>，页面 Last Published 为 2026-06-09。用于确认 task/verifier、trajectory analysis、failure taxonomy、golden trajectory、RL environment、RAG evaluation 和 SWE workflow。</p>
+          <p class="note">不确定性：公开页面不能证明各 SKU 的标准化程度和商业价格。</p>
+        </div>
+        <div class="source">
+          <h3>Scale 官方与 Scale Labs</h3>
+          <p><a href="https://labs.scale.com/leaderboard">Scale Labs Leaderboards</a>、<a href="https://scale.com/blog/leaderboard">SEAL Leaderboards blog</a>、<a href="https://scale.com/evaluation/model-developers">Scale Evaluation</a>。用于确认私有评测集、防 overfitting、专家评测、targeted evaluation 和 reporting consistency。</p>
+          <p class="note">不确定性：部分页面受 Cloudflare 限制，报告采用可访问搜索片段和公开页面交叉验证。</p>
+        </div>
+        <div class="source">
+          <h3>LangSmith 官方 Evaluation</h3>
+          <p><a href="https://www.langchain.com/langsmith/evaluation">LangSmith Evaluation</a>，页面 Last Published 为 2026-06-10。用于确认 offline/online eval、human feedback、prompt optimization、trajectory/tool call/reasoning、CI/CD 和 RAG evaluation。</p>
+          <p class="note">不确定性：未验证企业合同能力和私有部署边界。</p>
+        </div>
+        <div class="source">
+          <h3>Braintrust、Galileo、Patronus 官方</h3>
+          <p><a href="https://www.braintrust.dev/">Braintrust</a> 用于确认 tracing production、running evals、catching regressions；<a href="https://www.galileo.ai/">Galileo</a> 页面 Published 2026-06-09，用于确认 enterprise-scale evaluate/monitor/protect；<a href="https://www.patronus.ai/">Patronus</a> 页面 Last Published 2026-06-09，用于确认 simulation research and infrastructure 方向。</p>
+          <p class="note">不确定性：这些页面多为营销描述，具体 Agent 评测深度需产品 demo 验证。</p>
+        </div>
+        <div class="source">
+          <h3>Benchmark 与 Arena</h3>
+          <p><a href="https://webarena.dev/">WebArena</a>、<a href="https://os-world.github.io/">OSWorld</a>、<a href="https://arxiv.org/abs/2406.12045">tau-bench</a>、<a href="https://www.swebench.com/">SWE-bench</a>、<a href="https://lmsys.org/blog/2023-05-03-arena/">Chatbot Arena</a>、<a href="https://huggingface.co/spaces/lmarena-ai/arena-leaderboard">LMArena Leaderboard</a>。用于确认真实环境、可执行评测、用户/工具/政策交互和偏好榜单方法。</p>
+          <p class="note">不确定性：学术 benchmark 与企业私有任务存在场景迁移成本。</p>
+        </div>
+      </div>
+      <div class="print-note" style="margin-top: 12px;">
+        汇报建议：浏览器打开本文件后使用系统打印为 PDF；页面为静态 HTML，不依赖外部脚本。
+      </div>
+    </section>
+  </main>
+</body>
+</html>
