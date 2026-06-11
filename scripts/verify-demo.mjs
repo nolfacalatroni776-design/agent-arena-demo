@@ -108,6 +108,20 @@ for (const concept of terminalConcepts) {
   assert(html.includes(concept), `Missing terminal-state concept: ${concept}`);
 }
 
+assert(html.includes('href="docs/platform-introduction.html"'), "Missing platform introduction link in main demo");
+assert(!html.includes("面向 2028 年中产品终态：展示平台从 Agent 注册、环境构建、Arena 评测、轨迹湖、评分治理到数据和方案转化的可信闭环。"), "Main demo still contains removed customer-facing intro copy");
+
+const tooltipCount = collect(/data-tooltip="([^"]+)"/g).length;
+assert(tooltipCount >= 20, `Expected at least 20 contextual tooltips, found ${tooltipCount}`);
+
+try {
+  const intro = await readFile(join(root, "docs/platform-introduction.html"), "utf8");
+  assert(intro.includes("Agent Eval OS 平台介绍"), "Platform introduction document missing title");
+  assert(intro.includes("返回平台"), "Platform introduction document missing return link");
+} catch {
+  failures.push("Missing docs/platform-introduction.html");
+}
+
 if (failures.length > 0) {
   console.error("Demo verification failed:");
   for (const failure of failures) {
@@ -116,4 +130,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log(`Demo verification passed: ${viewIds.size} views, ${navViews.length} nav entries, ${jumpTargets.length} jumps, ${localLinks.length} local links.`);
+console.log(`Demo verification passed: ${viewIds.size} views, ${navViews.length} nav entries, ${jumpTargets.length} jumps, ${localLinks.length} local links, ${tooltipCount} tooltips.`);

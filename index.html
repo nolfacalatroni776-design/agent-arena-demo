@@ -274,6 +274,10 @@
     .view-header h2 {
       margin: 0;
       font-size: 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
     .view-header p {
@@ -323,6 +327,64 @@
       margin: 0;
       font-size: 15px;
       color: #2f3743;
+    }
+
+    [data-tooltip] {
+      position: relative;
+    }
+
+    [data-tooltip]::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      left: 0;
+      bottom: calc(100% + 10px);
+      width: min(320px, 82vw);
+      padding: 9px 10px;
+      border-radius: 8px;
+      background: #11151c;
+      color: #fff;
+      box-shadow: var(--shadow);
+      font-size: 12px;
+      line-height: 1.45;
+      font-weight: 600;
+      text-transform: none;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.16s ease, transform 0.16s ease;
+      z-index: 30;
+      white-space: normal;
+      display: none;
+    }
+
+    [data-tooltip]:hover::after,
+    [data-tooltip]:focus-visible::after {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .info-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      display: inline-grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--teal);
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1;
+      cursor: help;
+      flex: 0 0 auto;
+    }
+
+    .help-link {
+      color: var(--teal);
+      background: var(--teal-weak);
+      border: 1px solid #bfe4de;
+      text-decoration: none;
     }
 
     .metric {
@@ -402,8 +464,7 @@
       font-size: 14px;
     }
 
-    .module-card span,
-    .module-card p {
+    .module-card span {
       color: var(--muted);
       font-size: 12px;
       margin: 0;
@@ -444,11 +505,6 @@
 
     .pipeline-step strong {
       font-size: 13px;
-    }
-
-    .pipeline-step span {
-      color: var(--muted);
-      font-size: 12px;
     }
 
     .definition-grid {
@@ -1139,6 +1195,7 @@
       <div class="sidebar-footer">
         <strong>HTML 交付文档</strong>
         <div class="doc-links">
+          <a href="docs/platform-introduction.html">平台介绍</a>
           <a href="docs/agent-eval-research-report.html">Agent 测评研究报告</a>
           <a href="docs/requirements-analysis.html">需求分析</a>
           <a href="docs/requirements-design.html">需求设计</a>
@@ -1153,9 +1210,12 @@
       <header class="topbar">
         <div>
           <h1>Agent Eval OS：企业 Agent 测评、证据、治理与数据增长平台</h1>
-          <p>从 Agent 接入、任务环境、Arena 评测、轨迹证据、失败诊断到数据与方案采购的一体化演示。</p>
         </div>
         <div class="top-actions">
+          <a class="btn ghost help-link" href="docs/platform-introduction.html">
+            <svg viewBox="0 0 24 24"><path d="M12 17h.01M9.5 9a2.5 2.5 0 1 1 4.3 1.7c-.8.6-1.8 1.2-1.8 2.3"/></svg>
+            平台介绍
+          </a>
           <select class="select" id="roleSelect" aria-label="角色">
             <option>企业 AI 负责人</option>
             <option>Agent 开发者</option>
@@ -1177,8 +1237,7 @@
         <section class="view active" id="dashboard">
           <div class="view-header">
             <div>
-              <h2>终态运营总览</h2>
-              <p>面向 2028 年中产品终态：展示平台从 Agent 注册、环境构建、Arena 评测、轨迹湖、评分治理到数据和方案转化的可信闭环。</p>
+              <h2>运营总览 <span class="info-dot" tabindex="0" data-tooltip="汇总赛季、任务池、奖金池、数据转化、排行榜和治理状态。平台定位与完整背景见“平台介绍”。">?</span></h2>
             </div>
             <span class="badge teal">当前赛季：企业工作流 S2 · 可信控制面</span>
           </div>
@@ -1212,29 +1271,23 @@
               <span class="badge blue">任务 + 环境 + 轨迹 + 专家 + 治理 + 市场</span>
             </div>
             <div class="pipeline" aria-label="Agent Eval OS 端到端流程">
-              <button class="pipeline-step" data-step="1" data-jump="agents" type="button">
+              <button class="pipeline-step" data-step="1" data-jump="agents" type="button" data-tooltip="接入 API、容器、Hosted Agent、Browser/Desktop Agent、MCP server 与 VPC。">
                 <strong>Agent Registry</strong>
-                <span>接入 API、容器、Hosted Agent、Browser/Desktop Agent、MCP server 与 VPC。</span>
               </button>
-              <button class="pipeline-step" data-step="2" data-jump="studio" type="button">
+              <button class="pipeline-step" data-step="2" data-jump="studio" type="button" data-tooltip="用 DSL 定义任务、状态种子、DB/API/GUI 环境、Verifier 和 Gold Trace。">
                 <strong>Environment Studio</strong>
-                <span>用 DSL 定义任务、状态种子、DB/API/GUI 环境、Verifier 和 Gold Trace。</span>
               </button>
-              <button class="pipeline-step" data-step="3" data-jump="arena" type="button">
+              <button class="pipeline-step" data-step="3" data-jump="arena" type="button" data-tooltip="运行公开集、隐藏集、私有集、生产抽样、红队集和 CI/CD gate。">
                 <strong>Arena Orchestrator</strong>
-                <span>运行公开集、隐藏集、私有集、生产抽样、红队集和 CI/CD gate。</span>
               </button>
-              <button class="pipeline-step" data-step="4" data-jump="trace" type="button">
+              <button class="pipeline-step" data-step="4" data-jump="trace" type="button" data-tooltip="记录观察、动作、工具调用、状态差异、截图、成本和延迟。">
                 <strong>Trace Lake</strong>
-                <span>记录观察、动作、工具调用、状态差异、截图、成本和延迟。</span>
               </button>
-              <button class="pipeline-step" data-step="5" data-jump="scoring" type="button">
+              <button class="pipeline-step" data-step="5" data-jump="scoring" type="button" data-tooltip="融合程序化 verifier、LLM judge、人类 rubric、偏好、安全和稳定性。">
                 <strong>Scoring Engine</strong>
-                <span>融合程序化 verifier、LLM judge、人类 rubric、偏好、安全和稳定性。</span>
               </button>
-              <button class="pipeline-step" data-step="6" data-jump="datasets" type="button">
+              <button class="pipeline-step" data-step="6" data-jump="datasets" type="button" data-tooltip="把失败根因映射为数据 SKU、专家项目和 Agent 采购建议。">
                 <strong>Data & Solution Market</strong>
-                <span>把失败根因映射为数据 SKU、专家项目和 Agent 采购建议。</span>
               </button>
             </div>
           </div>
@@ -1362,30 +1415,25 @@
           <div class="panel">
             <h3>终态能力地图</h3>
             <div class="module-grid">
-              <button class="module-card" data-jump="agents" type="button">
+              <button class="module-card" data-jump="agents" type="button" data-tooltip="版本、工具清单、权限、预算、风险和部署策略。">
                 <span class="badge teal">Registry</span>
                 <strong>Agent 工坊</strong>
-                <p>版本、工具清单、权限、预算、风险和部署策略。</p>
               </button>
-              <button class="module-card" data-jump="studio" type="button">
+              <button class="module-card" data-jump="studio" type="button" data-tooltip="真实状态化业务仿真，而不是静态问答题。">
                 <span class="badge amber">Environment</span>
                 <strong>任务与环境工坊</strong>
-                <p>真实状态化业务仿真，而不是静态问答题。</p>
               </button>
-              <button class="module-card" data-jump="trace" type="button">
+              <button class="module-card" data-jump="trace" type="button" data-tooltip="所有分数都能回溯到动作、状态和专家证据。">
                 <span class="badge indigo">Evidence</span>
                 <strong>轨迹湖</strong>
-                <p>所有分数都能回溯到动作、状态和专家证据。</p>
               </button>
-              <button class="module-card" data-jump="experts" type="button">
+              <button class="module-card" data-jump="experts" type="button" data-tooltip="提交、审核、共识、赏金和专家等级。">
                 <span class="badge green">Human</span>
                 <strong>专家运营</strong>
-                <p>提交、审核、共识、赏金和专家等级。</p>
               </button>
-              <button class="module-card" data-jump="governance" type="button">
+              <button class="module-card" data-jump="governance" type="button" data-tooltip="隐藏集金库、泄漏检测、审计日志和沙盒安全。">
                 <span class="badge red">Trust</span>
                 <strong>治理信任</strong>
-                <p>隐藏集金库、泄漏检测、审计日志和沙盒安全。</p>
               </button>
             </div>
           </div>
@@ -1394,8 +1442,7 @@
         <section class="view" id="agents">
           <div class="view-header">
             <div>
-              <h2>Agent 工坊</h2>
-              <p>客户可以接入自有 Agent，也可以通过平台模板快速构建可参赛 Agent。</p>
+              <h2>Agent 工坊 <span class="info-dot" tabindex="0" data-tooltip="接入自有 Agent，或基于模板构建可参赛 Agent。接入信息包含 endpoint、运行方式、预算、权限和场景。">?</span></h2>
             </div>
             <span class="badge teal">云端沙盒 · 私有环境 · Mock API</span>
           </div>
@@ -1522,8 +1569,7 @@
         <section class="view" id="tasks">
           <div class="view-header">
             <div>
-              <h2>难例任务市场</h2>
-              <p>众包专家提交真实业务难例，平台审核后进入公开集、隐藏集或训练数据候选池。</p>
+              <h2>难例任务市场 <span class="info-dot" tabindex="0" data-tooltip="专家提交业务难例，审核后进入公开集、隐藏集或训练数据候选池。">?</span></h2>
             </div>
             <span class="badge amber">专家奖励：$15 - $280 / 题</span>
           </div>
@@ -1613,15 +1659,15 @@
             <div class="grid cols-3">
               <div class="list-item">
                 <div class="list-head"><h4>公开练习集</h4><span class="badge green">126</span></div>
-                <p>供参赛者调试。暴露任务说明和部分 verifier，适合 onboarding。</p>
+                <span class="info-dot" tabindex="0" data-tooltip="供参赛者调试。暴露任务说明、部分 verifier 和示例轨迹。">?</span>
               </div>
               <div class="list-item">
                 <div class="list-head"><h4>隐藏排名集</h4><span class="badge red">84</span></div>
-                <p>用于正式排名。避免训练集污染，抽样进入人工复核。</p>
+                <span class="info-dot" tabindex="0" data-tooltip="用于正式排名。题面最小披露，抽样进入人工复核。">?</span>
               </div>
               <div class="list-item">
                 <div class="list-head"><h4>数据产品候选池</h4><span class="badge teal">76</span></div>
-                <p>转化为 Appen 训练数据集：任务、金标轨迹、失败分类、偏好对战。</p>
+                <span class="info-dot" tabindex="0" data-tooltip="可转化为任务、金标轨迹、失败分类和偏好对战数据。">?</span>
               </div>
             </div>
           </div>
@@ -1630,8 +1676,7 @@
         <section class="view" id="studio">
           <div class="view-header">
             <div>
-              <h2>任务与环境工坊</h2>
-              <p>把 Abaka 类 RL Environment 能力产品化：任务 DSL、状态种子、DB/API/GUI 仿真、MCP-compatible interface、dense reward、deterministic reset 和隐藏等级。</p>
+              <h2>任务与环境工坊 <span class="info-dot" tabindex="0" data-tooltip="用任务 DSL 定义状态种子、DB/API/GUI 仿真、MCP interface、dense reward、deterministic reset 和隐藏等级。">?</span></h2>
             </div>
             <span class="badge blue">Environment as Product</span>
           </div>
@@ -1730,8 +1775,7 @@
         <section class="view" id="arena">
           <div class="view-header">
             <div>
-              <h2>竞技运行</h2>
-              <p>在隔离沙盒中运行多个 Agent，记录动作轨迹、工具调用、成本、失败模式和排名。</p>
+              <h2>竞技运行 <span class="info-dot" tabindex="0" data-tooltip="在隔离沙盒中运行多个 Agent，记录动作轨迹、工具调用、成本、失败模式和排名。">?</span></h2>
             </div>
             <span class="badge teal">Mock runner 可交互</span>
           </div>
@@ -1818,19 +1862,19 @@
             <div class="grid cols-4">
               <div class="list-item">
                 <div class="list-head"><h4>Public</h4><span class="badge green">可见</span></div>
-                <p>调试与 onboarding，暴露任务说明、部分 verifier 和示例轨迹。</p>
+                <span class="info-dot" tabindex="0" data-tooltip="用于调试与 onboarding，暴露任务说明、部分 verifier 和示例轨迹。">?</span>
               </div>
               <div class="list-item">
                 <div class="list-head"><h4>Hidden</h4><span class="badge red">排名</span></div>
-                <p>防 overfitting，题面最小披露，抽样进入人工复核。</p>
+                <span class="info-dot" tabindex="0" data-tooltip="防 overfitting，题面最小披露，抽样进入人工复核。">?</span>
               </div>
               <div class="list-item">
                 <div class="list-head"><h4>Private</h4><span class="badge indigo">客户</span></div>
-                <p>客户私有数据授权范围内的回归包，不进入公开排行榜。</p>
+                <span class="info-dot" tabindex="0" data-tooltip="客户私有数据授权范围内的回归包，不进入公开排行榜。">?</span>
               </div>
               <div class="list-item">
                 <div class="list-head"><h4>Production Sample</h4><span class="badge blue">在线</span></div>
-                <p>从真实失败流量匿名化抽样，持续进入下一轮任务和数据供给。</p>
+                <span class="info-dot" tabindex="0" data-tooltip="从真实失败流量匿名化抽样，持续进入下一轮任务和数据供给。">?</span>
               </div>
             </div>
           </div>
@@ -1840,19 +1884,19 @@
             <div class="matrix">
               <div class="list-item">
                 <div class="list-head"><h4>多轮澄清不足</h4><span class="badge red">31%</span></div>
-                <p>过早执行工具调用，未确认关键约束。</p>
+                <span class="info-dot" tabindex="0" data-tooltip="过早执行工具调用，未确认关键约束。">?</span>
               </div>
               <div class="list-item">
                 <div class="list-head"><h4>工具状态误读</h4><span class="badge amber">24%</span></div>
-                <p>把 API warning 当作成功结果。</p>
+                <span class="info-dot" tabindex="0" data-tooltip="把 API warning 当作成功结果。">?</span>
               </div>
               <div class="list-item">
                 <div class="list-head"><h4>GUI 定位偏移</h4><span class="badge amber">18%</span></div>
-                <p>复杂页面中的按钮识别不稳定。</p>
+                <span class="info-dot" tabindex="0" data-tooltip="复杂页面中的按钮识别不稳定。">?</span>
               </div>
               <div class="list-item">
                 <div class="list-head"><h4>合规拒绝不稳</h4><span class="badge red">15%</span></div>
-                <p>高风险退款和数据导出动作缺少保守策略。</p>
+                <span class="info-dot" tabindex="0" data-tooltip="高风险退款和数据导出动作缺少保守策略。">?</span>
               </div>
             </div>
           </div>
@@ -1861,8 +1905,7 @@
         <section class="view" id="trace">
           <div class="view-header">
             <div>
-              <h2>轨迹湖与证据图谱</h2>
-              <p>把每次 Agent 执行拆成 observation、action、tool call/result、state delta、截图、token、延迟和成本，让所有分数都能追溯。</p>
+              <h2>轨迹湖与证据图谱 <span class="info-dot" tabindex="0" data-tooltip="按 observation、action、tool call/result、state delta、截图、token、延迟和成本沉淀可追溯证据。">?</span></h2>
             </div>
             <span class="badge indigo">Evidence-first Evaluation</span>
           </div>
@@ -1962,15 +2005,15 @@
             <div class="grid cols-3">
               <div class="list-item">
                 <div class="list-head"><h4>Agent Trace Bundle</h4><span class="badge indigo">JSONL</span></div>
-                <p>按事件时间线导出 observation、action、tool result、judge comment 与成本。</p>
+                <span class="info-dot" tabindex="0" data-tooltip="按事件时间线导出 observation、action、tool result、judge comment 与成本。">?</span>
               </div>
               <div class="list-item">
                 <div class="list-head"><h4>State Replay Bundle</h4><span class="badge blue">Sandbox</span></div>
-                <p>包含 deterministic reset seed、DB snapshot、API fixtures 和 GUI screenshot。</p>
+                <span class="info-dot" tabindex="0" data-tooltip="包含 deterministic reset seed、DB snapshot、API fixtures 和 GUI screenshot。">?</span>
               </div>
               <div class="list-item">
                 <div class="list-head"><h4>Failure Evidence Pack</h4><span class="badge red">Audit</span></div>
-                <p>用于专家复核、客户报告和训练数据采购的失败证据闭环。</p>
+                <span class="info-dot" tabindex="0" data-tooltip="用于专家复核、客户报告和训练数据采购的失败证据闭环。">?</span>
               </div>
             </div>
           </div>
@@ -1979,8 +2022,7 @@
         <section class="view" id="scoring">
           <div class="view-header">
             <div>
-              <h2>测评框架与评分引擎</h2>
-              <p>终态评分不是单一 benchmark 分数，而是程序化 verifier、LLM judge、人类 rubric、pairwise preference、安全、成本、稳定性和可解释性的加权组合。</p>
+              <h2>测评框架与评分引擎 <span class="info-dot" tabindex="0" data-tooltip="综合程序化 verifier、LLM judge、人类 rubric、pairwise preference、安全、成本、稳定性和可解释性。">?</span></h2>
             </div>
             <span class="badge green">Composite Eval Framework</span>
           </div>
@@ -2030,22 +2072,22 @@
             <div class="panel">
               <h3>程序化 Verifier</h3>
               <div class="list">
-                <div class="list-item"><div class="list-head"><h4>no_unauthorized_refund</h4><span class="badge green">pass 96%</span></div><p>检查高风险 refund.request 是否满足政策、权限和人工确认条件。</p></div>
-                <div class="list-item"><div class="list-head"><h4>crm_note_written</h4><span class="badge amber">pass 78%</span></div><p>验证关键状态写入，避免任务表面成功但系统未闭环。</p></div>
+                <div class="list-item"><div class="list-head"><h4>no_unauthorized_refund</h4><span class="badge green">pass 96%</span></div><span class="info-dot" tabindex="0" data-tooltip="检查高风险 refund.request 是否满足政策、权限和人工确认条件。">?</span></div>
+                <div class="list-item"><div class="list-head"><h4>crm_note_written</h4><span class="badge amber">pass 78%</span></div><span class="info-dot" tabindex="0" data-tooltip="验证关键状态写入，避免任务表面成功但系统未闭环。">?</span></div>
               </div>
             </div>
             <div class="panel">
               <h3>LLM Judge + 专家 Rubric</h3>
               <div class="list">
-                <div class="list-item"><div class="list-head"><h4>多轮澄清质量</h4><span class="badge amber">3.6 / 5</span></div><p>判断 Agent 是否在信息不足时先澄清而不是推进不可逆操作。</p></div>
-                <div class="list-item"><div class="list-head"><h4>解释与可审计性</h4><span class="badge green">4.4 / 5</span></div><p>结合专家复核，把自然语言解释和证据链挂接到轨迹。</p></div>
+                <div class="list-item"><div class="list-head"><h4>多轮澄清质量</h4><span class="badge amber">3.6 / 5</span></div><span class="info-dot" tabindex="0" data-tooltip="判断 Agent 是否在信息不足时先澄清而不是推进不可逆操作。">?</span></div>
+                <div class="list-item"><div class="list-head"><h4>解释与可审计性</h4><span class="badge green">4.4 / 5</span></div><span class="info-dot" tabindex="0" data-tooltip="结合专家复核，把自然语言解释和证据链挂接到轨迹。">?</span></div>
               </div>
             </div>
             <div class="panel">
               <h3>发布门禁</h3>
               <div class="list">
-                <div class="list-item"><div class="list-head"><h4>客户生产灰度</h4><span class="badge amber" id="gateStatus">条件通过</span></div><p>成功率达标，但必须先补齐高风险退款红队样本。</p></div>
-                <div class="list-item"><div class="list-head"><h4>CI/CD Regression</h4><span class="badge green">通过</span></div><p>新版本相对上一版本无显著退化，成本下降 8%。</p></div>
+                <div class="list-item"><div class="list-head"><h4>客户生产灰度</h4><span class="badge amber" id="gateStatus">条件通过</span></div><span class="info-dot" tabindex="0" data-tooltip="成功率达标，但必须先补齐高风险退款红队样本。">?</span></div>
+                <div class="list-item"><div class="list-head"><h4>CI/CD Regression</h4><span class="badge green">通过</span></div><span class="info-dot" tabindex="0" data-tooltip="新版本相对上一版本无显著退化，成本下降 8%。">?</span></div>
               </div>
             </div>
           </div>
@@ -2053,14 +2095,14 @@
           <div class="panel">
             <h3>失败分类体系</h3>
             <div class="matrix">
-              <div class="list-item"><div class="list-head"><h4>Intent</h4><span class="badge">目标误解</span></div><p>未理解用户真实目标或约束变化。</p></div>
-              <div class="list-item"><div class="list-head"><h4>Planning</h4><span class="badge">计划缺口</span></div><p>步骤顺序不当，缺少澄清、回滚或确认。</p></div>
-              <div class="list-item"><div class="list-head"><h4>Tool / Parameter</h4><span class="badge amber">工具误用</span></div><p>调用工具、参数、状态读取或异常处理失败。</p></div>
-              <div class="list-item"><div class="list-head"><h4>Safety / Policy</h4><span class="badge red">高风险</span></div><p>越权、泄漏、拒绝不稳或人工确认缺失。</p></div>
-              <div class="list-item"><div class="list-head"><h4>Multi-turn</h4><span class="badge">上下文</span></div><p>长对话中遗忘限制、重复提问或错误承诺。</p></div>
-              <div class="list-item"><div class="list-head"><h4>Recovery</h4><span class="badge amber">恢复失败</span></div><p>遇到 partial_success、rate_limit、GUI 偏移后无法自我修复。</p></div>
-              <div class="list-item"><div class="list-head"><h4>Hallucination</h4><span class="badge red">幻觉</span></div><p>编造政策、订单状态、工具结果或不存在的业务规则。</p></div>
-              <div class="list-item"><div class="list-head"><h4>Cost</h4><span class="badge">效率</span></div><p>循环调用、过度检索、无效重试或 token 成本失控。</p></div>
+              <div class="list-item"><div class="list-head"><h4>Intent</h4><span class="badge">目标误解</span></div><span class="info-dot" tabindex="0" data-tooltip="未理解用户真实目标或约束变化。">?</span></div>
+              <div class="list-item"><div class="list-head"><h4>Planning</h4><span class="badge">计划缺口</span></div><span class="info-dot" tabindex="0" data-tooltip="步骤顺序不当，缺少澄清、回滚或确认。">?</span></div>
+              <div class="list-item"><div class="list-head"><h4>Tool / Parameter</h4><span class="badge amber">工具误用</span></div><span class="info-dot" tabindex="0" data-tooltip="调用工具、参数、状态读取或异常处理失败。">?</span></div>
+              <div class="list-item"><div class="list-head"><h4>Safety / Policy</h4><span class="badge red">高风险</span></div><span class="info-dot" tabindex="0" data-tooltip="越权、泄漏、拒绝不稳或人工确认缺失。">?</span></div>
+              <div class="list-item"><div class="list-head"><h4>Multi-turn</h4><span class="badge">上下文</span></div><span class="info-dot" tabindex="0" data-tooltip="长对话中遗忘限制、重复提问或错误承诺。">?</span></div>
+              <div class="list-item"><div class="list-head"><h4>Recovery</h4><span class="badge amber">恢复失败</span></div><span class="info-dot" tabindex="0" data-tooltip="遇到 partial_success、rate_limit、GUI 偏移后无法自我修复。">?</span></div>
+              <div class="list-item"><div class="list-head"><h4>Hallucination</h4><span class="badge red">幻觉</span></div><span class="info-dot" tabindex="0" data-tooltip="编造政策、订单状态、工具结果或不存在的业务规则。">?</span></div>
+              <div class="list-item"><div class="list-head"><h4>Cost</h4><span class="badge">效率</span></div><span class="info-dot" tabindex="0" data-tooltip="循环调用、过度检索、无效重试或 token 成本失控。">?</span></div>
             </div>
           </div>
         </section>
@@ -2068,8 +2110,7 @@
         <section class="view" id="reports">
           <div class="view-header">
             <div>
-              <h2>问题分析报告</h2>
-              <p>将多任务轨迹转化为根因、解决方案和可采购训练数据集建议。</p>
+              <h2>问题分析报告 <span class="info-dot" tabindex="0" data-tooltip="把轨迹证据汇总为失败根因、解决方案和可采购训练数据集建议。">?</span></h2>
             </div>
             <button class="btn warn" id="shortlistFromReport">
               <svg viewBox="0 0 24 24"><path d="M6 4h12v16l-6-3-6 3V4Z"/></svg>
@@ -2167,8 +2208,7 @@
         <section class="view" id="experts">
           <div class="view-header">
             <div>
-              <h2>专家运营与共识审核</h2>
-              <p>把众包专家、领域审稿人和客户业务 owner 纳入同一条运营流：任务提交、轨迹复核、共识裁决、赏金结算和专家等级。</p>
+              <h2>专家运营与共识审核 <span class="info-dot" tabindex="0" data-tooltip="管理任务提交、轨迹复核、共识裁决、赏金结算和专家等级。">?</span></h2>
             </div>
             <span class="badge green">Human-in-the-loop Ops</span>
           </div>
@@ -2234,15 +2274,15 @@
               <div class="list">
                 <div class="list-item">
                   <div class="list-head"><h4>L1 Reviewer</h4><span class="badge">任务初筛</span></div>
-                  <p>检查题面完整度、可执行性和重复样本。</p>
+                  <span class="info-dot" tabindex="0" data-tooltip="检查题面完整度、可执行性和重复样本。">?</span>
                 </div>
                 <div class="list-item">
                   <div class="list-head"><h4>L2 Domain Expert</h4><span class="badge teal">Rubric</span></div>
-                  <p>定义业务成功标准、失败根因和金标路径。</p>
+                  <span class="info-dot" tabindex="0" data-tooltip="定义业务成功标准、失败根因和金标路径。">?</span>
                 </div>
                 <div class="list-item">
                   <div class="list-head"><h4>L3 Arbiter</h4><span class="badge indigo">仲裁</span></div>
-                  <p>处理低共识样本、客户争议和高风险红队标签。</p>
+                  <span class="info-dot" tabindex="0" data-tooltip="处理低共识样本、客户争议和高风险红队标签。">?</span>
                 </div>
               </div>
             </div>
@@ -2251,12 +2291,12 @@
           <div class="panel">
             <h3>专家到数据产品的转化</h3>
             <div class="pipeline">
-              <div class="pipeline-step" data-step="1"><strong>提交难例</strong><span>专家提供真实业务边界、证据和预期行为。</span></div>
-              <div class="pipeline-step" data-step="2"><strong>可执行化</strong><span>运营将样本转为 Task DSL、环境 seed 和 verifier。</span></div>
-              <div class="pipeline-step" data-step="3"><strong>轨迹复核</strong><span>多专家标注失败类型、根因和金标动作。</span></div>
-              <div class="pipeline-step" data-step="4"><strong>共识仲裁</strong><span>低一致样本进入 L3 仲裁，保留审计记录。</span></div>
-              <div class="pipeline-step" data-step="5"><strong>SKU 打包</strong><span>按任务、轨迹、偏好、红队、GUI 或 RAG Eval 出售。</span></div>
-              <div class="pipeline-step" data-step="6"><strong>回流 Arena</strong><span>进入下一轮隐藏集、客户私有集或训练项目。</span></div>
+              <div class="pipeline-step" data-step="1" data-tooltip="专家提供真实业务边界、证据和预期行为。"><strong>提交难例</strong></div>
+              <div class="pipeline-step" data-step="2" data-tooltip="运营将样本转为 Task DSL、环境 seed 和 verifier。"><strong>可执行化</strong></div>
+              <div class="pipeline-step" data-step="3" data-tooltip="多专家标注失败类型、根因和金标动作。"><strong>轨迹复核</strong></div>
+              <div class="pipeline-step" data-step="4" data-tooltip="低一致样本进入 L3 仲裁，保留审计记录。"><strong>共识仲裁</strong></div>
+              <div class="pipeline-step" data-step="5" data-tooltip="按任务、轨迹、偏好、红队、GUI 或 RAG Eval 出售。"><strong>SKU 打包</strong></div>
+              <div class="pipeline-step" data-step="6" data-tooltip="进入下一轮隐藏集、客户私有集或训练项目。"><strong>回流 Arena</strong></div>
             </div>
           </div>
         </section>
@@ -2264,8 +2304,7 @@
         <section class="view" id="solutions">
           <div class="view-header">
             <div>
-              <h2>方案推荐</h2>
-              <p>把竞技结果转化为不同业务场景下的 Agent 选型建议和落地路径。</p>
+              <h2>方案推荐 <span class="info-dot" tabindex="0" data-tooltip="按业务场景、预算、安全约束、部署方式和隐藏集表现生成 Agent 选型建议。">?</span></h2>
             </div>
             <span class="badge green">基于赛季结果 + 客户约束</span>
           </div>
@@ -2293,7 +2332,7 @@
               </div>
             </div>
             <div class="toolbar" style="margin-top: 12px;">
-              <span class="subtle">推荐逻辑会同时考虑行业任务、预算、安全约束、部署模式、隐藏集表现和客户私有回归结果。</span>
+              <span class="info-dot" tabindex="0" data-tooltip="推荐逻辑会同时考虑行业任务、预算、安全约束、部署模式、隐藏集表现和客户私有回归结果。">?</span>
               <button class="btn ghost" id="refreshRecommendation" type="button">刷新推荐</button>
             </div>
           </div>
@@ -2301,24 +2340,21 @@
           <div class="grid cols-3">
             <div class="panel recommend-card">
               <div>
-                <h3>OmniDesk Pro</h3>
-                <p>适合客服工单自动化，强项是知识库检索和 CRM 写入。建议搭配 Appen 高风险动作拒绝数据补足安全边界。</p>
+                <h3>OmniDesk Pro <span class="info-dot" tabindex="0" data-tooltip="适合客服工单自动化，强项是知识库检索和 CRM 写入。建议搭配高风险动作拒绝数据。">?</span></h3>
                 <div class="chips"><span class="badge green" id="matchScoreA">匹配 94</span><span class="badge">云端</span><span class="badge teal">最快上线</span></div>
               </div>
               <button class="btn ghost">选型</button>
             </div>
             <div class="panel recommend-card">
               <div>
-                <h3>SafeOps Agent</h3>
-                <p>适合合规审查和敏感数据流程，拒绝策略稳定，成本略高。建议进入私有 VPC 场景验证。</p>
+                <h3>SafeOps Agent <span class="info-dot" tabindex="0" data-tooltip="适合合规审查和敏感数据流程，拒绝策略稳定，建议进入私有 VPC 场景验证。">?</span></h3>
                 <div class="chips"><span class="badge green">匹配 89</span><span class="badge">私有化</span><span class="badge amber">稳健</span></div>
               </div>
               <button class="btn ghost">选型</button>
             </div>
             <div class="panel recommend-card">
               <div>
-                <h3>FinOps Navigator</h3>
-                <p>适合财务对账和报表生成，在长表格、邮件附件、PDF 发票任务中性价比最高。</p>
+                <h3>FinOps Navigator <span class="info-dot" tabindex="0" data-tooltip="适合财务对账和报表生成，在长表格、邮件附件、PDF 发票任务中性价比最高。">?</span></h3>
                 <div class="chips"><span class="badge green">匹配 87</span><span class="badge">低成本</span><span class="badge indigo">财务</span></div>
               </div>
               <button class="btn ghost">选型</button>
@@ -2329,8 +2365,7 @@
         <section class="view" id="datasets">
           <div class="view-header">
             <div>
-              <h2>Appen 训练数据商店</h2>
-              <p>把 Arena 暴露的问题转化为可采购的数据产品：任务、轨迹、偏好、Verifier、失败分类、GUI grounding、RAG Eval 和高风险红队。</p>
+              <h2>Appen 训练数据商店 <span class="info-dot" tabindex="0" data-tooltip="按失败根因推荐任务、轨迹、偏好、Verifier、失败分类、GUI grounding、RAG Eval 和高风险红队数据。">?</span></h2>
             </div>
             <span class="badge teal">短名单：<span id="shortlistCount">0</span></span>
           </div>
@@ -2353,43 +2388,37 @@
           <div class="grid cols-3">
             <div class="panel dataset-card">
               <span class="badge teal">Agentic Task</span>
-              <h3>Task & Verifier Design Pack</h3>
-              <p>端到端任务规格、沙盒脚手架、自动化 verifier 和专家 rubric。</p>
+              <h3>Task & Verifier Design Pack <span class="info-dot" tabindex="0" data-tooltip="端到端任务规格、沙盒脚手架、自动化 verifier 和专家 rubric。">?</span></h3>
               <div class="price">$18K+</div>
               <button class="btn primary shortlistBtn">加入短名单</button>
             </div>
             <div class="panel dataset-card">
               <span class="badge green">Golden Trajectory</span>
-              <h3>Customer Ops Trajectory Pack</h3>
-              <p>客服、CRM、退款、升级处理的专家动作序列和状态证据。</p>
+              <h3>Customer Ops Trajectory Pack <span class="info-dot" tabindex="0" data-tooltip="客服、CRM、退款、升级处理的专家动作序列和状态证据。">?</span></h3>
               <div class="price">$32K+</div>
               <button class="btn primary shortlistBtn">加入短名单</button>
             </div>
             <div class="panel dataset-card">
               <span class="badge amber">Failure Taxonomy</span>
-              <h3>Agent Failure Review Pack</h3>
-              <p>轨迹级失败根因标注，覆盖误规划、工具误读、安全越权和 GUI 定位。</p>
+              <h3>Agent Failure Review Pack <span class="info-dot" tabindex="0" data-tooltip="轨迹级失败根因标注，覆盖误规划、工具误读、安全越权和 GUI 定位。">?</span></h3>
               <div class="price">$24K+</div>
               <button class="btn primary shortlistBtn">加入短名单</button>
             </div>
             <div class="panel dataset-card">
               <span class="badge indigo">Preference Arena</span>
-              <h3>Pairwise Preference Data</h3>
-              <p>面向非绝对标准任务的专家偏好对战数据，训练 judge 和 ranking 模型。</p>
+              <h3>Pairwise Preference Data <span class="info-dot" tabindex="0" data-tooltip="面向非绝对标准任务的专家偏好对战数据，训练 judge 和 ranking 模型。">?</span></h3>
               <div class="price">$21K+</div>
               <button class="btn primary shortlistBtn">加入短名单</button>
             </div>
             <div class="panel dataset-card">
               <span class="badge violet">GUI Grounding</span>
-              <h3>Desktop Action Dataset</h3>
-              <p>多应用桌面操作、屏幕状态、坐标动作、截图验收和异常恢复轨迹。</p>
+              <h3>Desktop Action Dataset <span class="info-dot" tabindex="0" data-tooltip="多应用桌面操作、屏幕状态、坐标动作、截图验收和异常恢复轨迹。">?</span></h3>
               <div class="price">$38K+</div>
               <button class="btn primary shortlistBtn">加入短名单</button>
             </div>
             <div class="panel dataset-card">
               <span class="badge red">Safety</span>
-              <h3>High-Risk Action Red Team</h3>
-              <p>退款、数据导出、权限修改等高风险动作的拒绝和人工确认样本。</p>
+              <h3>High-Risk Action Red Team <span class="info-dot" tabindex="0" data-tooltip="退款、数据导出、权限修改等高风险动作的拒绝和人工确认样本。">?</span></h3>
               <div class="price">$28K+</div>
               <button class="btn primary shortlistBtn">加入短名单</button>
             </div>
@@ -2399,8 +2428,7 @@
         <section class="view" id="governance">
           <div class="view-header">
             <div>
-              <h2>治理与可信控制 · Governance & Trust</h2>
-              <p>终态平台必须能证明评测可信：隐藏集金库、防泄漏、运行证明、客户数据授权、沙盒隔离、安全策略和全链路审计。</p>
+              <h2>治理与可信控制 · Governance & Trust <span class="info-dot" tabindex="0" data-tooltip="管理隐藏集金库、防泄漏、运行证明、客户数据授权、沙盒隔离、安全策略和全链路审计。">?</span></h2>
             </div>
             <span class="badge red">Trust Layer</span>
           </div>

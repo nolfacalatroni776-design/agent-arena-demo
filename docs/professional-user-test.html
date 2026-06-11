@@ -36,6 +36,7 @@
   <main>
     <section class="toc">
       <a href="../index.html">返回 Demo</a>
+      <a href="platform-introduction.html">平台介绍</a>
       <a href="agent-eval-research-report.html">Agent 测评研究报告</a>
       <a href="requirements-analysis.html">需求分析</a>
       <a href="requirements-design.html">需求设计</a>
@@ -46,6 +47,7 @@
     <section>
       <h2>1. 测试结论</h2>
       <p><span class="badge">通过</span> 当前静态 demo 可以让专业用户完整体验未来两年终态主流程：Agent Registry、难例市场、任务与环境工坊、Arena Orchestrator、Trace Lake、Scoring Engine、分析报告、专家运营、方案推荐、数据商店和 Governance & Trust。真实数据已用 mock 数据替代，符合客户演示阶段边界。</p>
+      <p><span class="badge">通过</span> 面向客户的介绍类文案已迁移到独立平台介绍文档；平台主界面保留操作、状态、数据和证据，功能说明通过模块 tooltip 提供。</p>
       <p class="note">测试日期：2026-06-11。测试对象：本地 HTTP 服务 <code>http://localhost:4173/</code>、根页面 <code>index.html</code>、测试脚本 <code>scripts/*.mjs</code> 及 <code>docs/*.html</code>。</p>
       <p>验证命令：<code>npm test</code>、<code>npm run test:browser</code>、<code>git diff --check</code>、Chrome headless 桌面/移动截图。</p>
     </section>
@@ -113,7 +115,9 @@
           <tr><td>T12</td><td>数据商店</td><td>点击多个数据包“加入短名单”。</td><td>短名单计数持续增加，toast 提示。</td><td><span class="badge">通过</span></td></tr>
           <tr><td>T13</td><td>治理信任</td><td>点击运行信任审计。</td><td>可信就绪度更新为 92%，审计日志追加证明。</td><td><span class="badge">通过</span></td></tr>
           <tr><td>T14</td><td>主流程</td><td>点击顶部“跑通主流程”。</td><td>自动依次展示接入、供题、环境、竞技、证据、评分、报告、专家、推荐、采购、治理。</td><td><span class="badge">通过</span></td></tr>
-          <tr><td>T15</td><td>文档</td><td>点击侧栏 HTML 交付文档。</td><td>研究报告、需求分析、设计、技术方案、风险、测试报告可打开。</td><td><span class="badge">通过</span></td></tr>
+          <tr><td>T15</td><td>平台介绍</td><td>点击顶部和侧栏“平台介绍”。</td><td>打开独立平台介绍文档，可返回平台。</td><td><span class="badge">通过</span></td></tr>
+          <tr><td>T16</td><td>功能说明</td><td>悬停或聚焦模块标题旁问号与功能卡。</td><td>tooltip 展示当前模块说明，主界面不再显示长篇介绍文案。</td><td><span class="badge">通过</span></td></tr>
+          <tr><td>T17</td><td>文档</td><td>点击侧栏 HTML 交付文档。</td><td>平台介绍、研究报告、需求分析、设计、技术方案、风险、测试报告可打开。</td><td><span class="badge">通过</span></td></tr>
         </tbody>
       </table>
     </section>
@@ -135,6 +139,7 @@
           <tr><td>引导采购 Appen 训练数据集。</td><td>已覆盖。</td><td>数据商店与报告短名单：Task & Verifier、Trajectory、Failure Taxonomy、GUI、Safety Red Team 等 SKU。</td></tr>
           <tr><td>通过竞技推荐不同场景优秀 Agent 方案。</td><td>已覆盖。</td><td>方案推荐：按业务场景和约束展示推荐卡。</td></tr>
           <tr><td>治理与可信控制。</td><td>已覆盖。</td><td>治理信任：隐藏集金库、泄漏探针、运行证明、数据授权、审计日志、客户证明。</td></tr>
+          <tr><td>介绍类文案不放在平台主界面。</td><td>已覆盖。</td><td>新增 <code>docs/platform-introduction.html</code>；主界面通过 <code>data-tooltip</code> 展示模块说明。</td></tr>
           <tr><td>参考 Real-World AI、CREAO、其它 Agent Arena。</td><td>已覆盖。</td><td>需求分析文档调研摘要中纳入这些参考与 benchmark。</td></tr>
           <tr><td>最终输出包括平台 demo、需求分析、需求设计、技术方案、风险点，均为 HTML。</td><td>已覆盖。</td><td><code>index.html</code> 与 <code>docs/*.html</code>。</td></tr>
         </tbody>
@@ -146,8 +151,8 @@
       <table>
         <thead><tr><th>验证项</th><th>命令/证据</th><th>结果</th></tr></thead>
         <tbody>
-          <tr><td>静态结构</td><td><code>npm test</code></td><td><span class="badge">通过</span> 12 个 view、12 个 nav、15 个跳转、本地文档链接全部有效。</td></tr>
-          <tr><td>浏览器交互</td><td><code>npm run test:browser</code></td><td><span class="badge">通过</span> 桌面/移动无横向溢出，环境编译、轨迹重放、评分权重、治理审计均可触发。</td></tr>
+          <tr><td>静态结构</td><td><code>npm test</code></td><td><span class="badge">通过</span> 12 个 view、12 个 nav、15 个跳转、本地文档链接和 70 个 tooltip 全部有效。</td></tr>
+          <tr><td>浏览器交互</td><td><code>npm run test:browser</code></td><td><span class="badge">通过</span> 桌面/移动无横向溢出，平台介绍入口、tooltip、环境编译、轨迹重放、评分权重、治理审计均可触发。</td></tr>
           <tr><td>格式检查</td><td><code>git diff --check</code></td><td><span class="badge">通过</span> 未发现空白错误。</td></tr>
           <tr><td>桌面截图</td><td><code>docs/demo-desktop.png</code></td><td><span class="badge">通过</span> 1440px 宽度下导航、总览、飞轮、排行榜可读。</td></tr>
           <tr><td>移动截图</td><td><code>docs/demo-mobile.png</code></td><td><span class="badge">通过</span> 390px 宽度下顶部按钮、导航、指标卡不裁切。</td></tr>

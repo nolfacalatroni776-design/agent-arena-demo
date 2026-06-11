@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent Eval OS 平台介绍</title>
+  <style>
+    :root { --ink:#171a1f; --muted:#606875; --line:#d9dde4; --bg:#f7f8fa; --panel:#fff; --teal:#0f766e; --blue:#2563eb; --amber:#b7791f; --red:#b42318; --green:#16803c; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height:1.58; letter-spacing:0; }
+    header { background:#11151c; color:#fff; padding:38px 28px; }
+    header h1 { margin:0; font-size:30px; line-height:1.18; }
+    header p { margin:10px 0 0; color:#c7d0dd; max-width:980px; }
+    main { width:min(1180px, calc(100% - 32px)); margin:24px auto 56px; display:grid; gap:18px; }
+    section { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:20px; }
+    h2 { margin:0 0 12px; font-size:20px; }
+    h3 { margin:0 0 8px; font-size:16px; }
+    p { margin:0 0 10px; color:#2f3743; }
+    a { color:var(--teal); font-weight:800; text-decoration:none; }
+    ul { margin:8px 0 0 20px; padding:0; }
+    li { margin:6px 0; }
+    .toc a { display:inline-block; margin:0 12px 8px 0; }
+    .grid { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:12px; }
+    .card { border:1px solid var(--line); border-radius:8px; padding:14px; background:#fff; min-height:132px; }
+    .badge { display:inline-block; padding:3px 8px; border-radius:999px; font-size:12px; font-weight:800; background:#d9f2ee; color:var(--teal); margin-bottom:8px; }
+    .badge.blue { background:#dbeafe; color:var(--blue); }
+    .badge.amber { background:#fff3d4; color:var(--amber); }
+    .badge.red { background:#fde7e7; color:var(--red); }
+    .badge.green { background:#e1f7e8; color:var(--green); }
+    table { width:100%; border-collapse:collapse; margin-top:10px; background:#fff; }
+    th, td { border:1px solid var(--line); padding:10px; text-align:left; vertical-align:top; }
+    th { background:#f1f4f7; color:#4a5360; }
+    @media (max-width:900px) { .grid { grid-template-columns:1fr; } table { display:block; overflow-x:auto; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Agent Eval OS 平台介绍</h1>
+    <p>面向企业 Agent 生命周期的可信测评控制面：把 Agent 接入、任务环境、Arena 评测、轨迹证据、评分治理、专家运营、数据产品和方案推荐串成闭环。</p>
+  </header>
+
+  <main>
+    <section class="toc">
+      <a href="../index.html">返回平台</a>
+      <a href="agent-eval-research-report.html">研究报告</a>
+      <a href="requirements-analysis.html">需求分析</a>
+      <a href="requirements-design.html">需求设计</a>
+      <a href="technical-implementation.html">技术方案</a>
+      <a href="risk-register.html">风险点</a>
+      <a href="professional-user-test.html">测试报告</a>
+    </section>
+
+    <section>
+      <h2>1. 平台定位</h2>
+      <p>Agent Eval OS 不是单次 benchmark 页面，而是企业采用 Agent 时的可信控制面。它持续回答四个问题：哪个 Agent 能完成我的业务、为什么失败、如何修复、需要补什么数据。</p>
+      <p>平台界面保留操作、状态和证据；背景介绍、产品定位、竞品参照和终态设计逻辑集中放在本文档与研究报告中。</p>
+    </section>
+
+    <section>
+      <h2>2. 核心闭环</h2>
+      <div class="grid">
+        <div class="card">
+          <span class="badge">Agent Registry</span>
+          <h3>接入与版本管理</h3>
+          <p>支持 API endpoint、容器镜像、Hosted Agent、Browser/Desktop Agent、MCP server 和 VPC 接入。</p>
+        </div>
+        <div class="card">
+          <span class="badge amber">Environment Studio</span>
+          <h3>任务与环境产品化</h3>
+          <p>用 DSL 管理任务、状态种子、DB/API/GUI 仿真、Verifier、Gold Trace 和隐藏等级。</p>
+        </div>
+        <div class="card">
+          <span class="badge blue">Arena Orchestrator</span>
+          <h3>持续评测编排</h3>
+          <p>运行公开集、隐藏集、客户私有集、生产抽样、红队集和 CI/CD 发布门禁。</p>
+        </div>
+        <div class="card">
+          <span class="badge green">Trace Lake</span>
+          <h3>可追溯证据</h3>
+          <p>沉淀 observation、action、tool call/result、state delta、截图、token、延迟和成本。</p>
+        </div>
+        <div class="card">
+          <span class="badge red">Scoring & Trust</span>
+          <h3>评分与治理</h3>
+          <p>融合程序化 verifier、LLM judge、人类 rubric、pairwise、安全、成本、稳定性和审计证明。</p>
+        </div>
+        <div class="card">
+          <span class="badge">Market Loop</span>
+          <h3>数据与方案转化</h3>
+          <p>把失败根因映射为数据 SKU、专家项目和 Agent 采购建议，形成训练和采购闭环。</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>3. 面向客户的价值</h2>
+      <table>
+        <thead><tr><th>客户问题</th><th>平台能力</th><th>输出物</th></tr></thead>
+        <tbody>
+          <tr><td>哪个 Agent 适合我的业务？</td><td>Arena 评测、隐藏集排名、方案推荐。</td><td>分场景 Agent 短名单、部署建议、风险提示。</td></tr>
+          <tr><td>Agent 为什么失败？</td><td>Trace Lake、Failure Taxonomy、专家复核。</td><td>失败根因、证据链、业务影响估算。</td></tr>
+          <tr><td>如何修复和提升？</td><td>Scoring Engine、Gold Trace、Verifier、红队样本。</td><td>修复路径、训练数据需求、回归评测计划。</td></tr>
+          <tr><td>评测结果可信吗？</td><td>隐藏集金库、泄漏检测、运行证明、审计日志。</td><td>Evaluation Attestation、Leakage Report、Data Authorization Ledger。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>4. 页面使用方式</h2>
+      <ul>
+        <li>平台主界面以操作和状态为主，不放大段介绍性文字。</li>
+        <li>每个模块标题旁的问号提供 hover/focus tooltip，说明当前模块的具体功能。</li>
+        <li>需要完整背景、竞品参照、终态判断和需求体系时，阅读研究报告与需求文档。</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

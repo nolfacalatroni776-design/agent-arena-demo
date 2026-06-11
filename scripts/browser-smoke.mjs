@@ -103,7 +103,10 @@ async function runViewport(client, width, height, label) {
     viewCount: document.querySelectorAll(".view").length,
     navCount: document.querySelectorAll(".nav [data-view]").length,
     activeView: document.querySelector(".view.active")?.id,
-    h1: document.querySelector(".topbar h1")?.textContent.trim()
+    h1: document.querySelector(".topbar h1")?.textContent.trim(),
+    tooltipCount: document.querySelectorAll("[data-tooltip]").length,
+    introHref: document.querySelector('a[href="docs/platform-introduction.html"]')?.textContent.trim(),
+    removedCopyPresent: document.body.textContent.includes("面向 2028 年中产品终态")
   }))()`);
 
   if (metrics.scrollWidth > width + 2 || metrics.bodyScrollWidth > width + 2) {
@@ -113,6 +116,9 @@ async function runViewport(client, width, height, label) {
   if (metrics.navCount !== 12) failures.push(`${label} expected 12 nav entries, found ${metrics.navCount}`);
   if (metrics.activeView !== "dashboard") failures.push(`${label} initial active view should be dashboard`);
   if (!metrics.h1?.includes("Agent Eval OS")) failures.push(`${label} topbar title missing`);
+  if (metrics.tooltipCount < 20) failures.push(`${label} expected contextual tooltips, found ${metrics.tooltipCount}`);
+  if (!metrics.introHref?.includes("平台介绍")) failures.push(`${label} platform introduction link missing`);
+  if (metrics.removedCopyPresent) failures.push(`${label} removed intro copy is still visible`);
 
   const flow = await evaluate(client, `(() => {
     const click = (selector) => document.querySelector(selector)?.click();
