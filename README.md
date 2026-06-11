@@ -10,6 +10,9 @@ https://nolfacalatroni776-design.github.io/agent-arena-demo/#/arenas
 - Agent Eval OS standalone demo:
 https://nolfacalatroni776-design.github.io/agent-arena-demo/agent-eval-os/
 
+- Agent Evaluation Control Plane terminal demo:
+https://nolfacalatroni776-design.github.io/agent-arena-demo/agent-eval-platform-terminal-demo/
+
 Local preview:
 
 ```bash

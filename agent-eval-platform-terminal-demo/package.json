@@ -1,0 +1,10 @@
+{
+  "name": "agent-eval-platform-terminal-demo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node scripts/verify-demo.mjs",
+    "test:browser": "node scripts/browser-smoke.mjs"
+  }
+}

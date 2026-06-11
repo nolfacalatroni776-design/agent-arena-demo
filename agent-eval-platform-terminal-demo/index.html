@@ -1,0 +1,1784 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent Evaluation Control Plane Demo</title>
+  <style>
+    :root {
+      --bg: #f5f6f8;
+      --paper: #ffffff;
+      --ink: #1b1f24;
+      --muted: #667085;
+      --line: #d9dee7;
+      --line-strong: #c7ceda;
+      --nav: #18202c;
+      --nav-soft: #222c3a;
+      --blue: #2563eb;
+      --blue-soft: #dbeafe;
+      --green: #067647;
+      --green-soft: #dcfae6;
+      --amber: #b54708;
+      --amber-soft: #fef0c7;
+      --red: #b42318;
+      --red-soft: #fee4e2;
+      --violet: #6941c6;
+      --violet-soft: #ebe9fe;
+      --cyan: #0e7090;
+      --cyan-soft: #cff9fe;
+      --shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 12px 32px rgba(16, 24, 40, 0.06);
+      --radius: 8px;
+      --font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      color: var(--ink);
+      background: var(--bg);
+      font-family: var(--font);
+      line-height: 1.45;
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: 0;
+    }
+
+    a { color: inherit; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 292px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      background: var(--nav);
+      color: #eef4ff;
+      display: flex;
+      flex-direction: column;
+      padding: 16px 12px;
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 11px;
+      align-items: center;
+      padding: 6px 8px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, #60a5fa 0 28%, transparent 28%),
+        linear-gradient(315deg, #34d399 0 28%, transparent 28%),
+        #ffffff;
+      color: #101828;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 14px;
+      line-height: 1.2;
+    }
+
+    .brand span {
+      display: block;
+      margin-top: 3px;
+      color: rgba(238, 244, 255, 0.66);
+      font-size: 12px;
+    }
+
+    .nav-group {
+      padding: 12px 8px 6px;
+      color: rgba(238, 244, 255, 0.58);
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+
+    .nav {
+      display: grid;
+      gap: 4px;
+      padding-top: 8px;
+    }
+
+    .nav button {
+      width: 100%;
+      min-height: 38px;
+      display: grid;
+      grid-template-columns: 22px 1fr auto;
+      gap: 8px;
+      align-items: center;
+      color: rgba(238, 244, 255, 0.82);
+      background: transparent;
+      border-radius: 8px;
+      padding: 8px 9px;
+      text-align: left;
+      font-weight: 700;
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      background: var(--nav-soft);
+      color: #ffffff;
+    }
+
+    .nav button.active {
+      box-shadow: inset 3px 0 0 #60a5fa;
+    }
+
+    .nav .icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+      background: rgba(255, 255, 255, 0.1);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .nav small {
+      color: rgba(238, 244, 255, 0.52);
+      font-weight: 800;
+      font-size: 11px;
+    }
+
+    .sidebar-card {
+      margin-top: auto;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+      font-size: 12px;
+    }
+
+    .sidebar-card strong {
+      font-size: 13px;
+    }
+
+    .progress {
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: #e8edf5;
+      overflow: hidden;
+    }
+
+    .sidebar-card .progress {
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .bar {
+      display: block;
+      width: var(--w);
+      height: 100%;
+      border-radius: inherit;
+      background: var(--blue);
+    }
+
+    .bar.green { background: var(--green); }
+    .bar.amber { background: #f79009; }
+    .bar.red { background: var(--red); }
+    .bar.violet { background: var(--violet); }
+
+    .main {
+      min-width: 0;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 13px 22px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(14px);
+    }
+
+    .workspace-title {
+      min-width: 260px;
+    }
+
+    .workspace-title h1 {
+      margin: 0;
+      font-size: 19px;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
+
+    .workspace-title span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .search {
+      flex: 1 1 360px;
+      max-width: 560px;
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--muted);
+      background: #f8fafc;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+      font-size: 13px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .content {
+      display: grid;
+      gap: 18px;
+      padding: 22px;
+      min-width: 0;
+    }
+
+    .view {
+      display: none;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .view.active {
+      display: grid;
+    }
+
+    .view-header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 14px;
+      padding: 16px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .view-header h2 {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 21px;
+    }
+
+    .view-header p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      max-width: 880px;
+      font-size: 13px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cols-main { grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr); }
+    .cols-wide { grid-template-columns: 320px minmax(0, 1fr); }
+
+    .panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      min-width: 0;
+    }
+
+    .panel h3 {
+      margin: 0 0 12px;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .panel p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .kpi {
+      min-height: 132px;
+      display: grid;
+      gap: 8px;
+      align-content: space-between;
+      border-left: 4px solid var(--blue);
+    }
+
+    .kpi.green { border-left-color: var(--green); }
+    .kpi.amber { border-left-color: #f79009; }
+    .kpi.violet { border-left-color: var(--violet); }
+    .kpi.red { border-left-color: var(--red); }
+
+    .kpi span {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+
+    .kpi strong {
+      font-size: 29px;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .kpi small {
+      color: var(--green);
+      font-weight: 800;
+      font-size: 12px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 22px;
+      border-radius: 6px;
+      padding: 2px 7px;
+      font-size: 12px;
+      font-weight: 900;
+      color: #344054;
+      background: #f2f4f7;
+      white-space: nowrap;
+    }
+
+    .badge.blue { background: var(--blue-soft); color: #175cd3; }
+    .badge.green { background: var(--green-soft); color: var(--green); }
+    .badge.amber { background: var(--amber-soft); color: var(--amber); }
+    .badge.red { background: var(--red-soft); color: var(--red); }
+    .badge.violet { background: var(--violet-soft); color: var(--violet); }
+    .badge.cyan { background: var(--cyan-soft); color: var(--cyan); }
+
+    .btn {
+      min-height: 36px;
+      border-radius: 8px;
+      padding: 8px 11px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      color: var(--ink);
+      background: #eef2f7;
+      border: 1px solid transparent;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .btn.primary {
+      color: #ffffff;
+      background: var(--blue);
+    }
+
+    .btn.ghost {
+      background: #ffffff;
+      border-color: var(--line);
+    }
+
+    .btn.warn {
+      color: #ffffff;
+      background: var(--amber);
+    }
+
+    .btn.success {
+      color: #ffffff;
+      background: var(--green);
+    }
+
+    .btn.danger {
+      color: #ffffff;
+      background: var(--red);
+    }
+
+    .input,
+    .select,
+    .textarea {
+      width: 100%;
+      min-height: 38px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--ink);
+      padding: 8px 10px;
+    }
+
+    .textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      color: #344054;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .full { grid-column: 1 / -1; }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .chips,
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      align-items: center;
+    }
+
+    .list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .item:hover,
+    .tile:hover,
+    .table-wrap:hover {
+      border-color: var(--line-strong);
+    }
+
+    .item-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .item h4,
+    .tile h4 {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .tile-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .tile {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #ffffff;
+      display: grid;
+      gap: 8px;
+      min-height: 128px;
+      align-content: start;
+    }
+
+    .domain-model {
+      min-height: 350px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #f8fafc;
+      display: grid;
+      place-items: center;
+    }
+
+    .domain-model svg {
+      width: 100%;
+      height: auto;
+      min-height: 350px;
+      display: block;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .flow-step {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+      min-height: 118px;
+      align-content: start;
+      position: relative;
+    }
+
+    .flow-step::before {
+      content: attr(data-step);
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      border-radius: 7px;
+      color: #ffffff;
+      background: var(--blue);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    table {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 11px;
+      text-align: left;
+      vertical-align: top;
+      font-size: 13px;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #475467;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    tbody tr:hover {
+      background: #fbfcff;
+    }
+
+    .code {
+      border-radius: 8px;
+      border: 1px solid #243044;
+      background: #111827;
+      color: #e5ecf6;
+      padding: 12px;
+      font: 12px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre-wrap;
+      overflow: auto;
+      min-height: 180px;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 8px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 78px 118px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: start;
+      border-bottom: 1px solid var(--line);
+      padding: 10px 0;
+      font-size: 13px;
+    }
+
+    .step:first-child {
+      padding-top: 0;
+    }
+
+    .step:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .split-judge {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .rubric {
+      display: grid;
+      gap: 10px;
+    }
+
+    .rubric-row {
+      display: grid;
+      grid-template-columns: 150px minmax(0, 1fr) 58px;
+      gap: 10px;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .rubric-row:last-child {
+      border-bottom: 0;
+    }
+
+    .rubric-row input {
+      width: 100%;
+      accent-color: var(--blue);
+    }
+
+    .architecture {
+      min-height: 560px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    .architecture svg {
+      width: 100%;
+      height: auto;
+      min-height: 560px;
+      display: block;
+    }
+
+    .roadmap {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .phase {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+      min-height: 260px;
+    }
+
+    .phase ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .notice {
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--blue);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 12px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 30;
+      display: none;
+      width: min(420px, calc(100vw - 36px));
+      border-radius: 8px;
+      background: #101828;
+      color: #ffffff;
+      box-shadow: var(--shadow);
+      padding: 12px 14px;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .toast.show {
+      display: block;
+    }
+
+    [data-tip] {
+      position: relative;
+    }
+
+    [data-tip]::after {
+      content: attr(data-tip);
+      position: absolute;
+      left: 0;
+      bottom: calc(100% + 10px);
+      z-index: 40;
+      width: min(340px, 82vw);
+      border-radius: 8px;
+      background: #101828;
+      color: #ffffff;
+      padding: 9px 10px;
+      font-size: 12px;
+      line-height: 1.45;
+      font-weight: 700;
+      white-space: normal;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(4px);
+      transition: opacity 0.16s ease, transform 0.16s ease;
+      display: none;
+      box-shadow: var(--shadow);
+    }
+
+    [data-tip]:hover::after,
+    [data-tip]:focus-visible::after {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .help {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      display: inline-grid;
+      place-items: center;
+      background: #f2f4f7;
+      color: var(--blue);
+      border: 1px solid var(--line);
+      font-size: 11px;
+      font-weight: 900;
+      cursor: help;
+      flex: 0 0 auto;
+    }
+
+    @media (max-width: 1180px) {
+      .app { grid-template-columns: 248px minmax(0, 1fr); }
+      .cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .cols-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .cols-main,
+      .cols-wide { grid-template-columns: 1fr; }
+      .tile-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .flow,
+      .roadmap { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 760px) {
+      html,
+      body {
+        overflow-x: hidden;
+      }
+
+      .app {
+        grid-template-columns: 1fr;
+        overflow-x: hidden;
+      }
+
+      .sidebar {
+        position: relative;
+        height: auto;
+      }
+
+      .nav {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .nav-group {
+        grid-column: 1 / -1;
+      }
+
+      .sidebar-card {
+        margin-top: 12px;
+      }
+
+      .topbar {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1fr;
+        align-items: stretch;
+      }
+
+      .workspace-title {
+        min-width: 0;
+      }
+
+      .search {
+        max-width: none;
+        min-width: 0;
+      }
+
+      .top-actions,
+      .button-row {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .top-actions .btn,
+      .top-actions .select,
+      .button-row .btn {
+        width: 100%;
+      }
+
+      .content {
+        padding: 14px;
+        overflow-x: hidden;
+      }
+
+      .view-header {
+        grid-template-columns: 1fr;
+      }
+
+      .cols-4,
+      .cols-3,
+      .cols-2,
+      .cols-main,
+      .cols-wide,
+      .tile-grid,
+      .flow,
+      .form-grid,
+      .split-judge,
+      .roadmap {
+        grid-template-columns: 1fr;
+      }
+
+      .step {
+        grid-template-columns: 1fr;
+      }
+
+      .rubric-row {
+        grid-template-columns: 1fr;
+      }
+
+      .domain-model svg {
+        min-width: 720px;
+      }
+
+      .domain-model {
+        overflow-x: auto;
+        place-items: start;
+      }
+
+      .architecture svg {
+        min-width: 820px;
+      }
+
+      .architecture {
+        overflow-x: auto;
+      }
+
+      .badge,
+      .btn {
+        white-space: normal;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">AE</div>
+        <div>
+          <strong>Agent Eval Platform</strong>
+          <span>terminal-state demo · independent build</span>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="平台模块导航">
+        <div class="nav-group">Control Plane</div>
+        <button class="active" data-view="home"><span class="icon">00</span><span>总览</span><small>P0</small></button>
+        <button data-view="targets"><span class="icon">01</span><span>被测对象接入</span><small>FR-1</small></button>
+        <button data-view="datasets"><span class="icon">02</span><span>评测集资产</span><small>FR-2</small></button>
+        <button data-view="runs"><span class="icon">03</span><span>执行引擎</span><small>FR-3</small></button>
+        <button data-view="evaluators"><span class="icon">04</span><span>评估器体系</span><small>FR-4</small></button>
+        <button data-view="annotation"><span class="icon">05</span><span>人工评估</span><small>FR-5</small></button>
+        <button data-view="reports"><span class="icon">06</span><span>报告与门禁</span><small>FR-6</small></button>
+        <div class="nav-group">Flywheel</div>
+        <button data-view="online"><span class="icon">07</span><span>在线评估</span><small>FR-7</small></button>
+        <button data-view="data-loop"><span class="icon">08</span><span>数据回流</span><small>FR-8</small></button>
+        <button data-view="architecture"><span class="icon">09</span><span>平台架构</span><small>ADR</small></button>
+        <button data-view="roadmap"><span class="icon">10</span><span>路线图</span><small>24M</small></button>
+        <button data-view="governance"><span class="icon">11</span><span>治理基础</span><small>FR-9</small></button>
+      </nav>
+
+      <div class="sidebar-card">
+        <strong>当前演示状态</strong>
+        <span>独立目录，不覆盖旧 Agent 竞技场 demo。</span>
+        <div class="progress"><span class="bar green" style="--w: 78%"></span></div>
+        <span>需求覆盖：P0 全链路 + P1/P2 终态占位</span>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="workspace-title">
+          <h1>Agent Evaluation Control Plane</h1>
+          <span>自动化评测平台 × 人工评估运营网络 × 评测资产库</span>
+        </div>
+        <div class="search" role="search">⌕ 搜索 Run、Case、Target、Evaluator、FR 编号</div>
+        <div class="top-actions">
+          <select class="select" id="personaSelect" aria-label="演示角色">
+            <option>平台 Owner</option>
+            <option>Agent 开发者</option>
+            <option>评测建设者</option>
+            <option>标注运营</option>
+            <option>企业 AI 负责人</option>
+          </select>
+          <button class="btn ghost" id="tourBtn">跑通主链路</button>
+          <button class="btn primary" data-view="runs">创建 Run</button>
+        </div>
+      </header>
+
+      <section class="content">
+        <section class="view active" id="home">
+          <div class="view-header">
+            <div>
+              <h2>平台终态总览 <span class="help" tabindex="0" data-tip="基于需求文档的终态定位：离线评测、回归门禁、在线评估、数据回流四大闭环。">?</span></h2>
+              <p>这版 demo 按领域模型和 FR 编号组织，不是营销介绍页。每个模块都展示对象、状态、操作和验收指标。</p>
+            </div>
+            <span class="badge blue">North Star：每周发布 / 回滚 / 选型决策数</span>
+          </div>
+
+          <div class="grid cols-4">
+            <div class="panel kpi">
+              <span>本周决策数</span>
+              <strong>47</strong>
+              <small>发布 31 · 回滚 4 · 选型 12</small>
+            </div>
+            <div class="panel kpi green">
+              <span>回归 Run</span>
+              <strong>1,284</strong>
+              <small>CI 门禁覆盖 68%</small>
+            </div>
+            <div class="panel kpi amber">
+              <span>Judge 一致率</span>
+              <strong id="globalJudgeScore">0.86</strong>
+              <small>低于 0.80 自动冻结门禁效力</small>
+            </div>
+            <div class="panel kpi violet">
+              <span>评测资产</span>
+              <strong>9,420</strong>
+              <small>Case · 环境模板 · 校准 Judge</small>
+            </div>
+          </div>
+
+          <div class="grid cols-main">
+            <div class="panel">
+              <h3>领域模型骨架 <span class="badge green">一切可复现</span></h3>
+              <div class="domain-model" aria-label="领域模型图">
+                <svg viewBox="0 0 960 360" role="img">
+                  <rect width="960" height="360" fill="#f8fafc"/>
+                  <defs>
+                    <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+                      <path d="M0,0 L0,6 L7,3 z" fill="#98a2b3"/>
+                    </marker>
+                  </defs>
+                  <g stroke="#98a2b3" stroke-width="2" marker-end="url(#arrow)" fill="none">
+                    <path d="M180 92 H310"/>
+                    <path d="M430 92 H560"/>
+                    <path d="M680 92 H780"/>
+                    <path d="M180 226 H310"/>
+                    <path d="M430 226 H560"/>
+                    <path d="M680 226 H780"/>
+                    <path d="M620 124 V196"/>
+                    <path d="M372 124 V196"/>
+                  </g>
+                  <g>
+                    <rect x="38" y="54" width="142" height="76" rx="8" fill="#fff" stroke="#d0d5dd"/>
+                    <text x="60" y="85" font-size="16" font-weight="800" fill="#1d2939">Dataset</text>
+                    <text x="60" y="108" font-size="12" fill="#667085">versioned snapshot</text>
+                    <rect x="310" y="54" width="122" height="76" rx="8" fill="#fff" stroke="#d0d5dd"/>
+                    <text x="334" y="85" font-size="16" font-weight="800" fill="#1d2939">Case</text>
+                    <text x="334" y="108" font-size="12" fill="#667085">input/ref/tags</text>
+                    <rect x="560" y="54" width="122" height="76" rx="8" fill="#fff" stroke="#d0d5dd"/>
+                    <text x="584" y="85" font-size="16" font-weight="800" fill="#1d2939">Run</text>
+                    <text x="584" y="108" font-size="12" fill="#667085">case × target × N</text>
+                    <rect x="780" y="54" width="142" height="76" rx="8" fill="#fff" stroke="#d0d5dd"/>
+                    <text x="804" y="85" font-size="16" font-weight="800" fill="#1d2939">Trial</text>
+                    <text x="804" y="108" font-size="12" fill="#667085">single execution</text>
+                  </g>
+                  <g>
+                    <rect x="38" y="188" width="142" height="76" rx="8" fill="#fff" stroke="#d0d5dd"/>
+                    <text x="60" y="219" font-size="16" font-weight="800" fill="#1d2939">Target</text>
+                    <text x="60" y="242" font-size="12" fill="#667085">agent version</text>
+                    <rect x="310" y="188" width="122" height="76" rx="8" fill="#fff" stroke="#d0d5dd"/>
+                    <text x="334" y="219" font-size="16" font-weight="800" fill="#1d2939">Trajectory</text>
+                    <text x="334" y="242" font-size="12" fill="#667085">step sequence</text>
+                    <rect x="560" y="188" width="122" height="76" rx="8" fill="#fff" stroke="#d0d5dd"/>
+                    <text x="584" y="219" font-size="16" font-weight="800" fill="#1d2939">Evaluator</text>
+                    <text x="584" y="242" font-size="12" fill="#667085">versioned</text>
+                    <rect x="780" y="188" width="142" height="76" rx="8" fill="#fff" stroke="#d0d5dd"/>
+                    <text x="804" y="219" font-size="16" font-weight="800" fill="#1d2939">Report/Gate</text>
+                    <text x="804" y="242" font-size="12" fill="#667085">decision output</text>
+                  </g>
+                  <g>
+                    <rect x="310" y="300" width="372" height="38" rx="8" fill="#eff6ff" stroke="#bfdbfe"/>
+                    <text x="338" y="324" font-size="13" font-weight="800" fill="#175cd3">Execution and evaluation are decoupled; history can be rejudged.</text>
+                  </g>
+                </svg>
+              </div>
+            </div>
+
+            <div class="panel">
+              <h3>四大闭环 <span class="help" tabindex="0" data-tip="需求文档明确：离线评测、回归门禁、在线评估、数据回流构成两年终态主链路。">?</span></h3>
+              <div class="flow">
+                <div class="flow-step" data-step="1"><h4>离线评测</h4><p>Dataset v42 × Target v18 × Evaluator set。</p><span class="badge blue">FR-3.1</span></div>
+                <div class="flow-step" data-step="2"><h4>回归门禁</h4><p>PR 状态检查、显著性结论、新失败列表。</p><span class="badge green">FR-6.5</span></div>
+                <div class="flow-step" data-step="3"><h4>在线评估</h4><p>OTel Collector 采样线上轨迹，异步评分。</p><span class="badge cyan">FR-7.1</span></div>
+                <div class="flow-step" data-step="4"><h4>数据回流</h4><p>失败归因生成数据需求单，再评测验证。</p><span class="badge violet">FR-8.2</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>需求覆盖矩阵</h3>
+            <div class="tile-grid">
+              <div class="tile"><span class="badge blue">P0</span><h4>FR-1 接入</h4><p>API、离线轨迹、SDK、MCP、Computer Use。</p></div>
+              <div class="tile"><span class="badge green">P0</span><h4>FR-2 数据集</h4><p>版本快照、Case、标签、导入、回流、健康度。</p></div>
+              <div class="tile"><span class="badge amber">P0</span><h4>FR-3 执行</h4><p>Run 编排、重复执行、沙箱、Mock、用户模拟器。</p></div>
+              <div class="tile"><span class="badge red">P0/P1</span><h4>FR-4 评估器</h4><p>规则、轨迹、终态、LLM Judge、安全、市场。</p></div>
+              <div class="tile" data-tip="FR-5.2 要求轨迹时间线、Step 级标注、轨迹级 Rubric、多模态回放和快捷键效率。"><span class="badge violet">P1</span><h4>FR-5 人工</h4><p>标注任务、Step 标注、Pairwise、专家网络。</p></div>
+              <div class="tile" data-tip="FR-6.2 要求 Run diff、Case 级变化分类、bootstrap / 配对检验和显著性结论。"><span class="badge blue">P0/P1</span><h4>FR-6 报告</h4><p>Run 报告、版本对比、失败归因、CI 门禁。</p></div>
+              <div class="tile"><span class="badge cyan">P1/P2</span><h4>FR-7 在线</h4><p>生产轨迹接入、质量监控、告警和 A/B。</p></div>
+              <div class="tile"><span class="badge green">P2</span><h4>FR-8 数据回流</h4><p>SFT/DPO/过程奖励导出，数据需求单。</p></div>
+              <div class="tile"><span class="badge red">P0-P2</span><h4>FR-9 基础</h4><p>多租户、RBAC、审计、安全、私有化。</p></div>
+              <div class="tile"><span class="badge amber">NFR</span><h4>非功能</h4><p>可复现、规模、隔离、成本、开放性。</p></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="targets">
+          <div class="view-header">
+            <div>
+              <h2>FR-1 被测对象接入 <span class="help" tabindex="0" data-tip="Target 是 Agent 的一个可复现版本：模型、Prompt、工具集、框架配置和接入方式全部版本化。">?</span></h2>
+              <p>支持 API 模式、离线轨迹上传、SDK 埋点、MCP/A2A 协议，以及 Computer Use / Browser Use 终态。</p>
+            </div>
+            <span class="badge blue" id="targetStatus">待接入 · 0 errors</span>
+          </div>
+
+          <div class="grid cols-main">
+            <div class="panel">
+              <h3>Target 接入向导</h3>
+              <div class="form-grid">
+                <label data-tip="FR-1.1/FR-1.2 是 P0 获客入口；API 和离线轨迹上传必须都足够顺滑。">接入模式
+                  <select class="select" id="targetMode">
+                    <option>FR-1.1 API 模式 · OpenAI-compatible</option>
+                    <option>FR-1.2 离线轨迹上传 · JSONL / OTel</option>
+                    <option>FR-1.3 SDK 埋点 · Python / TypeScript</option>
+                    <option>FR-1.4 MCP / A2A 协议</option>
+                    <option>FR-1.5 Browser / Computer Use</option>
+                  </select>
+                </label>
+                <label data-tip="Target 版本必须包含模型、Prompt、工具集、框架配置和接入方式，保证历史 Run 可复现。">Target 版本
+                  <input class="input" value="customer-support-agent@2026.06.11">
+                </label>
+                <label data-tip="API 模式发起主动调用；离线模式只上传 JSONL 或 OTel 轨迹，平台只做评估。">Endpoint / Trace source
+                  <input class="input" value="https://agent.internal/v1/chat/completions">
+                </label>
+                <label data-tip="凭据加密存储，支持租户级密钥管理或客户 VPC Secret Store。">凭据策略
+                  <select class="select">
+                    <option>租户级密钥管理 · encrypted</option>
+                    <option>客户 VPC Secret Store</option>
+                    <option>只读离线轨迹，无凭据</option>
+                  </select>
+                </label>
+                <label class="full" data-tip="自定义接口通过 URL、Header、请求体映射和响应字段提取规则适配。">请求模板
+                  <textarea class="textarea">{"messages":"$.case.input.messages","session_id":"$.trial.session","tools":"$.target.tool_manifest"}</textarea>
+                </label>
+              </div>
+              <div class="button-row" style="margin-top:12px;">
+                <button class="btn primary" id="connectTarget">连通性测试</button>
+                <button class="btn ghost" id="validateTrace">校验离线轨迹格式</button>
+                <span class="badge green">验收：新 Agent 接入 ≤ 15 分钟</span>
+              </div>
+            </div>
+
+            <div class="panel">
+              <h3>轨迹格式校验器 <span class="help" tabindex="0" data-tip="离线轨迹上传必须打磨为获客入口：格式校验、错误定位、修复指引、样例文件。">?</span></h3>
+              <div class="code" id="traceValidator">trace.jsonl
+status: waiting
+required fields:
+  trial_id, case_id, target_version, steps[]
+OTel GenAI extension:
+  gen_ai.request.model
+  gen_ai.usage.input_tokens
+  agent.tool.name
+  agent.tool.arguments</div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>接入方式对照</h3>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>模式</th><th>优先级</th><th>客户价值</th><th>平台能力</th><th>验收点</th></tr></thead>
+                <tbody>
+                  <tr><td>API 模式</td><td><span class="badge blue">FR-1.1 P0</span></td><td>最快接入现有 Agent 网关。</td><td>请求模板、响应字段提取、流式、多轮 session。</td><td>15 分钟内完成连通测试。</td></tr>
+                  <tr><td>离线轨迹上传</td><td><span class="badge blue">FR-1.2 P0</span></td><td>客户不改代码，只上传轨迹。</td><td>JSONL / OTel 校验、批量评估、修复指引。</td><td>1000 条轨迹全流程无需代码改造。</td></tr>
+                  <tr><td>SDK 埋点</td><td><span class="badge green">FR-1.3 P1</span></td><td>研发流程长期集成。</td><td>自动捕获 LLM、工具、消息、自定义事件。</td><td>主流框架 ≤ 5 行初始化代码。</td></tr>
+                  <tr><td>MCP / A2A</td><td><span class="badge green">FR-1.4 P1</span></td><td>无侵入采集工具调用轨迹。</td><td>平台 Mock 工具、沙箱工具、用户模拟器 Agent。</td><td>工具调用与跨 Agent 消息可完整追踪。</td></tr>
+                  <tr><td>Computer Use</td><td><span class="badge violet">FR-1.5 P2</span></td><td>评测浏览器与桌面 Agent。</td><td>受控 VM、截图、操作序列、终态校验。</td><td>屏幕录制和操作轨迹绑定 Trial。</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="datasets">
+          <div class="view-header">
+            <div>
+              <h2>FR-2 评测集与数据资产管理 <span class="help" tabindex="0" data-tip="Dataset 是版本化不可变快照；Case 是评测最小单元；标签是能力地图、失败归因、覆盖度分析的统一坐标。">?</span></h2>
+              <p>从 Case 结构、标签树、数据集版本、线上回流、合成数据和健康度监控构成资产飞轮。</p>
+            </div>
+            <button class="btn primary" id="createDatasetVersion">生成数据集版本</button>
+          </div>
+
+          <div class="grid cols-4">
+            <div class="panel kpi"><span>Dataset 版本</span><strong id="datasetVersion">v42</strong><small>历史版本不可变</small></div>
+            <div class="panel kpi green"><span>Case 总量</span><strong>18,620</strong><small>42% 来自线上回流</small></div>
+            <div class="panel kpi amber"><span>标签覆盖</span><strong>91%</strong><small>强制打标 P0</small></div>
+            <div class="panel kpi red"><span>污染风险</span><strong>1.8%</strong><small>canary 与公开重合检测</small></div>
+          </div>
+
+          <div class="grid cols-main">
+            <div class="panel" data-tip="修改 Case 后旧版本 Run 仍可复跑；报告必须明示 Dataset 版本号。">
+              <h3>Case 规格</h3>
+              <div class="code">case_id: cx_refund_conflict_0817
+input:
+  task_instruction: "Resolve refund request with coupon conflict"
+  conversation_history: [...]
+  environment_state_ref: env_seed_customer_ops_v9
+  attachments: [order_receipt.pdf]
+reference:
+  answers: ["safe refusal with audit note"]
+  gold_trajectory: [order.lookup, coupon.status, policy.search, crm.update]
+  assertions: [no_unauthorized_refund, crm_note_written]
+evaluation:
+  evaluators: [terminal_check_v3, tool_trace_v5, judge_customer_ops_v8]
+metadata:
+  tags: [tool_parameter, policy_compliance, recovery]
+  difficulty: 4
+  source: online_feedback
+  review_status: approved</div>
+            </div>
+
+            <div class="panel" data-tip="能力标签树是能力地图、失败归因和数据集覆盖度分析的统一坐标系。">
+              <h3>能力标签树</h3>
+              <div class="list">
+                <div class="item"><div class="item-head"><h4>任务规划</h4><span class="badge green">3,842 cases</span></div><div class="progress"><span class="bar green" style="--w: 84%"></span></div></div>
+                <div class="item"><div class="item-head"><h4>工具调用-选择</h4><span class="badge blue">2,940 cases</span></div><div class="progress"><span class="bar" style="--w: 76%"></span></div></div>
+                <div class="item"><div class="item-head"><h4>工具调用-参数</h4><span class="badge amber">2,166 cases</span></div><div class="progress"><span class="bar amber" style="--w: 62%"></span></div></div>
+                <div class="item"><div class="item-head"><h4>错误恢复</h4><span class="badge red">1,204 cases</span></div><div class="progress"><span class="bar red" style="--w: 41%"></span></div></div>
+                <div class="item"><div class="item-head"><h4>安全合规</h4><span class="badge violet">1,880 cases</span></div><div class="progress"><span class="bar violet" style="--w: 58%"></span></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>资产流水线</h3>
+            <div class="flow">
+              <div class="flow-step" data-step="A"><h4>线上轨迹回流</h4><p>负反馈、低分、人工接管进入待回流。</p><span class="badge green">FR-2.5</span></div>
+              <div class="flow-step" data-step="B"><h4>脱敏与补标</h4><p>PII 检测、参考答案、断言、标签补齐。</p><span class="badge red">FR-9.4</span></div>
+              <div class="flow-step" data-step="C"><h4>合成扩增</h4><p>种子 Case、难度提升、对抗扰动、人工抽审。</p><span class="badge amber">FR-2.6</span></div>
+              <div class="flow-step" data-step="D"><h4>健康度监控</h4><p>区分度、污染检测、换血提醒、异常跃升。</p><span class="badge violet">FR-2.7</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="runs">
+          <div class="view-header">
+            <div>
+              <h2>FR-3 执行引擎 <span class="help" tabindex="0" data-tip="Run = Dataset 版本 × Target × Evaluator 集合 × 运行配置；Trial 是每个 Case 的单次执行。">?</span></h2>
+              <p>支持重复执行、断点续跑、预算熔断、沙箱环境、Mock 工具、用户模拟器和多 Agent 终态能力。</p>
+            </div>
+            <span class="badge amber" id="runState">排队 · 0 / 3000 trials</span>
+          </div>
+
+          <div class="grid cols-main">
+            <div class="panel">
+              <h3>Run 编排配置</h3>
+              <div class="form-grid">
+                <label data-tip="Run 必须绑定不可变 Dataset 版本，避免分数不可比。">Dataset
+                  <select class="select"><option>customer_ops_regression@v42</option><option>safety_redteam@v18</option><option>browser_checkout@v9</option></select>
+                </label>
+                <label data-tip="同一数据集 × 多 Target 是选型场景；同一 Target 多版本是回归场景。">Target
+                  <select class="select"><option>customer-support-agent@2026.06.11</option><option>baseline-agent@2026.05.28</option></select>
+                </label>
+                <label data-tip="FR-3.2 要求原生支持 pass@k、pass^k、均值、方差和置信区间。">每 Case 重复次数 N
+                  <select class="select"><option>3 trials · 默认</option><option>5 trials · 高噪声</option><option>10 trials · 稳定性审计</option></select>
+                </label>
+                <label data-tip="预算熔断：成本达到上限时暂停并通知，而不是静默继续。">预算上限
+                  <select class="select"><option>$480 · 达到后暂停通知</option><option>$1000</option><option>按租户配额</option></select>
+                </label>
+                <label data-tip="有副作用任务进入隔离沙箱；每个 Trial 独立环境实例，终态由独立 Checker 判定。">执行环境
+                  <select class="select"><option>K8s Sandbox + Mock tools</option><option>API only</option><option>Browser cluster</option><option>Desktop microVM</option></select>
+                </label>
+                <label data-tip="CI 门禁任务进入高优先级队列，并对被测服务和 Judge 模型限流保护。">门禁优先级
+                  <select class="select"><option>CI gate · high priority</option><option>Nightly regression</option><option>Exploratory</option></select>
+                </label>
+              </div>
+              <div class="button-row" style="margin-top:12px;">
+                <button class="btn primary" id="startRun">启动 Run</button>
+                <button class="btn ghost" id="rerunFailures">失败 Trial 断点续跑</button>
+                <button class="btn ghost" id="rejudgeRun">历史轨迹重评</button>
+              </div>
+            </div>
+
+            <div class="panel">
+              <h3>执行日志</h3>
+              <div class="code" id="runLog">[ready] run-svc waiting for configuration
+[quota] tenant capacity: 500 concurrent sandbox instances
+[budget] judge gateway cache enabled</div>
+            </div>
+          </div>
+
+          <div class="grid cols-3">
+            <div class="panel">
+              <h3>重复执行统计 <span class="badge blue">FR-3.2 P0</span></h3>
+              <div class="list">
+                <div class="item"><div class="item-head"><h4>pass@1</h4><strong>0.78 ± 0.03</strong></div><div class="progress"><span class="bar" style="--w:78%"></span></div></div>
+                <div class="item"><div class="item-head"><h4>pass@3</h4><strong>0.91 ± 0.02</strong></div><div class="progress"><span class="bar green" style="--w:91%"></span></div></div>
+                <div class="item"><div class="item-head"><h4>pass^3</h4><strong>0.64 ± 0.04</strong></div><div class="progress"><span class="bar amber" style="--w:64%"></span></div></div>
+              </div>
+            </div>
+            <div class="panel">
+              <h3>环境沙箱 <span class="badge green">FR-3.3 P1</span></h3>
+              <div class="list">
+                <div class="item"><div class="item-head"><h4>冷启动</h4><span class="badge green">8.4s</span></div><p>预热池命中 91%。</p></div>
+                <div class="item"><div class="item-head"><h4>重置一致性</h4><span class="badge green">100/100</span></div><p>同 Case 初始状态完全一致。</p></div>
+                <div class="item"><div class="item-head"><h4>Checker 隔离</h4><span class="badge blue">独立容器</span></div><p>终态校验不信任 Agent 容器。</p></div>
+              </div>
+            </div>
+            <div class="panel">
+              <h3>Mock 工具与模拟器 <span class="badge violet">FR-3.4 / FR-3.5</span></h3>
+              <div class="list">
+                <div class="item"><div class="item-head"><h4>录制回放</h4><span class="badge green">deterministic</span></div><p>同一参数返回完全一致。</p></div>
+                <div class="item"><div class="item-head"><h4>故障注入</h4><span class="badge amber">15% timeout</span></div><p>评测 recovery_rate。</p></div>
+                <div class="item"><div class="item-head"><h4>用户模拟器</h4><span class="badge blue">persona+script</span></div><p>监控信息释放正确率。</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="evaluators">
+          <div class="view-header">
+            <div>
+              <h2>FR-4 评估器体系 <span class="help" tabindex="0" data-tip="所有 Evaluator 都遵循统一契约，输入轨迹和终态快照，输出分数、标签、理由、证据引用和评估成本。">?</span></h2>
+              <p>执行与评估解耦后，历史轨迹可用新评估器重新评分；Judge 治理是可信门禁的核心。</p>
+            </div>
+            <span class="badge green" id="judgeHealth">Judge 健康：0.86 · 可参与门禁</span>
+          </div>
+
+          <div class="grid cols-main">
+            <div class="panel" data-tip="评估器只读无副作用，因此同一历史轨迹可用新 Judge 或新规则全量重评。">
+              <h3>Evaluator Contract</h3>
+              <div class="code">input:
+  case: Case
+  trajectory: Step[]
+  final_output: object
+  terminal_snapshot: SandboxState
+  trial_meta: {latency_ms, token_cost, infra_status}
+output:
+  metric_name: "tool_parameter_accuracy"
+  score: 0.0..1.0
+  label: pass | fail | category
+  reason: "wrong refund amount after coupon conflict"
+  evidence_refs: ["step_008", "state_delta_004"]
+  eval_cost: "$0.004"
+side_effects: none
+version: evaluator@v5</div>
+            </div>
+
+            <div class="panel" data-tip="上线门槛：Judge 至少 200 条人工金标准且一致率 / Kappa 达标，运行期继续抽检。">
+              <h3>Judge 治理动作</h3>
+              <div class="list">
+                <div class="item"><div class="item-head"><h4>customer_ops_judge@v8</h4><span class="badge green">Kappa 0.86</span></div><p>人工金标准 312 条，近 7 日抽检一致率 0.84。</p></div>
+                <div class="item"><div class="item-head"><h4>safety_refusal_judge@v4</h4><span class="badge amber">Kappa 0.79</span></div><p>低于 0.80 门槛，建议冻结门禁效力。</p></div>
+                <div class="item"><div class="item-head"><h4>pairwise_quality@v6</h4><span class="badge blue">双向评</span></div><p>交换左右位置，不一致判平，监控长度偏差。</p></div>
+              </div>
+              <div class="button-row" style="margin-top:12px;">
+                <button class="btn danger" id="freezeJudge">冻结不合格 Judge</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid cols-3">
+            <div class="panel"><h3>规则评估器 <span class="badge blue">FR-4.2</span></h3><p>精确、包含、正则、JSON Schema、数值容差、自定义脚本、格式合规。</p></div>
+            <div class="panel"><h3>轨迹评估器 <span class="badge green">FR-4.3</span></h3><p>工具选择、参数、冗余调用、循环检测、步数效率、错误恢复。</p></div>
+            <div class="panel"><h3>终态校验 <span class="badge amber">FR-4.4</span></h3><p>测试用例、数据库状态、文件内容、页面/DOM、系统 API。</p></div>
+            <div class="panel"><h3>LLM-as-Judge <span class="badge red">FR-4.5</span></h3><p>Rubric、参考对比、Pairwise、人工校准、低置信升级、健康看板。</p></div>
+            <div class="panel"><h3>安全评估器 <span class="badge violet">FR-4.6</span></h3><p>间接注入、越狱、工具滥用、PII 泄漏、危险操作防护。</p></div>
+            <div class="panel"><h3>RM 与市场 <span class="badge cyan">FR-4.7</span></h3><p>客户 RM、过程奖励、认证评估器、校准报告和平台市场。</p></div>
+          </div>
+        </section>
+
+        <section class="view" id="annotation">
+          <div class="view-header">
+            <div>
+              <h2>FR-5 人工评估工作台 <span class="help" tabindex="0" data-tip="人工评估从项目制变成平台可调度资源：分发、背靠背、仲裁、IAA、专家等级和结算。">?</span></h2>
+              <p>标注界面以 Agent 轨迹为中心，支持 Step 级失败类型、严重程度、备注、Rubric 打分和 Pairwise 盲评。</p>
+            </div>
+            <span class="badge amber" id="annotationSla">平均标注 5.0 分钟 / 20 步轨迹</span>
+          </div>
+
+          <div class="grid cols-wide">
+            <div class="panel">
+              <h3>标注任务队列</h3>
+              <div class="list">
+                <div class="item"><div class="item-head"><h4>低置信 Judge 升级</h4><span class="badge amber">184 trials</span></div><p>抽样自 customer_ops_run_884。</p></div>
+                <div class="item"><div class="item-head"><h4>背靠背不一致</h4><span class="badge red">32 trials</span></div><p>进入 L3 仲裁。</p></div>
+                <div class="item"><div class="item-head"><h4>Bad Case 复核</h4><span class="badge blue">76 trials</span></div><p>归因模型训练样本。</p></div>
+              </div>
+              <button class="btn success" id="completeAnnotation" style="margin-top:12px;">完成一批标注</button>
+            </div>
+
+            <div class="panel">
+              <h3>轨迹标注界面 <span class="badge violet">FR-5.2</span></h3>
+              <div class="timeline">
+                <div class="step"><strong>00:01</strong><span class="badge blue">user</span><div>客户要求退款并保留优惠券权益。</div><span></span></div>
+                <div class="step"><strong>00:04</strong><span class="badge green">tool_call</span><div>order.lookup 返回 coupon_redeemed=true。</div><span class="badge green">正确</span></div>
+                <div class="step"><strong>00:07</strong><span class="badge red">tool_call</span><div>refund.request(amount=full) 未检查政策冲突。</div><span class="badge red">Step 标注</span></div>
+                <div class="step"><strong>00:09</strong><span class="badge amber">state_delta</span><div>CRM audit_note 为空，任务终态失败。</div><span class="badge amber">证据引用</span></div>
+              </div>
+              <div class="split-judge" style="margin-top:12px;">
+                <div class="item"><h4>人工标签</h4><div class="chips"><span class="badge red">工具参数错误</span><span class="badge amber">严重度 S2</span><span class="badge blue">规划缺口</span></div></div>
+                <div class="item"><h4>Judge 预标</h4><div class="chips"><span class="badge green">可确认</span><span class="badge">快捷键 1/2/3/4</span><span class="badge violet">预标-确认</span></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" data-tip="Pairwise 盲评隐藏 Target 身份、随机左右位置，后台计算 Elo / Bradley-Terry 和置信区间。">
+            <h3>Pairwise 盲评</h3>
+            <div class="split-judge">
+              <div class="item"><div class="item-head"><h4>轨迹 A</h4><span class="badge">身份隐藏</span></div><p>澄清一次后调用工具，CRM 写入完整，但成本较高。</p><button class="btn ghost">A 好</button></div>
+              <div class="item"><div class="item-head"><h4>轨迹 B</h4><span class="badge">身份隐藏</span></div><p>快速完成主任务，但未说明政策冲突，审计证据不足。</p><button class="btn ghost">B 好</button></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="reports">
+          <div class="view-header">
+            <div>
+              <h2>FR-6 分析、报告与门禁 <span class="help" tabindex="0" data-tip="报告必须从总分三次点击内定位到失败轨迹的具体出错步骤，并给出显著性和门禁判定。">?</span></h2>
+              <p>支持 Run 报告、版本对比、能力大盘、失败自动归因、CI/CD 门禁和对外认证报告。</p>
+            </div>
+            <span class="badge amber" id="gateState">门禁：待判定</span>
+          </div>
+
+          <div class="grid cols-4">
+            <div class="panel kpi"><span id="passMode">pass@1</span><strong>0.78</strong><small>95% CI ±0.03</small></div>
+            <div class="panel kpi green"><span>平均成本</span><strong>$0.21</strong><small>Judge 缓存命中 34%</small></div>
+            <div class="panel kpi amber"><span>平均延迟</span><strong>8.6s</strong><small>p95 14.2s</small></div>
+            <div class="panel kpi red"><span>新增安全失败</span><strong>0</strong><small>关键集 pass^3 0.73</small></div>
+          </div>
+
+          <div class="grid cols-main">
+            <div class="panel">
+              <h3>版本对比 <span class="badge blue">FR-6.2</span></h3>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>变化分类</th><th>Case 数</th><th>代表样例</th><th>处理建议</th></tr></thead>
+                  <tbody id="comparisonBody">
+                    <tr><td>新修复</td><td>184</td><td>coupon_conflict_0817</td><td>可发布依据</td></tr>
+                    <tr><td>新失败</td><td>17</td><td>pii_export_refusal_0201</td><td>进入回归分析</td></tr>
+                    <tr><td>持续失败</td><td>92</td><td>crm_merge_unsafe_1188</td><td>生成数据需求</td></tr>
+                    <tr><td>持续通过</td><td>1,706</td><td>standard_ticket_*</td><td>保持监控</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="button-row" style="margin-top:12px;">
+                <button class="btn ghost" id="togglePassK">切换 pass@k / pass^k</button>
+                <button class="btn ghost" id="compareRuns">运行显著性检验</button>
+                <button class="btn primary" id="triggerGate">触发 CI 门禁</button>
+              </div>
+            </div>
+
+            <div class="panel" data-tip="报告页直接展示本次最值得修的 3 个问题，并附代表样例和证据步骤。">
+              <h3>Top 3 失败模式 <span class="badge green">FR-6.4</span></h3>
+              <div class="list">
+                <div class="item"><div class="item-head"><h4>工具参数构造错误</h4><span class="badge red">28%</span></div><p>证据集中在 step_006-step_009。</p></div>
+                <div class="item"><div class="item-head"><h4>环境或基础设施问题</h4><span class="badge amber">9%</span></div><p>已从 Agent 成功率剔除，避免污染分数。</p></div>
+                <div class="item"><div class="item-head"><h4>上下文遗忘</h4><span class="badge violet">7%</span></div><p>长对话第 8 轮后忘记退款边界。</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="online">
+          <div class="view-header">
+            <div>
+              <h2>FR-7 在线评估 <span class="help" tabindex="0" data-tip="通过 OTel Collector 接收生产轨迹，按采样策略异步评估，不阻塞线上链路。">?</span></h2>
+              <p>离线评测和在线观测合流，线上告警轨迹自动进入待回流队列。</p>
+            </div>
+            <span class="badge cyan">OTel GenAI Collector</span>
+          </div>
+
+          <div class="grid cols-4">
+            <div class="panel kpi"><span>线上轨迹 / h</span><strong>42K</strong><small>采样 6.4%</small></div>
+            <div class="panel kpi green"><span>异步评分延迟</span><strong>74s</strong><small>不影响线上链路</small></div>
+            <div class="panel kpi amber"><span>质量告警</span><strong>6</strong><small>滑动窗口检验</small></div>
+            <div class="panel kpi violet"><span>待回流队列</span><strong id="onlineQueue">24</strong><small>负反馈 + 低分 + 接管</small></div>
+          </div>
+
+          <div class="panel" data-tip="在线评估异步执行，不影响线上链路；触发告警的轨迹进入待回流队列。">
+            <div class="toolbar">
+              <h3>在线质量流</h3>
+              <button class="btn primary" id="ingestOnlineTrace">摄入一批线上轨迹</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>触发源</th><th>采样策略</th><th>自动评分</th><th>动作</th></tr></thead>
+                <tbody>
+                  <tr><td>用户负反馈</td><td>100%</td><td>satisfaction_judge@v5</td><td>进入待回流</td></tr>
+                  <tr><td>人工接管</td><td>100%</td><td>handoff_reason_classifier@v3</td><td>生成 Bad Case 复核</td></tr>
+                  <tr><td>普通成功流量</td><td>3%</td><td>lightweight_quality_judge@v2</td><td>趋势监控</td></tr>
+                  <tr><td>高风险工具调用</td><td>100%</td><td>safety_policy_judge@v4</td><td>告警 + 审计</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="data-loop">
+          <div class="view-header">
+            <div>
+              <h2>FR-8 数据回流与第二增长曲线 <span class="help" tabindex="0" data-tip="评测轨迹和评分天然可转为 SFT、DPO、过程奖励信号；失败归因可一键生成数据需求单。">?</span></h2>
+              <p>把 Abaka 类公司的人工服务转化为可调度、可复购、可商业化的评测资产和训练数据产品。</p>
+            </div>
+            <span class="badge violet">Data Flywheel</span>
+          </div>
+
+          <div class="grid cols-4">
+            <div class="panel kpi"><span>数据需求单</span><strong id="dataOrders">11</strong><small>本周新增 4</small></div>
+            <div class="panel kpi green"><span>SFT 导出</span><strong>86K</strong><small>授权通过样本</small></div>
+            <div class="panel kpi amber"><span>DPO 偏好对</span><strong>12K</strong><small>来自 Pairwise</small></div>
+            <div class="panel kpi violet"><span>过程奖励步骤</span><strong>420K</strong><small>Step 级标注</small></div>
+          </div>
+
+          <div class="panel" data-tip="失败归因报告一键生成数据需求单，进入标注生产线后再评测验证。">
+            <h3>失败驱动的数据生产闭环</h3>
+            <div class="flow">
+              <div class="flow-step" data-step="1"><h4>失败归因</h4><p>工具参数错误占 28%，代表 Case 已定位。</p><span class="badge red">FR-6.4</span></div>
+              <div class="flow-step" data-step="2"><h4>数据需求单</h4><p>需要异常返回 + recovery gold trajectory。</p><span class="badge blue">FR-8.2</span></div>
+              <div class="flow-step" data-step="3"><h4>标注生产线</h4><p>专家生成金标轨迹、Rubric 和验证器。</p><span class="badge green">FR-5</span></div>
+              <div class="flow-step" data-step="4"><h4>再评测验证</h4><p>新数据训练后回归 Run 验证显著提升。</p><span class="badge violet">闭环</span></div>
+            </div>
+            <button class="btn primary" id="createDataOrder" style="margin-top:12px;">从失败模式生成数据需求单</button>
+          </div>
+        </section>
+
+        <section class="view" id="architecture">
+          <div class="view-header">
+            <div>
+              <h2>平台架构方案 <span class="help" tabindex="0" data-tip="总体架构按接入层、应用服务层、执行层、数据层组织；关键 ADR 确保可复现和可扩展。">?</span></h2>
+              <p>这不是单页 demo 架构，而是可演进到私有化部署、在线评估和数据资产市场的终态架构。</p>
+            </div>
+            <span class="badge blue">Execution and evaluation decoupled</span>
+          </div>
+
+          <div class="panel">
+            <div class="architecture" aria-label="平台架构图" data-tip="接入层、领域服务层、执行层、数据层按职责拆分，支持私有化部署和资产市场。">
+              <svg viewBox="0 0 1120 620" role="img">
+                <rect width="1120" height="620" fill="#ffffff"/>
+                <g font-family="Inter, system-ui">
+                  <rect x="40" y="28" width="1040" height="84" rx="8" fill="#eff6ff" stroke="#bfdbfe"/>
+                  <text x="64" y="60" font-size="18" font-weight="900" fill="#175cd3">接入层</text>
+                  <text x="64" y="90" font-size="14" fill="#344054">Web Console · Python/TS SDK · CLI · OpenAPI · CI Plugins · OTel Collector</text>
+
+                  <rect x="40" y="138" width="1040" height="142" rx="8" fill="#f8fafc" stroke="#d0d5dd"/>
+                  <text x="64" y="170" font-size="18" font-weight="900" fill="#1d2939">应用服务层</text>
+                  <g font-size="13" font-weight="800" fill="#344054">
+                    <rect x="64" y="195" width="130" height="48" rx="8" fill="#fff" stroke="#d0d5dd"/><text x="84" y="225">dataset-svc</text>
+                    <rect x="214" y="195" width="130" height="48" rx="8" fill="#fff" stroke="#d0d5dd"/><text x="247" y="225">run-svc</text>
+                    <rect x="364" y="195" width="130" height="48" rx="8" fill="#fff" stroke="#d0d5dd"/><text x="394" y="225">eval-svc</text>
+                    <rect x="514" y="195" width="130" height="48" rx="8" fill="#fff" stroke="#d0d5dd"/><text x="544" y="225">env-svc</text>
+                    <rect x="664" y="195" width="150" height="48" rx="8" fill="#fff" stroke="#d0d5dd"/><text x="684" y="225">annotation-svc</text>
+                    <rect x="834" y="195" width="130" height="48" rx="8" fill="#fff" stroke="#d0d5dd"/><text x="860" y="225">report-svc</text>
+                    <rect x="984" y="195" width="70" height="48" rx="8" fill="#fff" stroke="#d0d5dd"/><text x="1002" y="225">iam</text>
+                  </g>
+
+                  <rect x="40" y="306" width="1040" height="142" rx="8" fill="#ecfdf3" stroke="#abefc6"/>
+                  <text x="64" y="338" font-size="18" font-weight="900" fill="#067647">执行层</text>
+                  <g font-size="13" font-weight="800" fill="#344054">
+                    <rect x="64" y="362" width="160" height="52" rx="8" fill="#fff" stroke="#d0d5dd"/><text x="94" y="393">Scheduler</text>
+                    <rect x="246" y="362" width="160" height="52" rx="8" fill="#fff" stroke="#d0d5dd"/><text x="282" y="393">Runner Pool</text>
+                    <rect x="428" y="362" width="180" height="52" rx="8" fill="#fff" stroke="#d0d5dd"/><text x="464" y="393">Sandbox Pool</text>
+                    <rect x="630" y="362" width="170" height="52" rx="8" fill="#fff" stroke="#d0d5dd"/><text x="664" y="393">Checker Pool</text>
+                    <rect x="822" y="362" width="210" height="52" rx="8" fill="#fff" stroke="#d0d5dd"/><text x="866" y="393">Judge Gateway</text>
+                  </g>
+
+                  <rect x="40" y="474" width="1040" height="110" rx="8" fill="#fdf4ff" stroke="#e9d7fe"/>
+                  <text x="64" y="506" font-size="18" font-weight="900" fill="#6941c6">数据层</text>
+                  <text x="64" y="540" font-size="14" fill="#344054">PostgreSQL metadata · ClickHouse trajectory and scores · Object Storage snapshots/screenshots · Kafka streams · Redis queues/cache</text>
+                </g>
+              </svg>
+            </div>
+          </div>
+
+          <div class="grid cols-3">
+            <div class="panel"><h3>ADR-1</h3><p>执行与评估两个独立 pipeline，以轨迹 + 终态快照为中间产物。</p></div>
+            <div class="panel"><h3>ADR-4</h3><p>沙箱用强隔离运行时，Checker 与 Agent 容器物理分离。</p></div>
+            <div class="panel"><h3>ADR-7</h3><p>所有分数相关配置采用不可变版本快照。</p></div>
+          </div>
+        </section>
+
+        <section class="view" id="roadmap">
+          <div class="view-header">
+            <div>
+              <h2>两年演进路线图 <span class="help" tabindex="0" data-tip="每个 Phase 以真实业务里程碑验收，而非功能完成度。">?</span></h2>
+              <p>从 0-3 个月 MVP 到 18-24 个月生态飞轮，逐步建立环境模板、Judge 校准、专家网络和数据回流壁垒。</p>
+            </div>
+            <span class="badge green">Phase-based execution</span>
+          </div>
+
+          <div class="roadmap">
+            <div class="phase" data-tip="MVP 不追求大而全，只要 2 个真实业务 Agent 能端到端回归并辅助一次迭代决策。"><span class="badge blue">0-3M</span><h3>Phase 1 MVP</h3><ul><li>FR-1.1/1.2 接入</li><li>FR-2.1~2.3 数据集</li><li>FR-3.1/3.2 Run</li><li>FR-4.1~4.3 基础评估器</li><li>FR-6.1/6.2 报告对比</li></ul><strong>2 个真实 Agent 完成回归决策</strong></div>
+            <div class="phase" data-tip="工程化阶段把平台接入研发流程：SDK、CI、Judge 校准、沙箱、标注和失败归因同时成形。"><span class="badge green">3-9M</span><h3>Phase 2 工程化</h3><ul><li>SDK 与 CI 门禁</li><li>Judge 校准闭环</li><li>沙箱 v1 + Mock 工具</li><li>标注工作台</li><li>失败归因 v1</li></ul><strong>5 个团队接入 CI</strong></div>
+            <div class="phase" data-tip="深度能力阶段建立壁垒：环境模板、用户模拟器、安全评估、专家网络和私有化能力。"><span class="badge amber">9-18M</span><h3>Phase 3 壁垒</h3><ul><li>用户模拟器</li><li>安全评估</li><li>协议接入</li><li>合成数据线</li><li>专家网络与私有化</li></ul><strong>模板库 ≥ 10 个领域</strong></div>
+            <div class="phase" data-tip="终态阶段面向生态：Computer Use、多 Agent、RM 市场、在线 A/B、数据回流和公开榜单。"><span class="badge violet">18-24M</span><h3>Phase 4 终态</h3><ul><li>Computer Use</li><li>多 Agent 评测</li><li>RM 与市场</li><li>在线 A/B</li><li>数据回流与公开榜单</li></ul><strong>2 个客户跑通数据飞轮</strong></div>
+          </div>
+        </section>
+
+        <section class="view" id="governance">
+          <div class="view-header">
+            <div>
+              <h2>FR-9 平台基础与治理 <span class="help" tabindex="0" data-tip="多租户、RBAC、审计、LLM 网关、数据安全、私有化部署是贯穿全平台的基础能力。">?</span></h2>
+              <p>可信评测的关键不是总分，而是可复现、可审计、可隔离、可解释、可私有化。</p>
+            </div>
+            <span class="badge amber" id="auditState">审计：待运行</span>
+          </div>
+
+          <div class="grid cols-4">
+            <div class="panel kpi"><span>RBAC 角色</span><strong>5</strong><small>管理员/建设者/开发者/标注员/只读</small></div>
+            <div class="panel kpi green"><span>审计事件</span><strong>81K</strong><small>不可变日志链</small></div>
+            <div class="panel kpi amber"><span>Judge 成本</span><strong>$9.8K</strong><small>缓存节省 31%</small></div>
+            <div class="panel kpi red"><span>PII 命中</span><strong>132</strong><small>已自动脱敏</small></div>
+          </div>
+
+          <div class="grid cols-main">
+            <div class="panel">
+              <h3>治理控制清单</h3>
+              <div class="list">
+                <div class="item"><div class="item-head"><h4>FR-9.1 多租户与 RBAC</h4><span class="badge green">通过</span></div><p>组织、团队、项目三级隔离。</p></div>
+                <div class="item"><div class="item-head"><h4>FR-9.2 审计日志</h4><span class="badge green">通过</span></div><p>数据集变更、Run、门禁、导出全留痕。</p></div>
+                <div class="item"><div class="item-head"><h4>FR-9.3 LLM 网关</h4><span class="badge blue">运行中</span></div><p>多模型路由、缓存、限流、成本核算。</p></div>
+                <div class="item"><div class="item-head"><h4>FR-9.4 数据安全</h4><span class="badge amber">抽检中</span></div><p>PII 脱敏、静态加密、训练用途隔离。</p></div>
+                <div class="item"><div class="item-head"><h4>FR-9.5 私有化部署</h4><span class="badge violet">架构预留</span></div><p>核心服务无外部强依赖。</p></div>
+              </div>
+              <button class="btn primary" id="runAudit" style="margin-top:12px;">运行治理审计</button>
+            </div>
+
+            <div class="panel">
+              <h3>审计日志</h3>
+              <div class="code" id="auditLog">[iam] org=acme team=agent-platform project=customer-ops role=eval-builder
+[dataset] dataset_id=customer_ops_regression version=v42 immutable=true
+[run] run_id=run_884 target=customer-support-agent@2026.06.11
+[gate] judge=safety_refusal_judge@v4 excluded=false
+[export] pii_check=passed license_scope=training_allowed</div>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    const views = Array.from(document.querySelectorAll(".view"));
+    const navButtons = Array.from(document.querySelectorAll(".nav button[data-view]"));
+    const topViewButtons = Array.from(document.querySelectorAll(".top-actions [data-view]"));
+    const toast = document.getElementById("toast");
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 2600);
+    }
+
+    function activateView(id) {
+      views.forEach((view) => view.classList.toggle("active", view.id === id));
+      navButtons.forEach((button) => button.classList.toggle("active", button.dataset.view === id));
+      document.querySelector(".topbar").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    [...navButtons, ...topViewButtons, ...document.querySelectorAll(".content [data-view]")].forEach((button) => {
+      button.addEventListener("click", () => activateView(button.dataset.view));
+    });
+
+    document.getElementById("connectTarget").addEventListener("click", () => {
+      document.getElementById("targetStatus").textContent = "已接入 · schema parsed · latency 382ms";
+      showToast("Target 连通性测试通过：请求模板、鉴权和响应字段均已解析。");
+    });
+
+    document.getElementById("validateTrace").addEventListener("click", () => {
+      document.getElementById("traceValidator").textContent = `trace.jsonl
+status: valid
+records: 1000
+format: OTel GenAI + platform extensions
+fix suggestions: none
+next: send to eval-svc for scoring`;
+      showToast("离线轨迹格式校验通过，可进入评估链路。");
+    });
+
+    document.getElementById("createDatasetVersion").addEventListener("click", () => {
+      document.getElementById("datasetVersion").textContent = "v43";
+      showToast("Dataset v43 已生成不可变快照，历史 Run 仍绑定 v42。");
+    });
+
+    document.getElementById("startRun").addEventListener("click", () => {
+      document.getElementById("runState").textContent = "执行中 · 2,418 / 3000 trials";
+      document.getElementById("runLog").textContent += `
+[run] run_884 planned: 1000 cases × 3 trials
+[scheduler] priority=CI_GATE concurrency=500
+[runner] 2418 trials completed, 11 infra failures isolated
+[eval] rule and trajectory evaluators completed; judge queue active`;
+      showToast("Run 已启动：Trial 拆分、沙箱申请和轨迹采集开始。");
+    });
+
+    document.getElementById("rerunFailures").addEventListener("click", () => {
+      document.getElementById("runState").textContent = "部分完成 · 17 failed trials queued for rerun";
+      document.getElementById("runLog").textContent += `
+[resume] rerun failed trials only, idempotent execution enabled`;
+      showToast("已创建断点续跑任务，只重跑失败 Trial。");
+    });
+
+    document.getElementById("rejudgeRun").addEventListener("click", () => {
+      document.getElementById("runLog").textContent += `
+[rejudge] historical trajectories will be scored by evaluator_set@v9`;
+      showToast("历史轨迹重评已排队，原始执行轨迹保持不变。");
+    });
+
+    document.getElementById("freezeJudge").addEventListener("click", () => {
+      document.getElementById("judgeHealth").textContent = "Judge 健康：safety_refusal_judge@v4 已冻结门禁效力";
+      document.getElementById("globalJudgeScore").textContent = "0.84";
+      showToast("不合格 Judge 已从门禁判定中排除，仅保留参考分。");
+    });
+
+    document.getElementById("completeAnnotation").addEventListener("click", () => {
+      document.getElementById("annotationSla").textContent = "平均标注 4.1 分钟 / 20 步轨迹";
+      showToast("标注批次完成：IAA 已更新，仲裁样本已分派。");
+    });
+
+    document.getElementById("togglePassK").addEventListener("click", () => {
+      const passMode = document.getElementById("passMode");
+      passMode.textContent = passMode.textContent === "pass@1" ? "pass@3 / pass^3" : "pass@1";
+      showToast("报告视图已切换重复执行统计口径。");
+    });
+
+    document.getElementById("compareRuns").addEventListener("click", () => {
+      document.getElementById("comparisonBody").insertAdjacentHTML("beforeend", `
+        <tr><td>显著性结论</td><td>p=0.018</td><td>success_rate +3.4pp</td><td>差异显著，可作为发布依据</td></tr>
+      `);
+      showToast("配对 bootstrap 完成：核心指标提升达到统计显著。");
+    });
+
+    document.getElementById("triggerGate").addEventListener("click", () => {
+      document.getElementById("gateState").textContent = "门禁：通过 · 无新增安全失败";
+      showToast("CI 门禁通过，PR 状态检查和报告链接已回写。");
+    });
+
+    document.getElementById("ingestOnlineTrace").addEventListener("click", () => {
+      document.getElementById("onlineQueue").textContent = "29";
+      showToast("线上轨迹已摄入：5 条低分轨迹进入待回流队列。");
+    });
+
+    document.getElementById("createDataOrder").addEventListener("click", () => {
+      document.getElementById("dataOrders").textContent = "12";
+      showToast("已从失败模式生成数据需求单：异常返回 recovery trajectory pack。");
+    });
+
+    document.getElementById("runAudit").addEventListener("click", () => {
+      document.getElementById("auditState").textContent = "审计：合格 · evidence bundle ready";
+      document.getElementById("auditLog").textContent += `
+[audit] evaluator health checked, frozen judges excluded from gates
+[attestation] run_884 evidence bundle exported
+[privacy] PII redaction sample audit passed`;
+      showToast("治理审计完成：评测证明包已生成。");
+    });
+
+    document.getElementById("tourBtn").addEventListener("click", () => {
+      const order = ["targets", "datasets", "runs", "evaluators", "annotation", "reports", "online", "data-loop", "architecture", "governance"];
+      let index = 0;
+      showToast("开始主链路演示。");
+      const timer = window.setInterval(() => {
+        activateView(order[index]);
+        index += 1;
+        if (index >= order.length) {
+          window.clearInterval(timer);
+          showToast("主链路已跑通：接入、数据集、执行、评估、人工、报告、在线、回流、治理。");
+        }
+      }, 760);
+    });
+  </script>
+</body>
+</html>
