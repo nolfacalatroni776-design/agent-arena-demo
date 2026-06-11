@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Agent Evaluation Platform</title>
+  <title>智能体测评平台</title>
   <style>
     :root {
       --bg: #f7f6f3;
@@ -848,46 +848,46 @@
       <div class="workspace">
         <div class="workspace-mark">AE</div>
         <div>
-          <strong>Agent Eval</strong>
-          <span>Acme AI Platform</span>
+          <strong>智能体测评</strong>
+          <span>Acme AI 平台</span>
         </div>
       </div>
 
-      <nav class="nav" aria-label="Workspace navigation">
-        <div class="nav-title">Workspace</div>
-        <button class="active" data-view="home"><span class="emoji">⌂</span><span>Home</span><small>42</small></button>
-        <button data-view="targets"><span class="emoji">◈</span><span>Targets</span><small id="targetCount">18</small></button>
-        <button data-view="assets"><span class="emoji">▦</span><span>Evaluation Assets</span><small id="assetCount">9,420</small></button>
-        <button data-view="runs"><span class="emoji">▶</span><span>Runs</span><small>31</small></button>
-        <button data-view="trace"><span class="emoji">⌁</span><span>Trace Review</span><small>7</small></button>
-        <button data-view="reports"><span class="emoji">◷</span><span>Reports</span><small>12</small></button>
-        <div class="nav-title">Operations</div>
-        <button data-view="calibration"><span class="emoji">◎</span><span>Judge Calibration</span><small>3</small></button>
-        <button data-view="online"><span class="emoji">◌</span><span>Online Monitor</span><small id="onlineQueue">26</small></button>
-        <button data-view="data-loop"><span class="emoji">↻</span><span>Data Loop</span><small id="workOrders">12</small></button>
-        <button data-view="admin"><span class="emoji">⚙</span><span>Admin</span><small>OK</small></button>
-        <button data-view="docs"><span class="emoji">?</span><span>Docs</span><small>6</small></button>
+      <nav class="nav" aria-label="工作区导航">
+        <div class="nav-title">工作区</div>
+        <button class="active" data-view="home"><span class="emoji">⌂</span><span>首页</span><small>42</small></button>
+        <button data-view="targets"><span class="emoji">◈</span><span>被测对象</span><small id="targetCount">18</small></button>
+        <button data-view="assets"><span class="emoji">▦</span><span>评测资产</span><small id="assetCount">9,420</small></button>
+        <button data-view="runs"><span class="emoji">▶</span><span>评测运行</span><small>31</small></button>
+        <button data-view="trace"><span class="emoji">⌁</span><span>轨迹复核</span><small>7</small></button>
+        <button data-view="reports"><span class="emoji">◷</span><span>报告</span><small>12</small></button>
+        <div class="nav-title">运营</div>
+        <button data-view="calibration"><span class="emoji">◎</span><span>裁判校准</span><small>3</small></button>
+        <button data-view="online"><span class="emoji">◌</span><span>在线监控</span><small id="onlineQueue">26</small></button>
+        <button data-view="data-loop"><span class="emoji">↻</span><span>数据闭环</span><small id="workOrders">12</small></button>
+        <button data-view="admin"><span class="emoji">⚙</span><span>管理</span><small>正常</small></button>
+        <button data-view="docs"><span class="emoji">?</span><span>文档</span><small>6</small></button>
       </nav>
 
       <div class="sidebar-note">
-        <strong>Support Agent v18</strong>
-        <span>Gate-ready after unstable trials are rerun.</span>
-        <span class="badge green">Release window 18:00</span>
+        <strong>客服智能体 v18</strong>
+        <span>不稳定样例复跑后可进入门禁审批。</span>
+        <span class="badge green">发布窗口 18:00</span>
       </div>
     </aside>
 
     <main class="main">
       <header class="topbar">
-        <div class="breadcrumb">Acme AI Platform / Customer Ops / Evaluation workspace</div>
-        <div class="search">Search targets, cases, runs, traces, reports...</div>
+        <div class="breadcrumb">Acme AI 平台 / 客服运营 / 评测工作区</div>
+        <div class="search">搜索被测对象、样例、运行、轨迹、报告...</div>
         <div class="top-actions">
-          <select class="select" aria-label="Workspace mode">
-            <option>Customer Ops</option>
-            <option>Finance Agent</option>
-            <option>Browser Use Lab</option>
+          <select class="select" aria-label="工作区模式">
+            <option>客服运营</option>
+            <option>财务智能体</option>
+            <option>浏览器操作实验室</option>
           </select>
-          <button class="btn" id="quickTour">Command palette</button>
-          <button class="btn primary" data-view="runs">New run</button>
+          <button class="btn" id="quickTour">命令面板</button>
+          <button class="btn primary" data-view="runs">新建运行</button>
         </div>
       </header>
 
@@ -895,91 +895,91 @@
         <section class="view active" id="home">
           <div class="page-title">
             <div class="icon">⌂</div>
-            <h1>Evaluation workspace</h1>
+            <h1>评测工作区</h1>
             <div class="page-meta">
-              <span class="prop">Owner · AI Platform</span>
-              <span class="prop">Program · Customer Ops</span>
-              <span class="prop">Decision SLA · 4h</span>
-              <span class="prop">Last sync · 11 Jun 2026</span>
+              <span class="prop">负责人 · AI 平台</span>
+              <span class="prop">项目 · 客服运营</span>
+              <span class="prop">决策 SLA · 4 小时</span>
+              <span class="prop">最近同步 · 2026-06-11</span>
             </div>
           </div>
 
           <div class="tabs">
-            <button class="tab active">Overview</button>
-            <button class="tab">Board</button>
-            <button class="tab">Calendar</button>
-            <button class="tab">Recent decisions</button>
+            <button class="tab active">概览</button>
+            <button class="tab">看板</button>
+            <button class="tab">日历</button>
+            <button class="tab">最近决策</button>
           </div>
 
           <div class="grid cols-4">
-            <div class="card metric" data-tip="Weekly decisions made from platform evidence: release, rollback, model selection, or data production.">
-              <span>Decisions this week</span>
+            <div class="card metric" data-tip="本周基于平台证据做出的发布、回滚、模型选型或数据生产决策。">
+              <span>本周决策</span>
               <strong>47</strong>
-              <small>31 release · 4 rollback · 12 selection</small>
+              <small>31 次发布 · 4 次回滚 · 12 次选型</small>
             </div>
-            <div class="card metric" data-tip="Release gates use repeated trials, judge health, and confidence intervals rather than a single score.">
-              <span>Release gates</span>
+            <div class="card metric" data-tip="发布门禁使用重复试验、裁判健康度和置信区间，而不是依赖单次分数。">
+              <span>发布门禁</span>
               <strong>68%</strong>
-              <small>CI coverage across active targets</small>
+              <small>覆盖活跃被测对象的 CI 门禁</small>
             </div>
-            <div class="card metric" data-tip="Judge health is updated by gold-standard agreement and human review sampling.">
-              <span>Judge agreement</span>
+            <div class="card metric" data-tip="裁判健康度由金标准一致率和人工抽检结果持续更新。">
+              <span>裁判一致率</span>
               <strong>0.86</strong>
-              <small>3 judges need calibration</small>
+              <small>3 个裁判需要校准</small>
             </div>
-            <div class="card metric" data-tip="Reusable assets include datasets, cases, environment templates, mock tools, evaluators, rubrics, and gold traces.">
-              <span>Evaluation assets</span>
+            <div class="card metric" data-tip="可复用资产包括评测集、样例、环境模板、Mock 工具、评估器、Rubric 和金标准轨迹。">
+              <span>评测资产</span>
               <strong>9,420</strong>
-              <small>184 added this month</small>
+              <small>本月新增 184 个</small>
             </div>
           </div>
 
           <div class="grid cols-main">
             <div class="card">
               <div class="toolbar">
-                <h3>Recommended actions</h3>
-                <button class="btn subtle" data-view="reports">Open report queue</button>
+                <h3>建议处理事项</h3>
+                <button class="btn subtle" data-view="reports">打开报告队列</button>
               </div>
               <div class="database">
                 <table>
                   <thead>
-                    <tr><th>Action</th><th>Object</th><th>Owner</th><th>Impact</th><th>Status</th></tr>
+                    <tr><th>动作</th><th>对象</th><th>负责人</th><th>影响</th><th>状态</th></tr>
                   </thead>
                   <tbody>
-                    <tr><td>Review newly failed cases</td><td>Customer Ops regression</td><td>AI Platform</td><td><span class="badge red">High</span></td><td><span class="badge amber">Due today</span></td></tr>
-                    <tr><td>Approve release gate</td><td>Support Agent v18</td><td>Agent Team</td><td><span class="badge green">Ready</span></td><td><span class="badge blue">Evidence attached</span></td></tr>
-                    <tr><td>Calibrate safety judge</td><td>Risk refusal judge</td><td>Annotation Ops</td><td><span class="badge amber">Medium</span></td><td><span class="badge red">Below threshold</span></td></tr>
-                    <tr><td>Create training data order</td><td>Tool recovery failures</td><td>Data Ops</td><td><span class="badge purple">Growth</span></td><td><span class="badge">Draft</span></td></tr>
+                    <tr><td>复核新增失败样例</td><td>客服运营回归集</td><td>AI 平台</td><td><span class="badge red">高</span></td><td><span class="badge amber">今日到期</span></td></tr>
+                    <tr><td>批准发布门禁</td><td>客服智能体 v18</td><td>智能体团队</td><td><span class="badge green">就绪</span></td><td><span class="badge blue">证据已附加</span></td></tr>
+                    <tr><td>校准安全裁判</td><td>风险拒答裁判</td><td>标注运营</td><td><span class="badge amber">中</span></td><td><span class="badge red">低于阈值</span></td></tr>
+                    <tr><td>创建训练数据工单</td><td>工具恢复失败</td><td>数据运营</td><td><span class="badge purple">增长</span></td><td><span class="badge">草稿</span></td></tr>
                   </tbody>
                 </table>
               </div>
             </div>
 
             <div class="card side-panel">
-              <h3>Release readiness</h3>
+              <h3>发布就绪度</h3>
               <div class="list">
-                <div class="item"><div class="item-head"><h4>Regression suite</h4><span class="badge green">Passed</span></div><div class="progress"><span class="bar green" style="--w: 92%"></span></div></div>
-                <div class="item"><div class="item-head"><h4>Critical pass^3</h4><span class="badge green">0.74</span></div><div class="progress"><span class="bar green" style="--w: 74%"></span></div></div>
-                <div class="item"><div class="item-head"><h4>New safety failures</h4><span class="badge green">0</span></div><div class="progress"><span class="bar green" style="--w: 100%"></span></div></div>
-                <div class="item"><div class="item-head"><h4>Judge eligibility</h4><span class="badge amber">1 excluded</span></div><div class="progress"><span class="bar amber" style="--w: 82%"></span></div></div>
+                <div class="item"><div class="item-head"><h4>回归套件</h4><span class="badge green">通过</span></div><div class="progress"><span class="bar green" style="--w: 92%"></span></div></div>
+                <div class="item"><div class="item-head"><h4>关键集 pass^3</h4><span class="badge green">0.74</span></div><div class="progress"><span class="bar green" style="--w: 74%"></span></div></div>
+                <div class="item"><div class="item-head"><h4>新增安全失败</h4><span class="badge green">0</span></div><div class="progress"><span class="bar green" style="--w: 100%"></span></div></div>
+                <div class="item"><div class="item-head"><h4>裁判门禁资格</h4><span class="badge amber">已排除 1 个</span></div><div class="progress"><span class="bar amber" style="--w: 82%"></span></div></div>
               </div>
             </div>
           </div>
 
           <div class="card">
-            <h3>Pinned workspaces</h3>
+            <h3>置顶工作区</h3>
             <div class="template-grid">
               <div class="template-card" data-view="targets">
                 <div class="template-preview"><div class="mini-line"></div><div class="mini-line mid"></div><div class="mini-line short"></div></div>
-                <div class="template-body"><h4>Target registry</h4><p>18 targets · 4 unhealthy checks</p><span class="badge blue">Open</span></div>
+                <div class="template-body"><h4>被测对象注册表</h4><p>18 个对象 · 4 个健康检查异常</p><span class="badge blue">打开</span></div>
               </div>
               <div class="template-card" data-view="assets">
                 <div class="template-preview"><div class="mini-line mid"></div><div class="mini-line"></div><div class="mini-line short"></div></div>
-                <div class="template-body"><h4>Evaluation assets</h4><p>9,420 assets · 184 added this month</p><span class="badge green">Open</span></div>
+                <div class="template-body"><h4>评测资产</h4><p>9,420 个资产 · 本月新增 184 个</p><span class="badge green">打开</span></div>
               </div>
               <div class="template-card" data-view="runs">
                 <div class="template-preview"><div class="mini-line"></div><div class="mini-line"></div><div class="mini-line mid"></div></div>
-                <div class="template-body"><h4>Run queue</h4><p>31 active runs · 7 waiting on review</p><span class="badge amber">Open</span></div>
+                <div class="template-body"><h4>运行队列</h4><p>31 个运行中 · 7 个等待复核</p><span class="badge amber">打开</span></div>
               </div>
             </div>
           </div>
@@ -988,53 +988,53 @@
         <section class="view" id="targets">
           <div class="page-title">
             <div class="icon">◈</div>
-            <h1>Targets</h1>
+            <h1>被测对象</h1>
             <div class="page-meta">
-              <span class="prop">18 active</span>
-              <span class="prop">4 connection modes</span>
-              <span class="prop">Trace schema · current</span>
-              <span class="prop">Secrets · tenant scoped</span>
+              <span class="prop">18 个活跃对象</span>
+              <span class="prop">4 种接入模式</span>
+              <span class="prop">轨迹 Schema · 当前版本</span>
+              <span class="prop">密钥 · 租户隔离</span>
             </div>
           </div>
 
           <div class="toolbar">
             <div class="toolbar-left">
-              <button class="btn primary" id="addTarget" data-tip="Create a reproducible target version with runtime, tool manifest, prompt, and credentials captured.">Add target</button>
-              <button class="btn" id="uploadTrace" data-tip="Use offline trace upload when a customer wants evaluation without changing production code.">Upload traces</button>
-              <button class="btn" data-tip="Connection guides adapt to API, SDK, trace-only, MCP, and browser-use modes.">Connection guide</button>
+              <button class="btn primary" id="addTarget" data-tip="创建可复现的被测对象版本，并记录运行时、工具清单、提示词和凭据策略。">添加被测对象</button>
+              <button class="btn" id="uploadTrace" data-tip="客户不希望改造生产代码时，可使用离线轨迹上传完成评估。">上传轨迹</button>
+              <button class="btn" data-tip="接入指南会根据 API、SDK、纯轨迹、MCP 和浏览器操作模式切换。">接入指南</button>
             </div>
             <div class="toolbar-right">
-              <select class="select" aria-label="Target filter"><option>All connection modes</option><option>API</option><option>SDK</option><option>Trace upload</option><option>Browser use</option></select>
+              <select class="select" aria-label="被测对象筛选"><option>全部接入模式</option><option>API</option><option>SDK</option><option>轨迹上传</option><option>浏览器操作</option></select>
             </div>
           </div>
 
           <div class="grid cols-main">
             <div class="card">
-              <h3>Target registry</h3>
+              <h3>被测对象注册表</h3>
               <div class="database">
                 <table>
-                  <thead><tr><th>Name</th><th>Version</th><th>Connection</th><th>Health</th><th>Last run</th></tr></thead>
+                  <thead><tr><th>名称</th><th>版本</th><th>接入</th><th>健康度</th><th>最近运行</th></tr></thead>
                   <tbody id="targetTable">
-                    <tr><td>Support Agent</td><td>2026.06.11</td><td><span class="badge blue">API</span></td><td><span class="badge green">Healthy</span></td><td>91.2 · passed</td></tr>
-                    <tr><td>Finance Reconciler</td><td>2026.06.08</td><td><span class="badge green">SDK</span></td><td><span class="badge green">Healthy</span></td><td>87.9 · watch</td></tr>
-                    <tr><td>Browser Checkout Agent</td><td>2026.06.02</td><td><span class="badge purple">Browser</span></td><td><span class="badge amber">Sandbox warmup</span></td><td>73.4 · blocked</td></tr>
-                    <tr><td>Legacy Trace Import</td><td>offline-v4</td><td><span class="badge">Trace upload</span></td><td><span class="badge green" id="traceStatus">schema ready</span></td><td>Pending</td></tr>
+                    <tr><td>客服智能体</td><td>2026.06.11</td><td><span class="badge blue">API</span></td><td><span class="badge green">健康</span></td><td>91.2 · 已通过</td></tr>
+                    <tr><td>财务对账智能体</td><td>2026.06.08</td><td><span class="badge green">SDK</span></td><td><span class="badge green">健康</span></td><td>87.9 · 观察</td></tr>
+                    <tr><td>浏览器下单智能体</td><td>2026.06.02</td><td><span class="badge purple">浏览器</span></td><td><span class="badge amber">沙箱预热中</span></td><td>73.4 · 已阻断</td></tr>
+                    <tr><td>历史轨迹导入</td><td>offline-v4</td><td><span class="badge">轨迹上传</span></td><td><span class="badge green" id="traceStatus">轨迹结构就绪</span></td><td>待处理</td></tr>
                   </tbody>
                 </table>
               </div>
             </div>
 
             <div class="card side-panel">
-              <h3>Connection profile <span class="help" tabindex="0" data-tip="A connection profile can be API-driven, offline trace-only, SDK-instrumented, MCP/A2A mediated, or browser/computer-use sandboxed.">?</span></h3>
+              <h3>接入配置 <span class="help" tabindex="0" data-tip="接入配置可选择 API 驱动、离线轨迹、SDK 埋点、MCP/A2A 中介，或浏览器/电脑操作沙箱。">?</span></h3>
               <div class="form-grid">
-                <label class="full" data-tip="Target names are human-readable; scoring binds to immutable target versions.">Target name<input class="input" value="Support Agent"></label>
-                <label data-tip="Connection mode controls how the platform drives execution and captures trajectories.">Mode<select class="select"><option>API endpoint</option><option>Offline trace upload</option><option>SDK instrumentation</option><option>MCP tool mediation</option><option>Browser use</option></select></label>
-                <label data-tip="Credentials are encrypted and scoped by tenant or customer-controlled secret stores.">Credential policy<select class="select"><option>Tenant encrypted secret</option><option>Customer VPC secret</option><option>No credential</option></select></label>
-                <label class="full" data-tip="Endpoint can be OpenAI-compatible or a custom request/response mapping.">Endpoint<input class="input" value="https://agent.internal/v1/chat/completions"></label>
+                <label class="full" data-tip="对象名称用于识别；评分绑定到不可变的对象版本。">对象名称<input class="input" value="客服智能体"></label>
+                <label data-tip="接入模式决定平台如何驱动执行并采集轨迹。">模式<select class="select"><option>API 端点</option><option>离线轨迹上传</option><option>SDK 埋点</option><option>MCP 工具中介</option><option>浏览器操作</option></select></label>
+                <label data-tip="凭据加密存储，并按租户或客户自有密钥库隔离。">凭据策略<select class="select"><option>租户加密密钥</option><option>客户 VPC 密钥</option><option>无需凭据</option></select></label>
+                <label class="full" data-tip="端点可兼容 OpenAI 格式，也可配置自定义请求/响应映射。">端点<input class="input" value="https://agent.internal/v1/chat/completions"></label>
               </div>
               <div class="button-row" style="margin-top:12px;">
-                <button class="btn primary">Test connection</button>
-                <button class="btn">Save version</button>
+                <button class="btn primary">测试连接</button>
+                <button class="btn">保存版本</button>
               </div>
             </div>
           </div>
@@ -1043,61 +1043,61 @@
         <section class="view" id="assets">
           <div class="page-title">
             <div class="icon">▦</div>
-            <h1>Evaluation Assets</h1>
+            <h1>评测资产</h1>
             <div class="page-meta">
-              <span class="prop">9,420 assets</span>
-              <span class="prop">43 dataset snapshots</span>
-              <span class="prop">18 environments</span>
-              <span class="prop">64 evaluators</span>
+              <span class="prop">9,420 个资产</span>
+              <span class="prop">43 个评测集快照</span>
+              <span class="prop">18 个环境</span>
+              <span class="prop">64 个评估器</span>
             </div>
           </div>
 
           <div class="toolbar">
             <div class="toolbar-left">
-              <button class="btn primary" id="createCase" data-tip="Create a case with task input, references, assertions, tags, source, and review status.">New case</button>
-              <button class="btn" id="cloneTemplate" data-tip="Templates package datasets, rubrics, environment seeds, mock tools, and evaluators.">Clone template</button>
-              <button class="btn" data-tip="Import JSONL, CSV, benchmark adapters, or production-returned candidate cases.">Import dataset</button>
+              <button class="btn primary" id="createCase" data-tip="创建包含任务输入、参考答案、断言、标签、来源和审核状态的样例。">新建样例</button>
+              <button class="btn" id="cloneTemplate" data-tip="模板打包评测集、评分规则、环境种子、Mock 工具和评估器。">克隆模板</button>
+              <button class="btn" data-tip="导入 JSONL、CSV、Benchmark 适配器或线上回流候选样例。">导入评测集</button>
             </div>
             <div class="toolbar-right">
-              <select class="select"><option>Gallery view</option><option>Database view</option><option>Health view</option></select>
+              <select class="select"><option>画廊视图</option><option>数据库视图</option><option>健康度视图</option></select>
             </div>
           </div>
 
           <div class="template-grid">
-            <div class="template-card" data-tip="Reusable customer-service suite with tasks, assertions, gold traces, and mock CRM tools.">
+            <div class="template-card" data-tip="可复用客服评测套件，包含任务、断言、金标准轨迹和 Mock CRM 工具。">
               <div class="template-preview"><div class="mini-line"></div><div class="mini-line mid"></div><div class="mini-line short"></div></div>
-              <div class="template-body"><h4>Customer Ops Regression</h4><p>1,920 cases · 18 environments · 42 evaluators</p><div class="chips"><span class="badge green">Versioned</span><span class="badge">Private</span></div></div>
+              <div class="template-body"><h4>客服运营回归集</h4><p>1,920 个样例 · 18 个环境 · 42 个评估器</p><div class="chips"><span class="badge green">已版本化</span><span class="badge">私有</span></div></div>
             </div>
-            <div class="template-card" data-tip="Browser tasks with Playwright-backed terminal checks and screenshot evidence.">
+            <div class="template-card" data-tip="浏览器任务使用 Playwright 终态校验，并保留截图证据。">
               <div class="template-preview"><div class="mini-line short"></div><div class="mini-line"></div><div class="mini-line mid"></div></div>
-              <div class="template-body"><h4>Browser Checkout Lab</h4><p>680 cases · 9 web apps · 14 terminal checks</p><div class="chips"><span class="badge purple">Sandbox</span><span class="badge amber">Watch</span></div></div>
+              <div class="template-body"><h4>浏览器下单实验室</h4><p>680 个样例 · 9 个 Web 应用 · 14 个终态校验</p><div class="chips"><span class="badge purple">沙箱</span><span class="badge amber">观察</span></div></div>
             </div>
-            <div class="template-card" data-tip="Safety and indirect-injection challenge set for high-risk tool use.">
+            <div class="template-card" data-tip="面向高风险工具调用的安全与间接注入挑战集。">
               <div class="template-preview"><div class="mini-line"></div><div class="mini-line short"></div><div class="mini-line mid"></div></div>
-              <div class="template-body"><h4>Safety Red-Team Pack</h4><p>820 cases · 7 attack families · judge calibrated</p><div class="chips"><span class="badge red">Critical</span><span class="badge green">Gate-ready</span></div></div>
+              <div class="template-body"><h4>安全红队包</h4><p>820 个样例 · 7 类攻击 · 裁判已校准</p><div class="chips"><span class="badge red">关键</span><span class="badge green">门禁就绪</span></div></div>
             </div>
           </div>
 
           <div class="grid cols-main">
             <div class="card">
-              <h3>Case database</h3>
+              <h3>样例数据库</h3>
               <div class="database">
                 <table>
-                  <thead><tr><th>Case</th><th>Capability</th><th>Source</th><th>Environment</th><th>Status</th></tr></thead>
+                  <thead><tr><th>样例</th><th>能力</th><th>来源</th><th>环境</th><th>状态</th></tr></thead>
                   <tbody>
-                    <tr><td>Refund with coupon conflict</td><td>Tool parameter + policy</td><td><span class="badge blue">Production return</span></td><td>CRM sandbox</td><td><span class="badge green">Approved</span></td></tr>
-                    <tr><td>PII export refusal</td><td>Safety policy</td><td><span class="badge red">Red team</span></td><td>Mock data warehouse</td><td><span class="badge green">Gate set</span></td></tr>
-                    <tr><td>Invoice table ambiguity</td><td>Multimodal extraction</td><td><span class="badge purple">Expert authored</span></td><td>File sandbox</td><td><span class="badge amber">Needs review</span></td></tr>
+                    <tr><td>优惠券冲突退款</td><td>工具参数 + 政策规则</td><td><span class="badge blue">线上回流</span></td><td>CRM 沙箱</td><td><span class="badge green">已批准</span></td></tr>
+                    <tr><td>PII 导出拒答</td><td>安全策略</td><td><span class="badge red">红队</span></td><td>Mock 数据仓库</td><td><span class="badge green">门禁集</span></td></tr>
+                    <tr><td>发票表格歧义</td><td>多模态抽取</td><td><span class="badge purple">专家编写</span></td><td>文件沙箱</td><td><span class="badge amber">待复核</span></td></tr>
                   </tbody>
                 </table>
               </div>
             </div>
             <div class="card side-panel">
-              <h3>Asset health</h3>
+              <h3>资产健康度</h3>
               <div class="list">
-                <div class="item"><div class="item-head"><h4>Discrimination</h4><span class="badge green">Good</span></div><div class="progress"><span class="bar green" style="--w:81%"></span></div></div>
-                <div class="item"><div class="item-head"><h4>Staleness</h4><span class="badge amber">Rotate soon</span></div><div class="progress"><span class="bar amber" style="--w:62%"></span></div></div>
-                <div class="item"><div class="item-head"><h4>Leakage canary</h4><span class="badge green">Clean</span></div><div class="progress"><span class="bar green" style="--w:96%"></span></div></div>
+                <div class="item"><div class="item-head"><h4>区分度</h4><span class="badge green">良好</span></div><div class="progress"><span class="bar green" style="--w:81%"></span></div></div>
+                <div class="item"><div class="item-head"><h4>陈旧度</h4><span class="badge amber">即将轮换</span></div><div class="progress"><span class="bar amber" style="--w:62%"></span></div></div>
+                <div class="item"><div class="item-head"><h4>泄漏金丝雀</h4><span class="badge green">干净</span></div><div class="progress"><span class="bar green" style="--w:96%"></span></div></div>
               </div>
             </div>
           </div>
@@ -1106,51 +1106,51 @@
         <section class="view" id="runs">
           <div class="page-title">
             <div class="icon">▶</div>
-            <h1>Runs</h1>
+            <h1>评测运行</h1>
             <div class="page-meta">
-              <span class="prop">31 active</span>
-              <span class="prop">3,000 trials queued</span>
-              <span class="prop">Budget · $480</span>
-              <span class="prop">Sandbox pool · warm</span>
+              <span class="prop">31 个运行中</span>
+              <span class="prop">3,000 次试验排队中</span>
+              <span class="prop">预算 · $480</span>
+              <span class="prop">沙箱池 · 已预热</span>
             </div>
           </div>
 
           <div class="grid cols-main">
             <div class="card">
-              <h3>New evaluation run</h3>
+              <h3>新建评测运行</h3>
               <div class="form-grid">
-                <label data-tip="Runs bind to immutable dataset versions so reports remain comparable.">Dataset<select class="select"><option>Customer Ops Regression · v43</option><option>Safety Red-Team Pack · v18</option></select></label>
-                <label data-tip="Use the same suite across multiple target versions for model selection or regression checks.">Target<select class="select"><option>Support Agent · 2026.06.11</option><option>Baseline Agent · 2026.05.28</option></select></label>
-                <label data-tip="Repeated trials make non-determinism measurable through pass@k, pass^k, variance, and confidence intervals.">Trials per case<select class="select"><option>3 repeated trials</option><option>5 repeated trials</option><option>10 stability audit</option></select></label>
-                <label data-tip="Gate rules combine thresholds, baseline comparison, judge health, and safety constraints.">Gate rule<select class="select"><option>Release gate · no new critical failure</option><option>Nightly regression</option><option>Exploratory</option></select></label>
-                <label data-tip="Sandboxed tasks isolate side effects and use independent terminal-state checkers.">Environment<select class="select"><option>Kubernetes sandbox + mock tools</option><option>API-only</option><option>Browser cluster</option></select></label>
-                <label data-tip="Budget hard stops prevent silent cost overruns across target and judge calls.">Budget<select class="select"><option>$480 hard stop</option><option>$1,000 hard stop</option></select></label>
+                <label data-tip="评测运行绑定不可变评测集版本，保证报告可横向比较。">评测集<select class="select"><option>客服运营回归集 · v43</option><option>安全红队包 · v18</option></select></label>
+                <label data-tip="同一套件可跨多个被测对象版本使用，用于模型选型或回归检查。">被测对象<select class="select"><option>客服智能体 · 2026.06.11</option><option>基线智能体 · 2026.05.28</option></select></label>
+                <label data-tip="重复试验通过 pass@k、pass^k、方差和置信区间量化非确定性。">每样例试验次数<select class="select"><option>重复 3 次</option><option>重复 5 次</option><option>10 次稳定性审计</option></select></label>
+                <label data-tip="门禁规则组合阈值、基线对比、裁判健康度和安全约束。">门禁规则<select class="select"><option>发布门禁 · 无新增关键失败</option><option>夜间回归</option><option>探索运行</option></select></label>
+                <label data-tip="沙箱任务隔离副作用，并使用独立终态校验器。">环境<select class="select"><option>Kubernetes 沙箱 + Mock 工具</option><option>仅 API</option><option>浏览器集群</option></select></label>
+                <label data-tip="预算硬停止可避免被测对象和裁判调用静默超支。">预算<select class="select"><option>$480 硬停止</option><option>$1,000 硬停止</option></select></label>
               </div>
               <div class="button-row" style="margin-top:12px;">
-                <button class="btn primary" id="startRun" data-tip="Start a run by expanding cases into repeated trials and scheduling runner work.">Start run</button>
-                <button class="btn" id="rerunUnstable" data-tip="Only rerun unstable or failed trials; completed results remain idempotent.">Rerun unstable cases</button>
+                <button class="btn primary" id="startRun" data-tip="将样例展开为重复试验，并调度执行器开始运行。">启动运行</button>
+                <button class="btn" id="rerunUnstable" data-tip="仅复跑不稳定或失败的试验，已完成结果保持幂等。">复跑不稳定样例</button>
               </div>
             </div>
 
             <div class="card side-panel">
-              <h3>Run status</h3>
+              <h3>运行状态</h3>
               <div class="list">
-                <div class="item"><div class="item-head"><h4 id="runStatus">Queued</h4><span class="badge amber">3,000 trials</span></div><div class="progress"><span class="bar amber" style="--w:12%"></span></div></div>
+                <div class="item"><div class="item-head"><h4 id="runStatus">排队中</h4><span class="badge amber">3,000 次试验</span></div><div class="progress"><span class="bar amber" style="--w:12%"></span></div></div>
                 <div class="item"><div class="item-head"><h4>pass@3</h4><span class="badge green">0.91 ± 0.02</span></div></div>
                 <div class="item"><div class="item-head"><h4>pass^3</h4><span class="badge amber">0.64 ± 0.04</span></div></div>
-                <div class="item"><div class="item-head"><h4>Infra failures</h4><span class="badge green">excluded from score</span></div></div>
+                <div class="item"><div class="item-head"><h4>基础设施失败</h4><span class="badge green">不计入得分</span></div></div>
               </div>
             </div>
           </div>
 
           <div class="card">
-            <h3>Run queue</h3>
+            <h3>运行队列</h3>
             <div class="database">
               <table>
-                <thead><tr><th>Run</th><th>Target</th><th>Suite</th><th>Progress</th><th>Decision</th></tr></thead>
+                <thead><tr><th>运行</th><th>被测对象</th><th>套件</th><th>进度</th><th>决策</th></tr></thead>
                 <tbody>
-                  <tr><td>Customer Ops release gate</td><td>Support Agent</td><td>Regression v43</td><td><div class="progress"><span class="bar green" style="--w:92%"></span></div></td><td><span class="badge green">Ready</span></td></tr>
-                  <tr><td>Browser checkout stability</td><td>Browser Agent</td><td>Checkout Lab</td><td><div class="progress"><span class="bar amber" style="--w:61%"></span></div></td><td><span class="badge amber">Watch</span></td></tr>
+                  <tr><td>客服运营发布门禁</td><td>客服智能体</td><td>回归集 v43</td><td><div class="progress"><span class="bar green" style="--w:92%"></span></div></td><td><span class="badge green">就绪</span></td></tr>
+                  <tr><td>浏览器下单稳定性</td><td>浏览器智能体</td><td>下单实验室</td><td><div class="progress"><span class="bar amber" style="--w:61%"></span></div></td><td><span class="badge amber">观察</span></td></tr>
                 </tbody>
               </table>
             </div>
@@ -1160,39 +1160,39 @@
         <section class="view" id="trace">
           <div class="page-title">
             <div class="icon">⌁</div>
-            <h1>Trace Review</h1>
+            <h1>轨迹复核</h1>
             <div class="page-meta">
-              <span class="prop">Case · coupon_conflict_0817</span>
-              <span class="prop">Trial · 2 of 3</span>
-              <span class="prop">Severity · High</span>
-              <span class="prop">Reviewer · queued</span>
+              <span class="prop">样例 · coupon_conflict_0817</span>
+              <span class="prop">试验 · 2/3</span>
+              <span class="prop">严重度 · 高</span>
+              <span class="prop">复核人 · 排队中</span>
             </div>
           </div>
 
           <div class="grid cols-main">
             <div class="card">
               <div class="toolbar">
-                <h3>Trajectory timeline</h3>
-                <button class="btn primary" id="markStep" data-tip="Step-level labels become gold failure attribution data for future judges and reports.">Mark selected step</button>
+                <h3>轨迹时间线</h3>
+                <button class="btn primary" id="markStep" data-tip="步骤级标签会成为后续裁判和报告使用的金标准失败归因数据。">标记所选步骤</button>
               </div>
               <div class="timeline">
-                <div class="step"><strong>00:01</strong><span class="badge blue">User</span><div>Customer asks for a refund while keeping coupon benefits.</div><span></span></div>
-                <div class="step"><strong>00:04</strong><span class="badge green">Tool call</span><div>order.lookup returns coupon_redeemed=true, refund_window=open.</div><span class="badge green">Correct</span></div>
-                <div class="step"><strong>00:07</strong><span class="badge red">Tool call</span><div>refund.request(amount=full) executes before checking policy conflict.</div><span class="badge red" id="selectedStep">Needs label</span></div>
-                <div class="step"><strong>00:09</strong><span class="badge amber">State delta</span><div>CRM audit note is empty and refund status is blocked.</div><span class="badge amber">Evidence</span></div>
+                <div class="step"><strong>00:01</strong><span class="badge blue">用户</span><div>客户要求退款，同时保留优惠券权益。</div><span></span></div>
+                <div class="step"><strong>00:04</strong><span class="badge green">工具调用</span><div>order.lookup 返回 coupon_redeemed=true，refund_window=open。</div><span class="badge green">正确</span></div>
+                <div class="step"><strong>00:07</strong><span class="badge red">工具调用</span><div>refund.request(amount=full) 在检查政策冲突前被执行。</div><span class="badge red" id="selectedStep">待标注</span></div>
+                <div class="step"><strong>00:09</strong><span class="badge amber">状态变化</span><div>CRM 审计备注为空，退款状态被阻断。</div><span class="badge amber">证据</span></div>
               </div>
             </div>
             <div class="card side-panel">
-              <h3>Evidence panel <span class="help" tabindex="0" data-tip="Evaluator evidence references let reviewers jump from a score directly to the failing step.">?</span></h3>
-              <div class="code">terminal check:
-  no_unauthorized_refund: fail
-  crm_note_written: fail
-  policy_conflict_checked: fail
+              <h3>证据面板 <span class="help" tabindex="0" data-tip="评估器证据引用让复核人可以从分数直接跳到失败步骤。">?</span></h3>
+              <div class="code">终态校验：
+  no_unauthorized_refund: 失败
+  crm_note_written: 失败
+  policy_conflict_checked: 失败
 
-suggested label:
-  Tool parameter error
-  Planning gap
-  Severity: High</div>
+建议标签：
+  工具参数错误
+  规划缺口
+  严重度：高</div>
             </div>
           </div>
         </section>
@@ -1200,42 +1200,42 @@ suggested label:
         <section class="view" id="reports">
           <div class="page-title">
             <div class="icon">◷</div>
-            <h1>Reports</h1>
+            <h1>报告</h1>
             <div class="page-meta">
-              <span class="prop">Run · Customer Ops release gate</span>
-              <span class="prop">Baseline · 2026.05.28</span>
-              <span class="prop">confidence interval · ready</span>
-              <span class="prop">Decision · pending</span>
+              <span class="prop">运行 · 客服运营发布门禁</span>
+              <span class="prop">基线 · 2026.05.28</span>
+              <span class="prop">置信区间 · 已就绪</span>
+              <span class="prop">决策 · 待处理</span>
             </div>
           </div>
 
           <div class="grid cols-4">
-            <div class="card metric"><span>Success rate</span><strong>82%</strong><small>confidence interval ±3%</small></div>
-            <div class="card metric"><span>pass@3</span><strong>91%</strong><small>retry-aware reliability</small></div>
-            <div class="card metric"><span>pass^3</span><strong>74%</strong><small>consecutive success</small></div>
-            <div class="card metric"><span>Cost per task</span><strong>$0.21</strong><small>cache saved 31%</small></div>
+            <div class="card metric"><span>成功率</span><strong>82%</strong><small>置信区间 ±3%</small></div>
+            <div class="card metric"><span>pass@3</span><strong>91%</strong><small>考虑重试的可靠性</small></div>
+            <div class="card metric"><span>pass^3</span><strong>74%</strong><small>连续成功率</small></div>
+            <div class="card metric"><span>单任务成本</span><strong>$0.21</strong><small>缓存节省 31%</small></div>
           </div>
 
           <div class="grid cols-main">
             <div class="card">
-              <h3>Version comparison</h3>
+              <h3>版本对比</h3>
               <div class="database">
                 <table>
-                  <thead><tr><th>Change</th><th>Cases</th><th>Representative case</th><th>Decision</th></tr></thead>
+                  <thead><tr><th>变化</th><th>样例数</th><th>代表样例</th><th>决策</th></tr></thead>
                   <tbody>
-                    <tr><td>Fixed</td><td>184</td><td>coupon_conflict_0817</td><td><span class="badge green">Release evidence</span></td></tr>
-                    <tr><td>Newly failed</td><td>0 critical / 17 non-critical</td><td>crm_merge_unsafe_1188</td><td><span class="badge amber">Monitor</span></td></tr>
-                    <tr><td>Still failing</td><td>92</td><td>tool_recovery_timeout</td><td><span class="badge purple">Data work order</span></td></tr>
+                    <tr><td>已修复</td><td>184</td><td>coupon_conflict_0817</td><td><span class="badge green">发布证据</span></td></tr>
+                    <tr><td>新增失败</td><td>0 个关键 / 17 个非关键</td><td>crm_merge_unsafe_1188</td><td><span class="badge amber">监控</span></td></tr>
+                    <tr><td>持续失败</td><td>92</td><td>tool_recovery_timeout</td><td><span class="badge purple">数据工单</span></td></tr>
                   </tbody>
                 </table>
               </div>
-              <button class="btn primary" id="approveGate" style="margin-top:12px;" data-tip="Approving a gate attaches the report, comparison result, judge eligibility, and evidence bundle.">Approve release gate</button>
+              <button class="btn primary" id="approveGate" style="margin-top:12px;" data-tip="审批门禁会附加报告、对比结果、裁判资格和证据包。">批准发布门禁</button>
             </div>
             <div class="card side-panel">
-              <h3>Gate decision</h3>
+              <h3>门禁决策</h3>
               <div class="callout">
-                <strong id="gateStatus">Pending review</strong>
-                <p>No new critical safety failures. Difference is statistically significant. One judge excluded from gate due to low agreement.</p>
+                <strong id="gateStatus">待复核</strong>
+                <p>无新增关键安全失败。差异具备统计显著性。1 个裁判因一致率较低被排除在门禁之外。</p>
               </div>
             </div>
           </div>
@@ -1244,36 +1244,36 @@ suggested label:
         <section class="view" id="calibration">
           <div class="page-title">
             <div class="icon">◎</div>
-            <h1>Judge Calibration</h1>
+            <h1>裁判校准</h1>
             <div class="page-meta">
-              <span class="prop">3 judges watched</span>
-              <span class="prop">Gold trace set · 970</span>
-              <span class="prop">Human sample · 5%</span>
-              <span class="prop">Gate eligible · 2</span>
+              <span class="prop">3 个裁判观察中</span>
+              <span class="prop">金标准轨迹集 · 970</span>
+              <span class="prop">人工抽检 · 5%</span>
+              <span class="prop">可参与门禁 · 2</span>
             </div>
           </div>
 
           <div class="grid cols-main">
             <div class="card">
-              <h3>Judge health database</h3>
+              <h3>裁判健康度数据库</h3>
               <div class="database">
                 <table>
-                  <thead><tr><th>Judge</th><th>Gold cases</th><th>Agreement</th><th>Bias check</th><th>Gate eligibility</th></tr></thead>
+                  <thead><tr><th>裁判</th><th>金标准样例</th><th>一致率</th><th>偏差检查</th><th>门禁资格</th></tr></thead>
                   <tbody>
-                    <tr><td>Customer operations judge</td><td>312</td><td><span class="badge green">0.86</span></td><td>Length neutral</td><td><span class="badge green">Eligible</span></td></tr>
-                    <tr><td>Safety refusal judge</td><td>238</td><td><span class="badge red">0.79</span></td><td>Over-refusal drift</td><td><span class="badge amber" id="judgeStatus">Needs action</span></td></tr>
-                    <tr><td>Pairwise quality judge</td><td>420</td><td><span class="badge green">0.88</span></td><td>Position neutral</td><td><span class="badge green">Eligible</span></td></tr>
+                    <tr><td>客服运营裁判</td><td>312</td><td><span class="badge green">0.86</span></td><td>长度中性</td><td><span class="badge green">可用</span></td></tr>
+                    <tr><td>安全拒答裁判</td><td>238</td><td><span class="badge red">0.79</span></td><td>过度拒答漂移</td><td><span class="badge amber" id="judgeStatus">需要处理</span></td></tr>
+                    <tr><td>Pairwise 质量裁判</td><td>420</td><td><span class="badge green">0.88</span></td><td>位置中性</td><td><span class="badge green">可用</span></td></tr>
                   </tbody>
                 </table>
               </div>
-              <button class="btn danger" id="freezeJudge" style="margin-top:12px;" data-tip="Judges below agreement threshold remain visible but cannot block releases.">Exclude weak judge from gates</button>
+              <button class="btn danger" id="freezeJudge" style="margin-top:12px;" data-tip="低于一致率阈值的裁判仍可查看，但不能阻断发布。">从门禁排除弱裁判</button>
             </div>
             <div class="card side-panel">
-              <h3>Human review sample</h3>
+              <h3>人工复核抽样</h3>
               <div class="list">
-                <div class="item"><div class="item-head"><h4>Boundary scores</h4><span class="badge amber">84</span></div><p>Routed to two-reviewer back-to-back labeling.</p></div>
-                <div class="item"><div class="item-head"><h4>Low confidence</h4><span class="badge red">31</span></div><p>Escalated to senior reviewer queue.</p></div>
-                <div class="item"><div class="item-head"><h4>Calibration anchors</h4><span class="badge green">200+</span></div><p>Required before a judge can block release.</p></div>
+                <div class="item"><div class="item-head"><h4>边界分数</h4><span class="badge amber">84</span></div><p>已分配给双人背靠背标注。</p></div>
+                <div class="item"><div class="item-head"><h4>低置信度</h4><span class="badge red">31</span></div><p>已升级到资深复核队列。</p></div>
+                <div class="item"><div class="item-head"><h4>校准锚点</h4><span class="badge green">200+</span></div><p>裁判阻断发布前必须满足该要求。</p></div>
               </div>
             </div>
           </div>
@@ -1282,35 +1282,35 @@ suggested label:
         <section class="view" id="online">
           <div class="page-title">
             <div class="icon">◌</div>
-            <h1>Online Monitor</h1>
+            <h1>在线监控</h1>
             <div class="page-meta">
-              <span class="prop">OpenTelemetry · connected</span>
-              <span class="prop">42K traces / h</span>
-              <span class="prop">Drift alerts · 6</span>
-              <span class="prop">Return queue · 26</span>
+              <span class="prop">OpenTelemetry · 已连接</span>
+              <span class="prop">42K 条轨迹 / 小时</span>
+              <span class="prop">漂移告警 · 6</span>
+              <span class="prop">回流队列 · 26</span>
             </div>
           </div>
 
           <div class="grid cols-4">
-            <div class="card metric"><span>Production traces / h</span><strong>42K</strong><small>6.4% sampled</small></div>
-            <div class="card metric"><span>Async scoring delay</span><strong>74s</strong><small>does not block production</small></div>
-            <div class="card metric"><span>Quality alerts</span><strong>6</strong><small>sliding-window detection</small></div>
-            <div class="card metric"><span>Return queue</span><strong>26</strong><small>candidate regression cases</small></div>
+            <div class="card metric"><span>生产轨迹 / 小时</span><strong>42K</strong><small>抽样 6.4%</small></div>
+            <div class="card metric"><span>异步评分延迟</span><strong>74s</strong><small>不阻塞生产链路</small></div>
+            <div class="card metric"><span>质量告警</span><strong>6</strong><small>滑动窗口检测</small></div>
+            <div class="card metric"><span>回流队列</span><strong>26</strong><small>候选回归样例</small></div>
           </div>
 
           <div class="card">
             <div class="toolbar">
-              <h3>Production intake rules</h3>
-              <button class="btn primary" id="ingestTrace" data-tip="Selected online traces are redacted and routed to candidate regression cases.">Ingest selected traces</button>
+              <h3>生产接入规则</h3>
+              <button class="btn primary" id="ingestTrace" data-tip="选中的线上轨迹会先脱敏，再进入候选回归样例队列。">摄入所选轨迹</button>
             </div>
             <div class="database">
               <table>
-                <thead><tr><th>Trigger</th><th>Sampling</th><th>Evaluator</th><th>Action</th></tr></thead>
+                <thead><tr><th>触发条件</th><th>抽样</th><th>评估器</th><th>动作</th></tr></thead>
                 <tbody>
-                  <tr><td>User negative feedback</td><td>100%</td><td>Satisfaction judge</td><td>Candidate case</td></tr>
-                  <tr><td>Human handoff</td><td>100%</td><td>Handoff classifier</td><td>Review queue</td></tr>
-                  <tr><td>High-risk tool call</td><td>100%</td><td>Safety policy judge</td><td>Alert + audit</td></tr>
-                  <tr><td>Normal success traffic</td><td>3%</td><td>Lightweight quality judge</td><td>Trend monitor</td></tr>
+                  <tr><td>用户负反馈</td><td>100%</td><td>满意度裁判</td><td>候选样例</td></tr>
+                  <tr><td>人工接管</td><td>100%</td><td>接管分类器</td><td>复核队列</td></tr>
+                  <tr><td>高风险工具调用</td><td>100%</td><td>安全策略裁判</td><td>告警 + 审计</td></tr>
+                  <tr><td>普通成功流量</td><td>3%</td><td>轻量质量裁判</td><td>趋势监控</td></tr>
                 </tbody>
               </table>
             </div>
@@ -1320,37 +1320,37 @@ suggested label:
         <section class="view" id="data-loop">
           <div class="page-title">
             <div class="icon">↻</div>
-            <h1>Data Loop</h1>
+            <h1>数据闭环</h1>
             <div class="page-meta">
-              <span class="prop">12 open work orders</span>
-              <span class="prop">86K SFT rows</span>
-              <span class="prop">12K DPO pairs</span>
-              <span class="prop">License checked</span>
+              <span class="prop">12 个开放工单</span>
+              <span class="prop">86K 条 SFT 数据</span>
+              <span class="prop">12K 对 DPO 偏好</span>
+              <span class="prop">授权已检查</span>
             </div>
           </div>
 
           <div class="grid cols-main">
             <div class="card">
-              <h3>Failure clusters</h3>
+              <h3>失败聚类</h3>
               <div class="database">
                 <table>
-                  <thead><tr><th>Cluster</th><th>Share</th><th>Evidence</th><th>Data product</th></tr></thead>
+                  <thead><tr><th>聚类</th><th>占比</th><th>证据</th><th>数据产品</th></tr></thead>
                   <tbody>
-                    <tr><td>Tool recovery after timeout</td><td>28%</td><td>184 traces</td><td>Gold trajectory pack</td></tr>
-                    <tr><td>Policy conflict clarification</td><td>17%</td><td>96 traces</td><td>Preference pairs</td></tr>
-                    <tr><td>Indirect prompt injection</td><td>9%</td><td>41 traces</td><td>Safety red-team set</td></tr>
+                    <tr><td>超时后的工具恢复</td><td>28%</td><td>184 条轨迹</td><td>金标准轨迹包</td></tr>
+                    <tr><td>政策冲突澄清</td><td>17%</td><td>96 条轨迹</td><td>偏好对</td></tr>
+                    <tr><td>间接提示注入</td><td>9%</td><td>41 条轨迹</td><td>安全红队集</td></tr>
                   </tbody>
                 </table>
               </div>
-              <button class="btn primary" id="createWorkOrder" style="margin-top:12px;" data-tip="A work order specifies the missing data asset: cases, gold traces, preferences, red-team samples, or verifier logic.">Create data work order</button>
+              <button class="btn primary" id="createWorkOrder" style="margin-top:12px;" data-tip="工单会明确缺失的数据资产：样例、金标准轨迹、偏好、红队样本或校验逻辑。">创建数据工单</button>
             </div>
             <div class="card side-panel">
-              <h3>Export formats</h3>
+              <h3>导出格式</h3>
               <div class="list">
-                <div class="item"><div class="item-head"><h4>SFT conversations</h4><span class="badge green">86K</span></div></div>
-                <div class="item"><div class="item-head"><h4>DPO preference pairs</h4><span class="badge purple">12K</span></div></div>
-                <div class="item"><div class="item-head"><h4>Process reward steps</h4><span class="badge blue">420K</span></div></div>
-                <div class="item"><div class="item-head"><h4>Verifier templates</h4><span class="badge amber">38</span></div></div>
+                <div class="item"><div class="item-head"><h4>SFT 对话</h4><span class="badge green">86K</span></div></div>
+                <div class="item"><div class="item-head"><h4>DPO 偏好对</h4><span class="badge purple">12K</span></div></div>
+                <div class="item"><div class="item-head"><h4>过程奖励步骤</h4><span class="badge blue">420K</span></div></div>
+                <div class="item"><div class="item-head"><h4>校验器模板</h4><span class="badge amber">38</span></div></div>
               </div>
             </div>
           </div>
@@ -1359,40 +1359,40 @@ suggested label:
         <section class="view" id="admin">
           <div class="page-title">
             <div class="icon">⚙</div>
-            <h1>Admin</h1>
+            <h1>管理</h1>
             <div class="page-meta">
-              <span class="prop">Tenant · Acme AI</span>
-              <span class="prop">RBAC roles · 5</span>
-              <span class="prop">Audit events · 81K</span>
-              <span class="prop">Deployment · private-ready</span>
+              <span class="prop">租户 · Acme AI</span>
+              <span class="prop">RBAC 角色 · 5</span>
+              <span class="prop">审计事件 · 81K</span>
+              <span class="prop">部署 · 私有化就绪</span>
             </div>
           </div>
 
           <div class="grid cols-4">
-            <div class="card metric"><span>RBAC roles</span><strong>5</strong><small>admin · builder · developer · reviewer · read-only</small></div>
-            <div class="card metric"><span>Audit events</span><strong>81K</strong><small>immutable log chain</small></div>
-            <div class="card metric"><span>Judge cost</span><strong>$9.8K</strong><small>cache saved 31%</small></div>
-            <div class="card metric"><span>PII redactions</span><strong>132</strong><small>sample audit passed</small></div>
+            <div class="card metric"><span>RBAC 角色</span><strong>5</strong><small>管理员 · 构建者 · 开发者 · 复核人 · 只读</small></div>
+            <div class="card metric"><span>审计事件</span><strong>81K</strong><small>不可变日志链</small></div>
+            <div class="card metric"><span>裁判成本</span><strong>$9.8K</strong><small>缓存节省 31%</small></div>
+            <div class="card metric"><span>PII 脱敏</span><strong>132</strong><small>抽样审计通过</small></div>
           </div>
 
           <div class="grid cols-main">
             <div class="card">
-              <h3>Trust controls</h3>
+              <h3>信任控制</h3>
               <div class="list">
-                <div class="item"><div class="item-head"><h4>Tenant isolation</h4><span class="badge green">Ready</span></div><p>Organization, team, and project boundaries.</p></div>
-                <div class="item"><div class="item-head"><h4>Audit log</h4><span class="badge green">Ready</span></div><p>Dataset edits, runs, gates, exports, and judge changes.</p></div>
-                <div class="item"><div class="item-head"><h4>Private deployment</h4><span class="badge amber">Prepared</span></div><p>Core services avoid hard dependency on external systems.</p></div>
+                <div class="item"><div class="item-head"><h4>租户隔离</h4><span class="badge green">就绪</span></div><p>组织、团队和项目边界。</p></div>
+                <div class="item"><div class="item-head"><h4>审计日志</h4><span class="badge green">就绪</span></div><p>评测集编辑、运行、门禁、导出和裁判变更。</p></div>
+                <div class="item"><div class="item-head"><h4>私有化部署</h4><span class="badge amber">已准备</span></div><p>核心服务避免对外部系统形成硬依赖。</p></div>
               </div>
-              <button class="btn primary" id="runAudit" style="margin-top:12px;" data-tip="Evidence bundles include run config, dataset snapshot, target version, judge exclusions, audit log, and data authorization.">Generate evidence bundle</button>
+              <button class="btn primary" id="runAudit" style="margin-top:12px;" data-tip="证据包包含运行配置、评测集快照、被测对象版本、裁判排除记录、审计日志和数据授权。">生成证据包</button>
             </div>
             <div class="card side-panel">
-              <h3>Audit log</h3>
-              <div class="code" id="auditStatus">Evidence bundle: Draft
-dataset snapshot: customer_ops_regression_v43
-target: support-agent_2026_06_11
-gate: pending
-judge exclusions: 1
-data license: training allowed</div>
+              <h3>审计日志</h3>
+              <div class="code" id="auditStatus">证据包：草稿
+评测集快照：customer_ops_regression_v43
+被测对象：support-agent_2026_06_11
+门禁：待处理
+已排除裁判：1
+数据授权：允许训练</div>
             </div>
           </div>
         </section>
@@ -1400,54 +1400,54 @@ data license: training allowed</div>
         <section class="view" id="docs">
           <div class="page-title">
             <div class="icon">?</div>
-            <h1>Docs</h1>
+            <h1>文档</h1>
             <div class="page-meta">
-              <span class="prop">Audience · platform users</span>
-              <span class="prop">6 documents</span>
-              <span class="prop">Last reviewed · 11 Jun 2026</span>
+              <span class="prop">受众 · 平台用户</span>
+              <span class="prop">6 篇文档</span>
+              <span class="prop">最近复核 · 2026-06-11</span>
             </div>
           </div>
 
           <div class="toolbar">
             <div class="toolbar-left">
-              <button class="btn primary" data-tip="Open the platform introduction document without placing marketing copy inside operational modules.">Platform introduction</button>
-              <button class="btn" data-tip="Create a customer-specific implementation note from the active workspace configuration.">New note</button>
+              <button class="btn primary" data-tip="打开平台介绍文档；运营模块内不放营销式介绍文案。">平台介绍</button>
+              <button class="btn" data-tip="基于当前工作区配置创建客户实施说明。">新建说明</button>
             </div>
             <div class="toolbar-right">
-              <select class="select"><option>All docs</option><option>Operator guides</option><option>Implementation</option><option>Governance</option></select>
+              <select class="select"><option>全部文档</option><option>操作指南</option><option>实施</option><option>治理</option></select>
             </div>
           </div>
 
           <div class="doc-grid">
-            <div class="doc-card" data-tip="Platform overview and rollout notes live here instead of inside the app work surfaces.">
-              <h4>Platform introduction</h4>
-              <p>Audience, package, deployment model, and customer value narrative.</p>
-              <span class="badge green">Published</span>
+            <div class="doc-card" data-tip="平台概览和上线说明放在这里，而不是塞进操作工作台。">
+              <h4>平台介绍</h4>
+              <p>受众、套餐、部署模式和客户价值说明。</p>
+              <span class="badge green">已发布</span>
             </div>
-            <div class="doc-card" data-tip="Explains the canonical Target, Dataset, Case, Run, Trial, Trajectory, Evaluator, Score, Report, and Gate objects.">
-              <h4>Data model</h4>
-              <p>Canonical objects, lifecycle rules, versioning, and ownership.</p>
-              <span class="badge blue">Current</span>
+            <div class="doc-card" data-tip="说明被测对象、评测集、样例、运行、试验、轨迹、评估器、分数、报告和门禁等核心对象。">
+              <h4>数据模型</h4>
+              <p>核心对象、生命周期规则、版本化和归属关系。</p>
+              <span class="badge blue">当前</span>
             </div>
-            <div class="doc-card" data-tip="Internal implementation guide for repeated trials, sandbox resets, worker retries, and budget stops.">
-              <h4>Run orchestration</h4>
-              <p>Scheduler, runner pool, sandbox pool, and checker isolation.</p>
-              <span class="badge">Operator guide</span>
+            <div class="doc-card" data-tip="重复试验、沙箱重置、执行器重试和预算停止的内部实施指南。">
+              <h4>运行编排</h4>
+              <p>调度器、执行器池、沙箱池和校验器隔离。</p>
+              <span class="badge">操作指南</span>
             </div>
-            <div class="doc-card" data-tip="Judge release rules include gold-standard coverage, agreement threshold, bias checks, and gate eligibility.">
-              <h4>Judge governance</h4>
-              <p>Gold traces, human samples, escalation, exclusions, and audit trail.</p>
-              <span class="badge amber">Needs quarterly review</span>
+            <div class="doc-card" data-tip="裁判发布规则包含金标准覆盖、一致率阈值、偏差检查和门禁资格。">
+              <h4>裁判治理</h4>
+              <p>金标准轨迹、人工抽样、升级、排除和审计链路。</p>
+              <span class="badge amber">需季度复核</span>
             </div>
-            <div class="doc-card" data-tip="Defines how failures become cases, gold traces, preference pairs, red-team samples, and verifier logic.">
-              <h4>Data loop playbook</h4>
-              <p>Failure clusters, work order templates, exports, and validation runs.</p>
-              <span class="badge purple">Data Ops</span>
+            <div class="doc-card" data-tip="定义失败如何转化为样例、金标准轨迹、偏好对、红队样本和校验逻辑。">
+              <h4>数据闭环手册</h4>
+              <p>失败聚类、工单模板、导出和验证运行。</p>
+              <span class="badge purple">数据运营</span>
             </div>
-            <div class="doc-card" data-tip="Security guidance for tenant isolation, PII redaction, audit logs, private deployment, and evidence bundles.">
-              <h4>Trust and deployment</h4>
-              <p>RBAC, audit, data authorization, judge gateway controls, and private install.</p>
-              <span class="badge green">Ready</span>
+            <div class="doc-card" data-tip="租户隔离、PII 脱敏、审计日志、私有化部署和证据包的安全指南。">
+              <h4>信任与部署</h4>
+              <p>RBAC、审计、数据授权、裁判网关控制和私有化安装。</p>
+              <span class="badge green">就绪</span>
             </div>
           </div>
         </section>
@@ -1484,81 +1484,81 @@ data license: training allowed</div>
     document.getElementById("addTarget").addEventListener("click", () => {
       document.getElementById("targetCount").textContent = "19";
       document.getElementById("targetTable").insertAdjacentHTML("afterbegin", `
-        <tr><td>Retail Ops Pilot</td><td>2026.06.12</td><td><span class="badge blue">API</span></td><td><span class="badge green">Healthy</span></td><td>Ready for first run</td></tr>
+        <tr><td>零售运营试点</td><td>2026.06.12</td><td><span class="badge blue">API</span></td><td><span class="badge green">健康</span></td><td>可开始首次运行</td></tr>
       `);
-      showToast("Target added and connection health check passed.");
+      showToast("被测对象已添加，连接健康检查通过。");
     });
 
     document.getElementById("uploadTrace").addEventListener("click", () => {
-      document.getElementById("traceStatus").textContent = "validated";
-      showToast("1,000 offline traces validated and queued for scoring.");
+      document.getElementById("traceStatus").textContent = "已校验";
+      showToast("1,000 条离线轨迹已校验，并进入评分队列。");
     });
 
     document.getElementById("createCase").addEventListener("click", () => {
       document.getElementById("assetCount").textContent = "9,421";
-      showToast("New case created with references, tags, and review status.");
+      showToast("新样例已创建，包含参考、标签和审核状态。");
     });
 
     document.getElementById("cloneTemplate").addEventListener("click", () => {
       document.getElementById("assetCount").textContent = "9,422";
-      showToast("Evaluation template cloned into the private asset library.");
+      showToast("评测模板已克隆到私有资产库。");
     });
 
     document.getElementById("startRun").addEventListener("click", () => {
-      document.getElementById("runStatus").textContent = "running · 2,418 / 3,000 trials";
-      showToast("Evaluation run started with repeated trials and sandbox reset.");
+      document.getElementById("runStatus").textContent = "运行中 · 2,418 / 3,000 次试验";
+      showToast("评测运行已启动，包含重复试验和沙箱重置。");
     });
 
     document.getElementById("rerunUnstable").addEventListener("click", () => {
-      document.getElementById("runStatus").textContent = "running · unstable cases queued";
-      showToast("Only unstable and failed trials were queued for rerun.");
+      document.getElementById("runStatus").textContent = "运行中 · 不稳定样例已排队";
+      showToast("仅不稳定和失败试验已进入复跑队列。");
     });
 
     document.getElementById("markStep").addEventListener("click", () => {
-      document.getElementById("selectedStep").textContent = "Tool parameter error";
-      showToast("Step-level failure label saved and linked to evaluator evidence.");
+      document.getElementById("selectedStep").textContent = "工具参数错误";
+      showToast("步骤级失败标签已保存，并关联到评估器证据。");
     });
 
     document.getElementById("approveGate").addEventListener("click", () => {
-      document.getElementById("gateStatus").textContent = "Approved · release can proceed";
-      showToast("Release gate approved and evidence bundle attached.");
+      document.getElementById("gateStatus").textContent = "已批准 · 可以发布";
+      showToast("发布门禁已批准，证据包已附加。");
     });
 
     document.getElementById("freezeJudge").addEventListener("click", () => {
-      document.getElementById("judgeStatus").textContent = "Excluded from gates";
-      showToast("Weak judge excluded from release-gate decisions.");
+      document.getElementById("judgeStatus").textContent = "已从门禁排除";
+      showToast("弱裁判已从发布门禁决策中排除。");
     });
 
     document.getElementById("ingestTrace").addEventListener("click", () => {
       document.getElementById("onlineQueue").textContent = "31";
-      showToast("Five online traces entered the regression return queue.");
+      showToast("5 条线上轨迹已进入回归回流队列。");
     });
 
     document.getElementById("createWorkOrder").addEventListener("click", () => {
       document.getElementById("workOrders").textContent = "13";
-      showToast("Data work order created from failure cluster.");
+      showToast("已根据失败聚类创建数据工单。");
     });
 
     document.getElementById("runAudit").addEventListener("click", () => {
-      document.getElementById("auditStatus").textContent = `Evidence bundle: Ready
-dataset snapshot: customer_ops_regression_v43
-target: support-agent_2026_06_11
-gate: approved
-judge exclusions: safety_refusal_judge
-data license: training allowed`;
-      showToast("Evidence bundle is ready for export.");
+      document.getElementById("auditStatus").textContent = `证据包：就绪
+评测集快照：customer_ops_regression_v43
+被测对象：support-agent_2026_06_11
+门禁：已批准
+已排除裁判：safety_refusal_judge
+数据授权：允许训练`;
+      showToast("证据包已可导出。");
     });
 
     document.getElementById("quickTour").addEventListener("click", () => {
       const order = ["targets", "assets", "runs", "trace", "reports", "calibration", "online", "data-loop", "admin"];
       let index = 0;
-      showToast("Guided product flow started.");
+      showToast("产品流程导览已开始。");
       const timer = setInterval(() => {
         activateView(order[index]);
         index += 1;
         if (index >= order.length) {
           clearInterval(timer);
-          showToast("Guided flow complete.");
+          showToast("流程导览已完成。");
         }
       }, 700);
     });

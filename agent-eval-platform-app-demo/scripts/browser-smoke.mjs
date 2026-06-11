@@ -93,7 +93,7 @@ async function runViewport(client, width, height, label) {
   if (metrics.viewCount !== 11) failures.push(`${label} expected 11 views, found ${metrics.viewCount}`);
   if (metrics.navCount < 11) failures.push(`${label} expected at least 11 nav targets, found ${metrics.navCount}`);
   if (metrics.activeView !== "home") failures.push(`${label} initial active view should be home`);
-  if (!metrics.title?.includes("Evaluation workspace")) failures.push(`${label} title missing`);
+  if (!metrics.title?.includes("评测工作区")) failures.push(`${label} title missing`);
   if (metrics.forbiddenFr) failures.push(`${label} UI exposes FR requirement numbers`);
   if (metrics.tipCount < 20) failures.push(`${label} expected contextual tooltips, found ${metrics.tipCount}`);
 
@@ -137,15 +137,15 @@ async function runViewport(client, width, height, label) {
 
   if (flow.active !== "admin") failures.push(`${label} final view should be admin`);
   if (flow.targetCount !== "19") failures.push(`${label} add target failed`);
-  if (!flow.traceStatus?.includes("validated")) failures.push(`${label} trace upload failed`);
+  if (!flow.traceStatus?.includes("已校验")) failures.push(`${label} trace upload failed`);
   if (flow.assetCount !== "9,422") failures.push(`${label} asset actions failed`);
-  if (!flow.runStatus?.includes("running")) failures.push(`${label} run start failed`);
-  if (!flow.selectedStep?.includes("Tool parameter")) failures.push(`${label} step marking failed`);
-  if (!flow.gateStatus?.includes("Approved")) failures.push(`${label} gate action failed`);
-  if (!flow.judgeStatus?.includes("Excluded")) failures.push(`${label} judge action failed`);
+  if (!flow.runStatus?.includes("运行中")) failures.push(`${label} run start failed`);
+  if (!flow.selectedStep?.includes("工具参数错误")) failures.push(`${label} step marking failed`);
+  if (!flow.gateStatus?.includes("已批准")) failures.push(`${label} gate action failed`);
+  if (!flow.judgeStatus?.includes("已从门禁排除")) failures.push(`${label} judge action failed`);
   if (flow.onlineQueue !== "31") failures.push(`${label} online ingestion failed`);
   if (flow.workOrders !== "13") failures.push(`${label} data loop failed`);
-  if (!flow.auditStatus?.includes("Ready")) failures.push(`${label} audit action failed`);
+  if (!flow.auditStatus?.includes("就绪")) failures.push(`${label} audit action failed`);
 }
 
 const chrome = spawn(chromePath, [

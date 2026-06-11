@@ -75,22 +75,22 @@ for (const text of forbiddenCustomerCopy) {
 }
 
 const requiredProductTerms = [
-  "Targets",
-  "Evaluation Assets",
-  "Runs",
-  "Trace Review",
-  "Reports",
-  "Judge Calibration",
-  "Online Monitor",
-  "Data Loop",
-  "Admin",
+  "被测对象",
+  "评测资产",
+  "评测运行",
+  "轨迹复核",
+  "报告",
+  "裁判校准",
+  "在线监控",
+  "数据闭环",
+  "管理",
   "pass@3",
   "pass^3",
-  "confidence interval",
+  "置信区间",
   "OpenTelemetry",
-  "sandbox",
-  "gold trace",
-  "data work order"
+  "沙箱",
+  "金标准轨迹",
+  "数据工单"
 ];
 
 for (const term of requiredProductTerms) {
@@ -114,7 +114,7 @@ assert(design.includes("Final Information Architecture"), "Final requirements de
 assert(design.includes("Core Product Workflows"), "Final requirements design missing workflows");
 assert(design.includes("The product UI does not expose internal requirement numbers"), "Design must include no-number acceptance criterion");
 assert(html.includes('id="docs"'), "Missing standalone docs entry");
-assert(html.includes("Platform introduction"), "Docs entry should hold platform introduction copy outside operations UI");
+assert(html.includes("平台介绍"), "Docs entry should hold platform introduction copy outside operations UI");
 
 if (failures.length) {
   console.error("Verification failed:");
