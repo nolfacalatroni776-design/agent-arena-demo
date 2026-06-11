@@ -146,6 +146,81 @@ async function runViewport(client, width, height, label) {
   }
   await evaluate(client, `document.querySelector('#targets .side-panel .help[data-tip]')?.dispatchEvent(new MouseEvent('mouseleave'))`);
 
+  const lineage = await evaluate(client, `(() => {
+    const click = (selector) => document.querySelector(selector)?.click();
+    const field = (selector) => document.querySelector(selector)?.textContent.trim();
+    click('[data-view="runs"]');
+    click('#openRunTrace');
+    const trace = {
+      active: document.querySelector('.view.active')?.id,
+      runId: field('#trace [data-field="runId"]'),
+      target: field('#trace [data-field="targetVersion"]'),
+      dataset: field('#trace [data-field="datasetVersion"]'),
+      caseId: field('#trace [data-field="caseId"]'),
+      trialId: field('#trace [data-field="trialId"]'),
+      traceId: field('#trace [data-field="traceId"]'),
+      entry: field('#trace [data-field="traceEntry"]'),
+      evidence: field('#traceEvidence')
+    };
+    click('#openTraceReport');
+    const report = {
+      active: document.querySelector('.view.active')?.id,
+      runId: field('#reports [data-field="runId"]'),
+      reportId: field('#reports [data-field="reportId"]'),
+      target: field('#reports [data-field="targetVersion"]'),
+      dataset: field('#reports [data-field="datasetVersion"]')
+    };
+    click('#openReportTrace');
+    const reportTrace = {
+      active: document.querySelector('.view.active')?.id,
+      entry: field('#trace [data-field="traceEntry"]'),
+      runId: field('#trace [data-field="runId"]')
+    };
+    click('#openTraceDataLoop');
+    const dataLoop = {
+      active: document.querySelector('.view.active')?.id,
+      traceId: field('#data-loop [data-field="traceId"]'),
+      caseId: field('#data-loop [data-field="caseId"]'),
+      cluster: field('#data-loop [data-field="failureCluster"]'),
+      evidenceStep: field('#data-loop [data-field="evidenceStep"]')
+    };
+    click('#openDataLoopTrace');
+    const backTrace = {
+      active: document.querySelector('.view.active')?.id,
+      entry: field('#trace [data-field="traceEntry"]'),
+      traceId: field('#trace [data-field="traceId"]')
+    };
+    return { trace, report, reportTrace, dataLoop, backTrace };
+  })()`);
+
+  if (lineage.trace.active !== "trace") failures.push(`${label} run queue should open trace view`);
+  if (lineage.trace.runId !== "run_20260611_1842") failures.push(`${label} trace run lineage mismatch: ${lineage.trace.runId}`);
+  if (lineage.trace.target !== "support-agent_2026_06_11") failures.push(`${label} trace target lineage mismatch: ${lineage.trace.target}`);
+  if (lineage.trace.dataset !== "customer_ops_regression_v43") failures.push(`${label} trace dataset lineage mismatch: ${lineage.trace.dataset}`);
+  if (lineage.trace.caseId !== "coupon_conflict_0817") failures.push(`${label} trace case lineage mismatch: ${lineage.trace.caseId}`);
+  if (lineage.trace.trialId !== "trial_002") failures.push(`${label} trace trial lineage mismatch: ${lineage.trace.trialId}`);
+  if (lineage.trace.traceId !== "traj_refund_002") failures.push(`${label} trace id mismatch: ${lineage.trace.traceId}`);
+  if (!lineage.trace.entry?.includes("运行队列")) failures.push(`${label} trace entry should mention run queue`);
+  if (!lineage.trace.evidence?.includes("run_20260611_1842") || !lineage.trace.evidence?.includes("traj_refund_002")) {
+    failures.push(`${label} trace evidence should include run and trajectory ids`);
+  }
+  if (lineage.report.active !== "reports") failures.push(`${label} trace should open report view`);
+  if (lineage.report.runId !== lineage.trace.runId) failures.push(`${label} report run id should match trace`);
+  if (lineage.report.reportId !== "report_gate_20260611_1842") failures.push(`${label} report id mismatch`);
+  if (lineage.report.target !== lineage.trace.target) failures.push(`${label} report target should match trace`);
+  if (lineage.report.dataset !== lineage.trace.dataset) failures.push(`${label} report dataset should match trace`);
+  if (lineage.reportTrace.active !== "trace") failures.push(`${label} report representative case should return to trace`);
+  if (!lineage.reportTrace.entry?.includes("报告")) failures.push(`${label} report-to-trace entry should mention report`);
+  if (lineage.reportTrace.runId !== lineage.trace.runId) failures.push(`${label} report trace run should stay aligned`);
+  if (lineage.dataLoop.active !== "data-loop") failures.push(`${label} trace should open data-loop view`);
+  if (lineage.dataLoop.traceId !== "traj_refund_002") failures.push(`${label} data loop trace should match selected trajectory`);
+  if (lineage.dataLoop.caseId !== "coupon_conflict_0817") failures.push(`${label} data loop case should match selected case`);
+  if (lineage.dataLoop.cluster !== "政策冲突澄清") failures.push(`${label} data loop cluster mismatch`);
+  if (!lineage.dataLoop.evidenceStep?.includes("refund.request")) failures.push(`${label} data loop evidence step missing`);
+  if (lineage.backTrace.active !== "trace") failures.push(`${label} data loop evidence should return to trace`);
+  if (!lineage.backTrace.entry?.includes("数据闭环")) failures.push(`${label} back trace entry should mention data loop`);
+  if (lineage.backTrace.traceId !== "traj_refund_002") failures.push(`${label} back trace id should remain selected trajectory`);
+
   const flow = await evaluate(client, `(() => {
     const click = (selector) => document.querySelector(selector)?.click();
     click('[data-view="targets"]');

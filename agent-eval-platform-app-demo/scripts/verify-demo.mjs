@@ -92,7 +92,11 @@ const requiredProductTerms = [
   "OpenTelemetry",
   "沙箱",
   "金标准轨迹",
-  "数据工单"
+  "数据工单",
+  "来源链路",
+  "查看失败轨迹",
+  "Trajectory",
+  "Run Snapshot"
 ];
 
 for (const term of requiredProductTerms) {
