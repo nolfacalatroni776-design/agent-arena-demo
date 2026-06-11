@@ -1,22 +1,17 @@
-# Agent Eval OS Demo
+# Agent Arena Demo
 
-Static customer-facing demo for an Agent evaluation operating system. The demo
-covers Agent Registry, task and environment design, Arena orchestration, Trace
-Lake evidence, scoring, failure intelligence, expert operations, data products,
-solution recommendation, and governance.
+Static demo for the Elite AI Arena product experience.
 
-Public demo:
-https://nolfacalatroni776-design.github.io/agent-arena-demo/
+Public demos:
+
+- Elite AI Arena original demo:
+https://nolfacalatroni776-design.github.io/agent-arena-demo/#/arenas
+
+- Agent Eval OS standalone demo:
+https://nolfacalatroni776-design.github.io/agent-arena-demo/agent-eval-os/
 
 Local preview:
 
 ```bash
 python3 -m http.server 4173
-```
-
-Validation:
-
-```bash
-npm test
-npm run test:browser
 ```
