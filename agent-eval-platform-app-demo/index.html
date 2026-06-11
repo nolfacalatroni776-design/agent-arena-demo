@@ -1,0 +1,1567 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent Evaluation Platform</title>
+  <style>
+    :root {
+      --bg: #f7f6f3;
+      --paper: #ffffff;
+      --ink: #2f3437;
+      --muted: #6f6f6f;
+      --soft: #f1f1ef;
+      --line: #e4e2dc;
+      --line-strong: #d4d1c8;
+      --hover: #efefeb;
+      --blue: #2f6fdb;
+      --blue-soft: #e8f1ff;
+      --green: #2f7d52;
+      --green-soft: #e7f3ec;
+      --amber: #a96800;
+      --amber-soft: #f7ecd5;
+      --red: #b23b3b;
+      --red-soft: #f8e5e5;
+      --purple: #6940a5;
+      --purple-soft: #eee7f8;
+      --shadow: 0 1px 2px rgba(15, 15, 15, 0.06), 0 16px 40px rgba(15, 15, 15, 0.06);
+      --font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      color: var(--ink);
+      background: var(--bg);
+      font-family: var(--font);
+      line-height: 1.45;
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: 0;
+    }
+
+    a { color: inherit; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      background: #fbfaf8;
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 14px 10px;
+      overflow-y: auto;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 9px;
+      align-items: center;
+      padding: 6px 8px 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .workspace-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 7px;
+      display: grid;
+      place-items: center;
+      color: #ffffff;
+      background: #2f3437;
+      font-weight: 900;
+    }
+
+    .workspace strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .workspace span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .nav-title {
+      color: #8c8a84;
+      text-transform: uppercase;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 0 8px;
+    }
+
+    .nav {
+      display: grid;
+      gap: 2px;
+    }
+
+    .nav button {
+      width: 100%;
+      min-height: 34px;
+      border-radius: 6px;
+      display: grid;
+      grid-template-columns: 22px 1fr auto;
+      gap: 8px;
+      align-items: center;
+      background: transparent;
+      color: var(--ink);
+      text-align: left;
+      padding: 6px 8px;
+      font-weight: 650;
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      background: var(--hover);
+    }
+
+    .nav button.active {
+      box-shadow: inset 3px 0 0 #2f3437;
+    }
+
+    .nav .emoji {
+      width: 22px;
+      height: 22px;
+      border-radius: 5px;
+      display: grid;
+      place-items: center;
+      background: var(--soft);
+      font-size: 13px;
+    }
+
+    .nav small {
+      color: #9b9790;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .sidebar-note {
+      margin-top: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 10px;
+      display: grid;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .main {
+      min-width: 0;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      min-height: 62px;
+      padding: 11px 28px;
+      background: rgba(247, 246, 243, 0.9);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+      min-width: 0;
+    }
+
+    .search {
+      flex: 1 1 360px;
+      max-width: 560px;
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #ffffff;
+      color: #8c8a84;
+      padding: 0 11px;
+      font-size: 13px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .content {
+      display: grid;
+      gap: 22px;
+      padding: 30px 42px 42px;
+      min-width: 0;
+    }
+
+    .view {
+      display: none;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .view.active {
+      display: grid;
+    }
+
+    .page-title {
+      display: grid;
+      gap: 8px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 18px;
+    }
+
+    .page-title .icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      font-size: 25px;
+    }
+
+    .page-title h1 {
+      margin: 0;
+      font-size: 32px;
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .page-title p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 900px;
+      font-size: 14px;
+    }
+
+    .page-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .prop {
+      min-height: 28px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      font-weight: 700;
+    }
+
+    .tabs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .tab {
+      min-height: 32px;
+      border-radius: 6px;
+      padding: 6px 10px;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 750;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tab.active,
+    .tab:hover {
+      color: var(--ink);
+      background: var(--hover);
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar-left,
+    .toolbar-right,
+    .chips,
+    .button-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cols-main { grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr); }
+    .cols-side { grid-template-columns: 300px minmax(0, 1fr); }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+      box-shadow: 0 1px 1px rgba(15, 15, 15, 0.03);
+      padding: 14px;
+      min-width: 0;
+    }
+
+    .card:hover {
+      border-color: var(--line-strong);
+    }
+
+    .card h3 {
+      margin: 0 0 12px;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .metric {
+      min-height: 116px;
+      display: grid;
+      gap: 7px;
+      align-content: space-between;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .metric strong {
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 800;
+    }
+
+    .metric small {
+      color: var(--green);
+      font-weight: 750;
+      font-size: 12px;
+    }
+
+    .badge {
+      min-height: 22px;
+      border-radius: 5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 2px 7px;
+      font-size: 12px;
+      font-weight: 800;
+      background: var(--soft);
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    .badge.blue { background: var(--blue-soft); color: var(--blue); }
+    .badge.green { background: var(--green-soft); color: var(--green); }
+    .badge.amber { background: var(--amber-soft); color: var(--amber); }
+    .badge.red { background: var(--red-soft); color: var(--red); }
+    .badge.purple { background: var(--purple-soft); color: var(--purple); }
+
+    .btn {
+      min-height: 34px;
+      border-radius: 6px;
+      padding: 7px 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      color: var(--ink);
+      background: #ffffff;
+      border: 1px solid var(--line);
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .btn.primary {
+      background: #2f3437;
+      color: #ffffff;
+      border-color: #2f3437;
+    }
+
+    .btn.subtle {
+      background: var(--soft);
+    }
+
+    .btn.danger {
+      color: #ffffff;
+      background: var(--red);
+      border-color: var(--red);
+    }
+
+    .input,
+    .select,
+    .textarea {
+      width: 100%;
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #ffffff;
+      color: var(--ink);
+      padding: 7px 9px;
+    }
+
+    .textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      color: #4d4a45;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .full { grid-column: 1 / -1; }
+
+    .database {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    table {
+      width: 100%;
+      min-width: 680px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 10px 11px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: middle;
+      font-size: 13px;
+    }
+
+    th {
+      color: #8c8a84;
+      background: #fbfaf8;
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+    tbody tr:hover { background: #fbfaf8; }
+
+    .template-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .template-card {
+      display: grid;
+      grid-template-rows: 120px auto;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #ffffff;
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .template-preview {
+      padding: 14px;
+      background:
+        linear-gradient(135deg, rgba(47, 52, 55, 0.05), rgba(47, 52, 55, 0)),
+        #f7f6f3;
+      display: grid;
+      align-content: center;
+      gap: 8px;
+    }
+
+    .mini-line {
+      height: 9px;
+      border-radius: 999px;
+      background: #dcd9d2;
+    }
+
+    .mini-line.short { width: 64%; }
+    .mini-line.mid { width: 82%; }
+
+    .template-body {
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .template-body h4 {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .template-body p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .doc-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .doc-card h4 {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .doc-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .item {
+      display: grid;
+      gap: 7px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 11px;
+      min-width: 0;
+    }
+
+    .item-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .item h4 {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .progress {
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--soft);
+      overflow: hidden;
+    }
+
+    .bar {
+      display: block;
+      width: var(--w);
+      height: 100%;
+      border-radius: inherit;
+      background: #2f3437;
+    }
+
+    .bar.green { background: var(--green); }
+    .bar.amber { background: var(--amber); }
+    .bar.red { background: var(--red); }
+    .bar.blue { background: var(--blue); }
+    .bar.purple { background: var(--purple); }
+
+    .timeline {
+      display: grid;
+      gap: 2px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 72px 120px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: start;
+      border-bottom: 1px solid var(--line);
+      padding: 10px 0;
+      font-size: 13px;
+    }
+
+    .step:last-child { border-bottom: 0; }
+
+    .code {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfaf8;
+      color: var(--ink);
+      padding: 12px;
+      font: 12px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre-wrap;
+      overflow: auto;
+      min-height: 150px;
+    }
+
+    .side-panel {
+      position: sticky;
+      top: 84px;
+      align-self: start;
+    }
+
+    .callout {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 12px;
+      display: grid;
+      gap: 7px;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 40;
+      width: min(420px, calc(100vw - 36px));
+      border-radius: 8px;
+      background: #2f3437;
+      color: #ffffff;
+      padding: 12px 14px;
+      display: none;
+      box-shadow: var(--shadow);
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .toast.show { display: block; }
+
+    [data-tip] {
+      position: relative;
+    }
+
+    [data-tip]::after {
+      content: attr(data-tip);
+      position: absolute;
+      z-index: 50;
+      left: 0;
+      bottom: calc(100% + 9px);
+      width: min(340px, 82vw);
+      border-radius: 8px;
+      background: #2f3437;
+      color: #ffffff;
+      padding: 9px 10px;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(4px);
+      pointer-events: none;
+      white-space: normal;
+      font-size: 12px;
+      line-height: 1.45;
+      font-weight: 650;
+      display: none;
+    }
+
+    [data-tip]:hover::after,
+    [data-tip]:focus-visible::after {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .help {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      display: inline-grid;
+      place-items: center;
+      background: var(--soft);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+      cursor: help;
+    }
+
+    @media (max-width: 1120px) {
+      .app { grid-template-columns: 230px minmax(0, 1fr); }
+      .cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .cols-3,
+      .template-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .cols-main,
+      .cols-side { grid-template-columns: 1fr; }
+      .side-panel { position: static; }
+    }
+
+    @media (max-width: 760px) {
+      html,
+      body { overflow-x: hidden; }
+      .app {
+        grid-template-columns: 1fr;
+        overflow-x: hidden;
+      }
+      .sidebar {
+        position: relative;
+        height: auto;
+      }
+      .nav {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .nav-title {
+        grid-column: 1 / -1;
+      }
+      .topbar {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1fr;
+        padding: 12px 16px;
+      }
+      .search {
+        max-width: none;
+        min-width: 0;
+      }
+      .top-actions,
+      .toolbar,
+      .toolbar-left,
+      .toolbar-right,
+      .button-row {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+      .top-actions .btn,
+      .top-actions .select,
+      .toolbar .btn,
+      .toolbar .select,
+      .button-row .btn {
+        width: 100%;
+      }
+      .content {
+        padding: 20px 14px 28px;
+        overflow-x: hidden;
+      }
+      .page-title h1 {
+        font-size: 27px;
+      }
+      .cols-4,
+      .cols-3,
+      .cols-2,
+      .cols-main,
+      .cols-side,
+      .template-grid,
+      .doc-grid,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .step {
+        grid-template-columns: 1fr;
+      }
+      .badge,
+      .btn {
+        white-space: normal;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="workspace">
+        <div class="workspace-mark">AE</div>
+        <div>
+          <strong>Agent Eval</strong>
+          <span>Acme AI Platform</span>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Workspace navigation">
+        <div class="nav-title">Workspace</div>
+        <button class="active" data-view="home"><span class="emoji">⌂</span><span>Home</span><small>42</small></button>
+        <button data-view="targets"><span class="emoji">◈</span><span>Targets</span><small id="targetCount">18</small></button>
+        <button data-view="assets"><span class="emoji">▦</span><span>Evaluation Assets</span><small id="assetCount">9,420</small></button>
+        <button data-view="runs"><span class="emoji">▶</span><span>Runs</span><small>31</small></button>
+        <button data-view="trace"><span class="emoji">⌁</span><span>Trace Review</span><small>7</small></button>
+        <button data-view="reports"><span class="emoji">◷</span><span>Reports</span><small>12</small></button>
+        <div class="nav-title">Operations</div>
+        <button data-view="calibration"><span class="emoji">◎</span><span>Judge Calibration</span><small>3</small></button>
+        <button data-view="online"><span class="emoji">◌</span><span>Online Monitor</span><small id="onlineQueue">26</small></button>
+        <button data-view="data-loop"><span class="emoji">↻</span><span>Data Loop</span><small id="workOrders">12</small></button>
+        <button data-view="admin"><span class="emoji">⚙</span><span>Admin</span><small>OK</small></button>
+        <button data-view="docs"><span class="emoji">?</span><span>Docs</span><small>6</small></button>
+      </nav>
+
+      <div class="sidebar-note">
+        <strong>Support Agent v18</strong>
+        <span>Gate-ready after unstable trials are rerun.</span>
+        <span class="badge green">Release window 18:00</span>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="breadcrumb">Acme AI Platform / Customer Ops / Evaluation workspace</div>
+        <div class="search">Search targets, cases, runs, traces, reports...</div>
+        <div class="top-actions">
+          <select class="select" aria-label="Workspace mode">
+            <option>Customer Ops</option>
+            <option>Finance Agent</option>
+            <option>Browser Use Lab</option>
+          </select>
+          <button class="btn" id="quickTour">Command palette</button>
+          <button class="btn primary" data-view="runs">New run</button>
+        </div>
+      </header>
+
+      <section class="content">
+        <section class="view active" id="home">
+          <div class="page-title">
+            <div class="icon">⌂</div>
+            <h1>Evaluation workspace</h1>
+            <div class="page-meta">
+              <span class="prop">Owner · AI Platform</span>
+              <span class="prop">Program · Customer Ops</span>
+              <span class="prop">Decision SLA · 4h</span>
+              <span class="prop">Last sync · 11 Jun 2026</span>
+            </div>
+          </div>
+
+          <div class="tabs">
+            <button class="tab active">Overview</button>
+            <button class="tab">Board</button>
+            <button class="tab">Calendar</button>
+            <button class="tab">Recent decisions</button>
+          </div>
+
+          <div class="grid cols-4">
+            <div class="card metric" data-tip="Weekly decisions made from platform evidence: release, rollback, model selection, or data production.">
+              <span>Decisions this week</span>
+              <strong>47</strong>
+              <small>31 release · 4 rollback · 12 selection</small>
+            </div>
+            <div class="card metric" data-tip="Release gates use repeated trials, judge health, and confidence intervals rather than a single score.">
+              <span>Release gates</span>
+              <strong>68%</strong>
+              <small>CI coverage across active targets</small>
+            </div>
+            <div class="card metric" data-tip="Judge health is updated by gold-standard agreement and human review sampling.">
+              <span>Judge agreement</span>
+              <strong>0.86</strong>
+              <small>3 judges need calibration</small>
+            </div>
+            <div class="card metric" data-tip="Reusable assets include datasets, cases, environment templates, mock tools, evaluators, rubrics, and gold traces.">
+              <span>Evaluation assets</span>
+              <strong>9,420</strong>
+              <small>184 added this month</small>
+            </div>
+          </div>
+
+          <div class="grid cols-main">
+            <div class="card">
+              <div class="toolbar">
+                <h3>Recommended actions</h3>
+                <button class="btn subtle" data-view="reports">Open report queue</button>
+              </div>
+              <div class="database">
+                <table>
+                  <thead>
+                    <tr><th>Action</th><th>Object</th><th>Owner</th><th>Impact</th><th>Status</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Review newly failed cases</td><td>Customer Ops regression</td><td>AI Platform</td><td><span class="badge red">High</span></td><td><span class="badge amber">Due today</span></td></tr>
+                    <tr><td>Approve release gate</td><td>Support Agent v18</td><td>Agent Team</td><td><span class="badge green">Ready</span></td><td><span class="badge blue">Evidence attached</span></td></tr>
+                    <tr><td>Calibrate safety judge</td><td>Risk refusal judge</td><td>Annotation Ops</td><td><span class="badge amber">Medium</span></td><td><span class="badge red">Below threshold</span></td></tr>
+                    <tr><td>Create training data order</td><td>Tool recovery failures</td><td>Data Ops</td><td><span class="badge purple">Growth</span></td><td><span class="badge">Draft</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="card side-panel">
+              <h3>Release readiness</h3>
+              <div class="list">
+                <div class="item"><div class="item-head"><h4>Regression suite</h4><span class="badge green">Passed</span></div><div class="progress"><span class="bar green" style="--w: 92%"></span></div></div>
+                <div class="item"><div class="item-head"><h4>Critical pass^3</h4><span class="badge green">0.74</span></div><div class="progress"><span class="bar green" style="--w: 74%"></span></div></div>
+                <div class="item"><div class="item-head"><h4>New safety failures</h4><span class="badge green">0</span></div><div class="progress"><span class="bar green" style="--w: 100%"></span></div></div>
+                <div class="item"><div class="item-head"><h4>Judge eligibility</h4><span class="badge amber">1 excluded</span></div><div class="progress"><span class="bar amber" style="--w: 82%"></span></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Pinned workspaces</h3>
+            <div class="template-grid">
+              <div class="template-card" data-view="targets">
+                <div class="template-preview"><div class="mini-line"></div><div class="mini-line mid"></div><div class="mini-line short"></div></div>
+                <div class="template-body"><h4>Target registry</h4><p>18 targets · 4 unhealthy checks</p><span class="badge blue">Open</span></div>
+              </div>
+              <div class="template-card" data-view="assets">
+                <div class="template-preview"><div class="mini-line mid"></div><div class="mini-line"></div><div class="mini-line short"></div></div>
+                <div class="template-body"><h4>Evaluation assets</h4><p>9,420 assets · 184 added this month</p><span class="badge green">Open</span></div>
+              </div>
+              <div class="template-card" data-view="runs">
+                <div class="template-preview"><div class="mini-line"></div><div class="mini-line"></div><div class="mini-line mid"></div></div>
+                <div class="template-body"><h4>Run queue</h4><p>31 active runs · 7 waiting on review</p><span class="badge amber">Open</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="targets">
+          <div class="page-title">
+            <div class="icon">◈</div>
+            <h1>Targets</h1>
+            <div class="page-meta">
+              <span class="prop">18 active</span>
+              <span class="prop">4 connection modes</span>
+              <span class="prop">Trace schema · current</span>
+              <span class="prop">Secrets · tenant scoped</span>
+            </div>
+          </div>
+
+          <div class="toolbar">
+            <div class="toolbar-left">
+              <button class="btn primary" id="addTarget" data-tip="Create a reproducible target version with runtime, tool manifest, prompt, and credentials captured.">Add target</button>
+              <button class="btn" id="uploadTrace" data-tip="Use offline trace upload when a customer wants evaluation without changing production code.">Upload traces</button>
+              <button class="btn" data-tip="Connection guides adapt to API, SDK, trace-only, MCP, and browser-use modes.">Connection guide</button>
+            </div>
+            <div class="toolbar-right">
+              <select class="select" aria-label="Target filter"><option>All connection modes</option><option>API</option><option>SDK</option><option>Trace upload</option><option>Browser use</option></select>
+            </div>
+          </div>
+
+          <div class="grid cols-main">
+            <div class="card">
+              <h3>Target registry</h3>
+              <div class="database">
+                <table>
+                  <thead><tr><th>Name</th><th>Version</th><th>Connection</th><th>Health</th><th>Last run</th></tr></thead>
+                  <tbody id="targetTable">
+                    <tr><td>Support Agent</td><td>2026.06.11</td><td><span class="badge blue">API</span></td><td><span class="badge green">Healthy</span></td><td>91.2 · passed</td></tr>
+                    <tr><td>Finance Reconciler</td><td>2026.06.08</td><td><span class="badge green">SDK</span></td><td><span class="badge green">Healthy</span></td><td>87.9 · watch</td></tr>
+                    <tr><td>Browser Checkout Agent</td><td>2026.06.02</td><td><span class="badge purple">Browser</span></td><td><span class="badge amber">Sandbox warmup</span></td><td>73.4 · blocked</td></tr>
+                    <tr><td>Legacy Trace Import</td><td>offline-v4</td><td><span class="badge">Trace upload</span></td><td><span class="badge green" id="traceStatus">schema ready</span></td><td>Pending</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="card side-panel">
+              <h3>Connection profile <span class="help" tabindex="0" data-tip="A connection profile can be API-driven, offline trace-only, SDK-instrumented, MCP/A2A mediated, or browser/computer-use sandboxed.">?</span></h3>
+              <div class="form-grid">
+                <label class="full" data-tip="Target names are human-readable; scoring binds to immutable target versions.">Target name<input class="input" value="Support Agent"></label>
+                <label data-tip="Connection mode controls how the platform drives execution and captures trajectories.">Mode<select class="select"><option>API endpoint</option><option>Offline trace upload</option><option>SDK instrumentation</option><option>MCP tool mediation</option><option>Browser use</option></select></label>
+                <label data-tip="Credentials are encrypted and scoped by tenant or customer-controlled secret stores.">Credential policy<select class="select"><option>Tenant encrypted secret</option><option>Customer VPC secret</option><option>No credential</option></select></label>
+                <label class="full" data-tip="Endpoint can be OpenAI-compatible or a custom request/response mapping.">Endpoint<input class="input" value="https://agent.internal/v1/chat/completions"></label>
+              </div>
+              <div class="button-row" style="margin-top:12px;">
+                <button class="btn primary">Test connection</button>
+                <button class="btn">Save version</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="assets">
+          <div class="page-title">
+            <div class="icon">▦</div>
+            <h1>Evaluation Assets</h1>
+            <div class="page-meta">
+              <span class="prop">9,420 assets</span>
+              <span class="prop">43 dataset snapshots</span>
+              <span class="prop">18 environments</span>
+              <span class="prop">64 evaluators</span>
+            </div>
+          </div>
+
+          <div class="toolbar">
+            <div class="toolbar-left">
+              <button class="btn primary" id="createCase" data-tip="Create a case with task input, references, assertions, tags, source, and review status.">New case</button>
+              <button class="btn" id="cloneTemplate" data-tip="Templates package datasets, rubrics, environment seeds, mock tools, and evaluators.">Clone template</button>
+              <button class="btn" data-tip="Import JSONL, CSV, benchmark adapters, or production-returned candidate cases.">Import dataset</button>
+            </div>
+            <div class="toolbar-right">
+              <select class="select"><option>Gallery view</option><option>Database view</option><option>Health view</option></select>
+            </div>
+          </div>
+
+          <div class="template-grid">
+            <div class="template-card" data-tip="Reusable customer-service suite with tasks, assertions, gold traces, and mock CRM tools.">
+              <div class="template-preview"><div class="mini-line"></div><div class="mini-line mid"></div><div class="mini-line short"></div></div>
+              <div class="template-body"><h4>Customer Ops Regression</h4><p>1,920 cases · 18 environments · 42 evaluators</p><div class="chips"><span class="badge green">Versioned</span><span class="badge">Private</span></div></div>
+            </div>
+            <div class="template-card" data-tip="Browser tasks with Playwright-backed terminal checks and screenshot evidence.">
+              <div class="template-preview"><div class="mini-line short"></div><div class="mini-line"></div><div class="mini-line mid"></div></div>
+              <div class="template-body"><h4>Browser Checkout Lab</h4><p>680 cases · 9 web apps · 14 terminal checks</p><div class="chips"><span class="badge purple">Sandbox</span><span class="badge amber">Watch</span></div></div>
+            </div>
+            <div class="template-card" data-tip="Safety and indirect-injection challenge set for high-risk tool use.">
+              <div class="template-preview"><div class="mini-line"></div><div class="mini-line short"></div><div class="mini-line mid"></div></div>
+              <div class="template-body"><h4>Safety Red-Team Pack</h4><p>820 cases · 7 attack families · judge calibrated</p><div class="chips"><span class="badge red">Critical</span><span class="badge green">Gate-ready</span></div></div>
+            </div>
+          </div>
+
+          <div class="grid cols-main">
+            <div class="card">
+              <h3>Case database</h3>
+              <div class="database">
+                <table>
+                  <thead><tr><th>Case</th><th>Capability</th><th>Source</th><th>Environment</th><th>Status</th></tr></thead>
+                  <tbody>
+                    <tr><td>Refund with coupon conflict</td><td>Tool parameter + policy</td><td><span class="badge blue">Production return</span></td><td>CRM sandbox</td><td><span class="badge green">Approved</span></td></tr>
+                    <tr><td>PII export refusal</td><td>Safety policy</td><td><span class="badge red">Red team</span></td><td>Mock data warehouse</td><td><span class="badge green">Gate set</span></td></tr>
+                    <tr><td>Invoice table ambiguity</td><td>Multimodal extraction</td><td><span class="badge purple">Expert authored</span></td><td>File sandbox</td><td><span class="badge amber">Needs review</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card side-panel">
+              <h3>Asset health</h3>
+              <div class="list">
+                <div class="item"><div class="item-head"><h4>Discrimination</h4><span class="badge green">Good</span></div><div class="progress"><span class="bar green" style="--w:81%"></span></div></div>
+                <div class="item"><div class="item-head"><h4>Staleness</h4><span class="badge amber">Rotate soon</span></div><div class="progress"><span class="bar amber" style="--w:62%"></span></div></div>
+                <div class="item"><div class="item-head"><h4>Leakage canary</h4><span class="badge green">Clean</span></div><div class="progress"><span class="bar green" style="--w:96%"></span></div></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="runs">
+          <div class="page-title">
+            <div class="icon">▶</div>
+            <h1>Runs</h1>
+            <div class="page-meta">
+              <span class="prop">31 active</span>
+              <span class="prop">3,000 trials queued</span>
+              <span class="prop">Budget · $480</span>
+              <span class="prop">Sandbox pool · warm</span>
+            </div>
+          </div>
+
+          <div class="grid cols-main">
+            <div class="card">
+              <h3>New evaluation run</h3>
+              <div class="form-grid">
+                <label data-tip="Runs bind to immutable dataset versions so reports remain comparable.">Dataset<select class="select"><option>Customer Ops Regression · v43</option><option>Safety Red-Team Pack · v18</option></select></label>
+                <label data-tip="Use the same suite across multiple target versions for model selection or regression checks.">Target<select class="select"><option>Support Agent · 2026.06.11</option><option>Baseline Agent · 2026.05.28</option></select></label>
+                <label data-tip="Repeated trials make non-determinism measurable through pass@k, pass^k, variance, and confidence intervals.">Trials per case<select class="select"><option>3 repeated trials</option><option>5 repeated trials</option><option>10 stability audit</option></select></label>
+                <label data-tip="Gate rules combine thresholds, baseline comparison, judge health, and safety constraints.">Gate rule<select class="select"><option>Release gate · no new critical failure</option><option>Nightly regression</option><option>Exploratory</option></select></label>
+                <label data-tip="Sandboxed tasks isolate side effects and use independent terminal-state checkers.">Environment<select class="select"><option>Kubernetes sandbox + mock tools</option><option>API-only</option><option>Browser cluster</option></select></label>
+                <label data-tip="Budget hard stops prevent silent cost overruns across target and judge calls.">Budget<select class="select"><option>$480 hard stop</option><option>$1,000 hard stop</option></select></label>
+              </div>
+              <div class="button-row" style="margin-top:12px;">
+                <button class="btn primary" id="startRun" data-tip="Start a run by expanding cases into repeated trials and scheduling runner work.">Start run</button>
+                <button class="btn" id="rerunUnstable" data-tip="Only rerun unstable or failed trials; completed results remain idempotent.">Rerun unstable cases</button>
+              </div>
+            </div>
+
+            <div class="card side-panel">
+              <h3>Run status</h3>
+              <div class="list">
+                <div class="item"><div class="item-head"><h4 id="runStatus">Queued</h4><span class="badge amber">3,000 trials</span></div><div class="progress"><span class="bar amber" style="--w:12%"></span></div></div>
+                <div class="item"><div class="item-head"><h4>pass@3</h4><span class="badge green">0.91 ± 0.02</span></div></div>
+                <div class="item"><div class="item-head"><h4>pass^3</h4><span class="badge amber">0.64 ± 0.04</span></div></div>
+                <div class="item"><div class="item-head"><h4>Infra failures</h4><span class="badge green">excluded from score</span></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Run queue</h3>
+            <div class="database">
+              <table>
+                <thead><tr><th>Run</th><th>Target</th><th>Suite</th><th>Progress</th><th>Decision</th></tr></thead>
+                <tbody>
+                  <tr><td>Customer Ops release gate</td><td>Support Agent</td><td>Regression v43</td><td><div class="progress"><span class="bar green" style="--w:92%"></span></div></td><td><span class="badge green">Ready</span></td></tr>
+                  <tr><td>Browser checkout stability</td><td>Browser Agent</td><td>Checkout Lab</td><td><div class="progress"><span class="bar amber" style="--w:61%"></span></div></td><td><span class="badge amber">Watch</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="trace">
+          <div class="page-title">
+            <div class="icon">⌁</div>
+            <h1>Trace Review</h1>
+            <div class="page-meta">
+              <span class="prop">Case · coupon_conflict_0817</span>
+              <span class="prop">Trial · 2 of 3</span>
+              <span class="prop">Severity · High</span>
+              <span class="prop">Reviewer · queued</span>
+            </div>
+          </div>
+
+          <div class="grid cols-main">
+            <div class="card">
+              <div class="toolbar">
+                <h3>Trajectory timeline</h3>
+                <button class="btn primary" id="markStep" data-tip="Step-level labels become gold failure attribution data for future judges and reports.">Mark selected step</button>
+              </div>
+              <div class="timeline">
+                <div class="step"><strong>00:01</strong><span class="badge blue">User</span><div>Customer asks for a refund while keeping coupon benefits.</div><span></span></div>
+                <div class="step"><strong>00:04</strong><span class="badge green">Tool call</span><div>order.lookup returns coupon_redeemed=true, refund_window=open.</div><span class="badge green">Correct</span></div>
+                <div class="step"><strong>00:07</strong><span class="badge red">Tool call</span><div>refund.request(amount=full) executes before checking policy conflict.</div><span class="badge red" id="selectedStep">Needs label</span></div>
+                <div class="step"><strong>00:09</strong><span class="badge amber">State delta</span><div>CRM audit note is empty and refund status is blocked.</div><span class="badge amber">Evidence</span></div>
+              </div>
+            </div>
+            <div class="card side-panel">
+              <h3>Evidence panel <span class="help" tabindex="0" data-tip="Evaluator evidence references let reviewers jump from a score directly to the failing step.">?</span></h3>
+              <div class="code">terminal check:
+  no_unauthorized_refund: fail
+  crm_note_written: fail
+  policy_conflict_checked: fail
+
+suggested label:
+  Tool parameter error
+  Planning gap
+  Severity: High</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="reports">
+          <div class="page-title">
+            <div class="icon">◷</div>
+            <h1>Reports</h1>
+            <div class="page-meta">
+              <span class="prop">Run · Customer Ops release gate</span>
+              <span class="prop">Baseline · 2026.05.28</span>
+              <span class="prop">confidence interval · ready</span>
+              <span class="prop">Decision · pending</span>
+            </div>
+          </div>
+
+          <div class="grid cols-4">
+            <div class="card metric"><span>Success rate</span><strong>82%</strong><small>confidence interval ±3%</small></div>
+            <div class="card metric"><span>pass@3</span><strong>91%</strong><small>retry-aware reliability</small></div>
+            <div class="card metric"><span>pass^3</span><strong>74%</strong><small>consecutive success</small></div>
+            <div class="card metric"><span>Cost per task</span><strong>$0.21</strong><small>cache saved 31%</small></div>
+          </div>
+
+          <div class="grid cols-main">
+            <div class="card">
+              <h3>Version comparison</h3>
+              <div class="database">
+                <table>
+                  <thead><tr><th>Change</th><th>Cases</th><th>Representative case</th><th>Decision</th></tr></thead>
+                  <tbody>
+                    <tr><td>Fixed</td><td>184</td><td>coupon_conflict_0817</td><td><span class="badge green">Release evidence</span></td></tr>
+                    <tr><td>Newly failed</td><td>0 critical / 17 non-critical</td><td>crm_merge_unsafe_1188</td><td><span class="badge amber">Monitor</span></td></tr>
+                    <tr><td>Still failing</td><td>92</td><td>tool_recovery_timeout</td><td><span class="badge purple">Data work order</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <button class="btn primary" id="approveGate" style="margin-top:12px;" data-tip="Approving a gate attaches the report, comparison result, judge eligibility, and evidence bundle.">Approve release gate</button>
+            </div>
+            <div class="card side-panel">
+              <h3>Gate decision</h3>
+              <div class="callout">
+                <strong id="gateStatus">Pending review</strong>
+                <p>No new critical safety failures. Difference is statistically significant. One judge excluded from gate due to low agreement.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="calibration">
+          <div class="page-title">
+            <div class="icon">◎</div>
+            <h1>Judge Calibration</h1>
+            <div class="page-meta">
+              <span class="prop">3 judges watched</span>
+              <span class="prop">Gold trace set · 970</span>
+              <span class="prop">Human sample · 5%</span>
+              <span class="prop">Gate eligible · 2</span>
+            </div>
+          </div>
+
+          <div class="grid cols-main">
+            <div class="card">
+              <h3>Judge health database</h3>
+              <div class="database">
+                <table>
+                  <thead><tr><th>Judge</th><th>Gold cases</th><th>Agreement</th><th>Bias check</th><th>Gate eligibility</th></tr></thead>
+                  <tbody>
+                    <tr><td>Customer operations judge</td><td>312</td><td><span class="badge green">0.86</span></td><td>Length neutral</td><td><span class="badge green">Eligible</span></td></tr>
+                    <tr><td>Safety refusal judge</td><td>238</td><td><span class="badge red">0.79</span></td><td>Over-refusal drift</td><td><span class="badge amber" id="judgeStatus">Needs action</span></td></tr>
+                    <tr><td>Pairwise quality judge</td><td>420</td><td><span class="badge green">0.88</span></td><td>Position neutral</td><td><span class="badge green">Eligible</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <button class="btn danger" id="freezeJudge" style="margin-top:12px;" data-tip="Judges below agreement threshold remain visible but cannot block releases.">Exclude weak judge from gates</button>
+            </div>
+            <div class="card side-panel">
+              <h3>Human review sample</h3>
+              <div class="list">
+                <div class="item"><div class="item-head"><h4>Boundary scores</h4><span class="badge amber">84</span></div><p>Routed to two-reviewer back-to-back labeling.</p></div>
+                <div class="item"><div class="item-head"><h4>Low confidence</h4><span class="badge red">31</span></div><p>Escalated to senior reviewer queue.</p></div>
+                <div class="item"><div class="item-head"><h4>Calibration anchors</h4><span class="badge green">200+</span></div><p>Required before a judge can block release.</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="online">
+          <div class="page-title">
+            <div class="icon">◌</div>
+            <h1>Online Monitor</h1>
+            <div class="page-meta">
+              <span class="prop">OpenTelemetry · connected</span>
+              <span class="prop">42K traces / h</span>
+              <span class="prop">Drift alerts · 6</span>
+              <span class="prop">Return queue · 26</span>
+            </div>
+          </div>
+
+          <div class="grid cols-4">
+            <div class="card metric"><span>Production traces / h</span><strong>42K</strong><small>6.4% sampled</small></div>
+            <div class="card metric"><span>Async scoring delay</span><strong>74s</strong><small>does not block production</small></div>
+            <div class="card metric"><span>Quality alerts</span><strong>6</strong><small>sliding-window detection</small></div>
+            <div class="card metric"><span>Return queue</span><strong>26</strong><small>candidate regression cases</small></div>
+          </div>
+
+          <div class="card">
+            <div class="toolbar">
+              <h3>Production intake rules</h3>
+              <button class="btn primary" id="ingestTrace" data-tip="Selected online traces are redacted and routed to candidate regression cases.">Ingest selected traces</button>
+            </div>
+            <div class="database">
+              <table>
+                <thead><tr><th>Trigger</th><th>Sampling</th><th>Evaluator</th><th>Action</th></tr></thead>
+                <tbody>
+                  <tr><td>User negative feedback</td><td>100%</td><td>Satisfaction judge</td><td>Candidate case</td></tr>
+                  <tr><td>Human handoff</td><td>100%</td><td>Handoff classifier</td><td>Review queue</td></tr>
+                  <tr><td>High-risk tool call</td><td>100%</td><td>Safety policy judge</td><td>Alert + audit</td></tr>
+                  <tr><td>Normal success traffic</td><td>3%</td><td>Lightweight quality judge</td><td>Trend monitor</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="data-loop">
+          <div class="page-title">
+            <div class="icon">↻</div>
+            <h1>Data Loop</h1>
+            <div class="page-meta">
+              <span class="prop">12 open work orders</span>
+              <span class="prop">86K SFT rows</span>
+              <span class="prop">12K DPO pairs</span>
+              <span class="prop">License checked</span>
+            </div>
+          </div>
+
+          <div class="grid cols-main">
+            <div class="card">
+              <h3>Failure clusters</h3>
+              <div class="database">
+                <table>
+                  <thead><tr><th>Cluster</th><th>Share</th><th>Evidence</th><th>Data product</th></tr></thead>
+                  <tbody>
+                    <tr><td>Tool recovery after timeout</td><td>28%</td><td>184 traces</td><td>Gold trajectory pack</td></tr>
+                    <tr><td>Policy conflict clarification</td><td>17%</td><td>96 traces</td><td>Preference pairs</td></tr>
+                    <tr><td>Indirect prompt injection</td><td>9%</td><td>41 traces</td><td>Safety red-team set</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <button class="btn primary" id="createWorkOrder" style="margin-top:12px;" data-tip="A work order specifies the missing data asset: cases, gold traces, preferences, red-team samples, or verifier logic.">Create data work order</button>
+            </div>
+            <div class="card side-panel">
+              <h3>Export formats</h3>
+              <div class="list">
+                <div class="item"><div class="item-head"><h4>SFT conversations</h4><span class="badge green">86K</span></div></div>
+                <div class="item"><div class="item-head"><h4>DPO preference pairs</h4><span class="badge purple">12K</span></div></div>
+                <div class="item"><div class="item-head"><h4>Process reward steps</h4><span class="badge blue">420K</span></div></div>
+                <div class="item"><div class="item-head"><h4>Verifier templates</h4><span class="badge amber">38</span></div></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="admin">
+          <div class="page-title">
+            <div class="icon">⚙</div>
+            <h1>Admin</h1>
+            <div class="page-meta">
+              <span class="prop">Tenant · Acme AI</span>
+              <span class="prop">RBAC roles · 5</span>
+              <span class="prop">Audit events · 81K</span>
+              <span class="prop">Deployment · private-ready</span>
+            </div>
+          </div>
+
+          <div class="grid cols-4">
+            <div class="card metric"><span>RBAC roles</span><strong>5</strong><small>admin · builder · developer · reviewer · read-only</small></div>
+            <div class="card metric"><span>Audit events</span><strong>81K</strong><small>immutable log chain</small></div>
+            <div class="card metric"><span>Judge cost</span><strong>$9.8K</strong><small>cache saved 31%</small></div>
+            <div class="card metric"><span>PII redactions</span><strong>132</strong><small>sample audit passed</small></div>
+          </div>
+
+          <div class="grid cols-main">
+            <div class="card">
+              <h3>Trust controls</h3>
+              <div class="list">
+                <div class="item"><div class="item-head"><h4>Tenant isolation</h4><span class="badge green">Ready</span></div><p>Organization, team, and project boundaries.</p></div>
+                <div class="item"><div class="item-head"><h4>Audit log</h4><span class="badge green">Ready</span></div><p>Dataset edits, runs, gates, exports, and judge changes.</p></div>
+                <div class="item"><div class="item-head"><h4>Private deployment</h4><span class="badge amber">Prepared</span></div><p>Core services avoid hard dependency on external systems.</p></div>
+              </div>
+              <button class="btn primary" id="runAudit" style="margin-top:12px;" data-tip="Evidence bundles include run config, dataset snapshot, target version, judge exclusions, audit log, and data authorization.">Generate evidence bundle</button>
+            </div>
+            <div class="card side-panel">
+              <h3>Audit log</h3>
+              <div class="code" id="auditStatus">Evidence bundle: Draft
+dataset snapshot: customer_ops_regression_v43
+target: support-agent_2026_06_11
+gate: pending
+judge exclusions: 1
+data license: training allowed</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="docs">
+          <div class="page-title">
+            <div class="icon">?</div>
+            <h1>Docs</h1>
+            <div class="page-meta">
+              <span class="prop">Audience · platform users</span>
+              <span class="prop">6 documents</span>
+              <span class="prop">Last reviewed · 11 Jun 2026</span>
+            </div>
+          </div>
+
+          <div class="toolbar">
+            <div class="toolbar-left">
+              <button class="btn primary" data-tip="Open the platform introduction document without placing marketing copy inside operational modules.">Platform introduction</button>
+              <button class="btn" data-tip="Create a customer-specific implementation note from the active workspace configuration.">New note</button>
+            </div>
+            <div class="toolbar-right">
+              <select class="select"><option>All docs</option><option>Operator guides</option><option>Implementation</option><option>Governance</option></select>
+            </div>
+          </div>
+
+          <div class="doc-grid">
+            <div class="doc-card" data-tip="Platform overview and rollout notes live here instead of inside the app work surfaces.">
+              <h4>Platform introduction</h4>
+              <p>Audience, package, deployment model, and customer value narrative.</p>
+              <span class="badge green">Published</span>
+            </div>
+            <div class="doc-card" data-tip="Explains the canonical Target, Dataset, Case, Run, Trial, Trajectory, Evaluator, Score, Report, and Gate objects.">
+              <h4>Data model</h4>
+              <p>Canonical objects, lifecycle rules, versioning, and ownership.</p>
+              <span class="badge blue">Current</span>
+            </div>
+            <div class="doc-card" data-tip="Internal implementation guide for repeated trials, sandbox resets, worker retries, and budget stops.">
+              <h4>Run orchestration</h4>
+              <p>Scheduler, runner pool, sandbox pool, and checker isolation.</p>
+              <span class="badge">Operator guide</span>
+            </div>
+            <div class="doc-card" data-tip="Judge release rules include gold-standard coverage, agreement threshold, bias checks, and gate eligibility.">
+              <h4>Judge governance</h4>
+              <p>Gold traces, human samples, escalation, exclusions, and audit trail.</p>
+              <span class="badge amber">Needs quarterly review</span>
+            </div>
+            <div class="doc-card" data-tip="Defines how failures become cases, gold traces, preference pairs, red-team samples, and verifier logic.">
+              <h4>Data loop playbook</h4>
+              <p>Failure clusters, work order templates, exports, and validation runs.</p>
+              <span class="badge purple">Data Ops</span>
+            </div>
+            <div class="doc-card" data-tip="Security guidance for tenant isolation, PII redaction, audit logs, private deployment, and evidence bundles.">
+              <h4>Trust and deployment</h4>
+              <p>RBAC, audit, data authorization, judge gateway controls, and private install.</p>
+              <span class="badge green">Ready</span>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    const views = Array.from(document.querySelectorAll(".view"));
+    const navButtons = Array.from(document.querySelectorAll("[data-view]"));
+    const toast = document.getElementById("toast");
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove("show"), 2600);
+    }
+
+    function activateView(id) {
+      views.forEach((view) => view.classList.toggle("active", view.id === id));
+      document.querySelectorAll(".nav button[data-view]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.view === id);
+      });
+      document.querySelector(".topbar").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    navButtons.forEach((button) => {
+      button.addEventListener("click", () => activateView(button.dataset.view));
+    });
+
+    document.getElementById("addTarget").addEventListener("click", () => {
+      document.getElementById("targetCount").textContent = "19";
+      document.getElementById("targetTable").insertAdjacentHTML("afterbegin", `
+        <tr><td>Retail Ops Pilot</td><td>2026.06.12</td><td><span class="badge blue">API</span></td><td><span class="badge green">Healthy</span></td><td>Ready for first run</td></tr>
+      `);
+      showToast("Target added and connection health check passed.");
+    });
+
+    document.getElementById("uploadTrace").addEventListener("click", () => {
+      document.getElementById("traceStatus").textContent = "validated";
+      showToast("1,000 offline traces validated and queued for scoring.");
+    });
+
+    document.getElementById("createCase").addEventListener("click", () => {
+      document.getElementById("assetCount").textContent = "9,421";
+      showToast("New case created with references, tags, and review status.");
+    });
+
+    document.getElementById("cloneTemplate").addEventListener("click", () => {
+      document.getElementById("assetCount").textContent = "9,422";
+      showToast("Evaluation template cloned into the private asset library.");
+    });
+
+    document.getElementById("startRun").addEventListener("click", () => {
+      document.getElementById("runStatus").textContent = "running · 2,418 / 3,000 trials";
+      showToast("Evaluation run started with repeated trials and sandbox reset.");
+    });
+
+    document.getElementById("rerunUnstable").addEventListener("click", () => {
+      document.getElementById("runStatus").textContent = "running · unstable cases queued";
+      showToast("Only unstable and failed trials were queued for rerun.");
+    });
+
+    document.getElementById("markStep").addEventListener("click", () => {
+      document.getElementById("selectedStep").textContent = "Tool parameter error";
+      showToast("Step-level failure label saved and linked to evaluator evidence.");
+    });
+
+    document.getElementById("approveGate").addEventListener("click", () => {
+      document.getElementById("gateStatus").textContent = "Approved · release can proceed";
+      showToast("Release gate approved and evidence bundle attached.");
+    });
+
+    document.getElementById("freezeJudge").addEventListener("click", () => {
+      document.getElementById("judgeStatus").textContent = "Excluded from gates";
+      showToast("Weak judge excluded from release-gate decisions.");
+    });
+
+    document.getElementById("ingestTrace").addEventListener("click", () => {
+      document.getElementById("onlineQueue").textContent = "31";
+      showToast("Five online traces entered the regression return queue.");
+    });
+
+    document.getElementById("createWorkOrder").addEventListener("click", () => {
+      document.getElementById("workOrders").textContent = "13";
+      showToast("Data work order created from failure cluster.");
+    });
+
+    document.getElementById("runAudit").addEventListener("click", () => {
+      document.getElementById("auditStatus").textContent = `Evidence bundle: Ready
+dataset snapshot: customer_ops_regression_v43
+target: support-agent_2026_06_11
+gate: approved
+judge exclusions: safety_refusal_judge
+data license: training allowed`;
+      showToast("Evidence bundle is ready for export.");
+    });
+
+    document.getElementById("quickTour").addEventListener("click", () => {
+      const order = ["targets", "assets", "runs", "trace", "reports", "calibration", "online", "data-loop", "admin"];
+      let index = 0;
+      showToast("Guided product flow started.");
+      const timer = setInterval(() => {
+        activateView(order[index]);
+        index += 1;
+        if (index >= order.length) {
+          clearInterval(timer);
+          showToast("Guided flow complete.");
+        }
+      }, 700);
+    });
+  </script>
+</body>
+</html>
