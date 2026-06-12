@@ -266,7 +266,7 @@ async function runViewport(client, width, height, label) {
   if (workspaceSwitch.finance.caseId !== "invoice_tax_mismatch_0442") failures.push(`${label} finance case id not updated`);
   if (!workspaceSwitch.finance.timeline?.includes("erp.post_adjustment")) failures.push(`${label} finance trace timeline not updated`);
   if (workspaceSwitch.finance.targetInput !== "财务对账智能体") failures.push(`${label} finance target form not updated`);
-  if (!workspaceSwitch.finance.runQueue?.includes("供应商对账月结门禁")) failures.push(`${label} finance run queue not updated`);
+  if (!workspaceSwitch.finance.runQueue?.includes("供应商对账月结准入")) failures.push(`${label} finance run queue not updated`);
 
   if (workspaceSwitch.browser.active !== "trace") failures.push(`${label} browser switch should open trace from run queue`);
   if (!workspaceSwitch.browser.breadcrumb?.includes("浏览器操作实验室")) failures.push(`${label} browser breadcrumb not updated`);
@@ -498,7 +498,7 @@ async function runViewport(client, width, height, label) {
   if (!flow.runStatus?.includes("运行中")) failures.push(`${label} run start failed`);
   if (!flow.selectedStep?.includes("工具参数错误")) failures.push(`${label} step marking failed`);
   if (!flow.gateStatus?.includes("已批准")) failures.push(`${label} gate action failed`);
-  if (!flow.judgeStatus?.includes("已从门禁排除")) failures.push(`${label} judge action failed`);
+  if (!flow.judgeStatus?.includes("已从准入判断排除")) failures.push(`${label} judge action failed`);
   if (flow.onlineQueue !== "31") failures.push(`${label} online ingestion failed`);
   if (flow.workOrders !== "13") failures.push(`${label} data loop failed`);
   if (!flow.auditStatus?.includes("就绪")) failures.push(`${label} audit action failed`);

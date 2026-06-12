@@ -996,13 +996,13 @@
       <nav class="nav" aria-label="工作区导航">
         <div class="nav-title">工作区</div>
         <button class="active" data-view="home"><span class="emoji">⌂</span><span>首页</span><small>42</small></button>
-        <button data-view="targets"><span class="emoji">◈</span><span>被测对象</span><small id="targetCount">18</small></button>
+        <button data-view="targets" data-tip="这里管理要被评测的 Agent、机器人或自动化流程版本；平台会按版本保存接入方式、工具清单和运行证据。"><span class="emoji">◈</span><span>智能体版本</span><small id="targetCount">18</small></button>
         <button data-view="assets"><span class="emoji">▦</span><span>评测资产</span><small id="assetCount">9,420</small></button>
         <button data-view="runs"><span class="emoji">▶</span><span>评测运行</span><small>31</small></button>
-        <button data-view="trace"><span class="emoji">⌁</span><span>轨迹复核</span><small>7</small></button>
+        <button data-view="trace" data-tip="运行轨迹记录 Agent 每一步输入、工具调用、页面操作、结果和证据，方便定位失败原因。"><span class="emoji">⌁</span><span>运行轨迹</span><small>7</small></button>
         <button data-view="reports"><span class="emoji">◷</span><span>报告</span><small>12</small></button>
         <div class="nav-title">运营</div>
-        <button data-view="calibration"><span class="emoji">◎</span><span>裁判校准</span><small>3</small></button>
+        <button data-view="calibration" data-tip="评分器是自动判断任务是否完成的规则或模型；校准用于确认它和人工判断保持一致。"><span class="emoji">◎</span><span>评分器校准</span><small>3</small></button>
         <button data-view="online"><span class="emoji">◌</span><span>在线监控</span><small id="onlineQueue">26</small></button>
         <button data-view="data-loop"><span class="emoji">↻</span><span>数据闭环</span><small id="workOrders">12</small></button>
         <button data-view="admin"><span class="emoji">⚙</span><span>管理</span><small>正常</small></button>
@@ -1011,7 +1011,7 @@
 
       <div class="sidebar-note">
         <strong id="sidebarContextTitle">客服智能体 v18</strong>
-        <span id="sidebarContextText">不稳定样例复跑后可进入门禁审批。</span>
+        <span id="sidebarContextText">不稳定样例复跑后可进入上线准入审批。</span>
         <span class="badge green" id="sidebarContextBadge">发布窗口 18:00</span>
       </div>
     </aside>
@@ -1019,7 +1019,7 @@
     <main class="main">
       <header class="topbar">
         <div class="breadcrumb" id="breadcrumb">Acme AI 平台 / 客服运营 / 评测工作区</div>
-        <button class="search" id="globalSearch" type="button">搜索被测对象、样例、运行、轨迹、报告...</button>
+        <button class="search" id="globalSearch" type="button">搜索智能体版本、样例、运行、轨迹、报告...</button>
         <div class="top-actions">
           <select class="select" id="workspaceMode" aria-label="工作区模式">
             <option value="support">客服运营</option>
@@ -1039,7 +1039,7 @@
             <div class="page-meta">
               <span class="prop">负责人 · AI 平台</span>
               <span class="prop">项目 · <span id="homeProject">客服运营</span></span>
-              <span class="prop">决策 SLA · 4 小时</span>
+              <span class="prop" data-tip="SLA 是对处理时限的承诺；这里表示准入决策需要在 4 小时内完成。">处理时限（SLA） · 4 小时</span>
               <span class="prop">最近同步 · 2026-06-11</span>
             </div>
           </div>
@@ -1050,7 +1050,7 @@
             <button class="tab" data-home-tab="日历">日历</button>
             <button class="tab" data-home-tab="最近决策">最近决策</button>
           </div>
-          <div class="tab-panel" id="homeTabPanel">概览 · 展示当前工作区的发布门禁、待处理事项和可下钻入口。</div>
+          <div class="tab-panel" id="homeTabPanel">概览 · 展示当前工作区的上线准入、待处理事项和可下钻入口。</div>
 
           <div class="grid cols-4">
             <div class="card metric" data-tip="本周基于平台证据做出的发布、回滚、模型选型或数据生产决策。">
@@ -1058,17 +1058,17 @@
               <strong id="metricDecisions">47</strong>
               <small id="metricDecisionText">31 次发布 · 4 次回滚 · 12 次选型</small>
             </div>
-            <div class="card metric" data-tip="发布门禁使用重复试验、裁判健康度和置信区间，而不是依赖单次分数。">
-              <span id="metricGateLabel">发布门禁</span>
+            <div class="card metric" data-tip="上线准入决定某个 Agent 版本是否可以进入发布或生产；它会综合重复试验、评分器健康度和结果可信范围。">
+              <span id="metricGateLabel">上线准入</span>
               <strong id="metricGateValue">68%</strong>
-              <small id="metricGateText">覆盖活跃被测对象的 CI 门禁</small>
+              <small id="metricGateText">覆盖活跃智能体版本的 CI 发布检查</small>
             </div>
-            <div class="card metric" data-tip="裁判健康度由金标准一致率和人工抽检结果持续更新。">
-              <span>裁判一致率</span>
+            <div class="card metric" data-tip="评分器一致率表示自动评分结果和人工确认结果有多接近；低一致率评分器不能单独决定上线。">
+              <span>评分器一致率</span>
               <strong id="metricJudgeValue">0.86</strong>
-              <small id="metricJudgeText">3 个裁判需要校准</small>
+              <small id="metricJudgeText">3 个评分器需要校准</small>
             </div>
-            <div class="card metric" data-tip="可复用资产包括评测集、样例、环境模板、Mock 工具、评估器、Rubric 和金标准轨迹。">
+            <div class="card metric" data-tip="可复用资产包括评测集、样例、环境模板、模拟工具、评估器、评分标准和人工确认的标杆答案轨迹。">
               <span>评测资产</span>
               <strong id="metricAssetsValue">9,420</strong>
               <small id="metricAssetsText">本月新增 184 个</small>
@@ -1087,10 +1087,10 @@
                     <tr><th>动作</th><th>对象</th><th>负责人</th><th>影响</th><th>状态</th></tr>
                   </thead>
                   <tbody>
-                    <tr id="taskRow1"><td>复核新增失败样例</td><td>客服运营回归集</td><td>AI 平台</td><td><span class="badge red">高</span></td><td><span class="badge amber">今日到期</span></td></tr>
-                    <tr id="taskRow2"><td>批准发布门禁</td><td>客服智能体 v18</td><td>智能体团队</td><td><span class="badge green">就绪</span></td><td><span class="badge blue">证据已附加</span></td></tr>
-                    <tr id="taskRow3"><td>校准安全裁判</td><td>风险拒答裁判</td><td>标注运营</td><td><span class="badge amber">中</span></td><td><span class="badge red">低于阈值</span></td></tr>
-                    <tr id="taskRow4"><td>创建训练数据工单</td><td>工具恢复失败</td><td>数据运营</td><td><span class="badge purple">增长</span></td><td><span class="badge">草稿</span></td></tr>
+                    <tr id="taskRow1"><td>复核新增失败样例</td><td>客服运营复测集</td><td>AI 平台</td><td><span class="badge red">高</span></td><td><span class="badge amber">今日到期</span></td></tr>
+                    <tr id="taskRow2"><td>批准上线准入</td><td>客服智能体 v18</td><td>智能体团队</td><td><span class="badge green">就绪</span></td><td><span class="badge blue">证据已附加</span></td></tr>
+                    <tr id="taskRow3"><td>校准安全评分器</td><td>风险拒答评分器</td><td>标注运营</td><td><span class="badge amber">中</span></td><td><span class="badge red">低于阈值</span></td></tr>
+                    <tr id="taskRow4"><td>创建训练数据任务</td><td>工具恢复失败</td><td>数据运营</td><td><span class="badge purple">增长</span></td><td><span class="badge">草稿</span></td></tr>
                   </tbody>
                 </table>
               </div>
@@ -1099,10 +1099,10 @@
             <div class="card side-panel">
               <h3>发布就绪度</h3>
               <div class="list">
-                <div class="item"><div class="item-head"><h4>回归套件</h4><span class="badge green">通过</span></div><div class="progress"><span class="bar green" style="--w: 92%"></span></div></div>
-                <div class="item"><div class="item-head"><h4>关键集 pass^3</h4><span class="badge green">0.74</span></div><div class="progress"><span class="bar green" style="--w: 74%"></span></div></div>
+                <div class="item" data-tip="复测套件用于确认新版本没有破坏已有能力；工程上也常叫回归套件。"><div class="item-head"><h4>复测套件</h4><span class="badge green">通过</span></div><div class="progress"><span class="bar green" style="--w: 92%"></span></div></div>
+                <div class="item" data-tip="连续 3 次成功率表示同一个样例连续运行 3 次都成功的比例，用来衡量稳定性。"><div class="item-head"><h4>连续 3 次成功率</h4><span class="badge green">0.74</span></div><div class="progress"><span class="bar green" style="--w: 74%"></span></div></div>
                 <div class="item"><div class="item-head"><h4>新增安全失败</h4><span class="badge green">0</span></div><div class="progress"><span class="bar green" style="--w: 100%"></span></div></div>
-                <div class="item"><div class="item-head"><h4>裁判门禁资格</h4><span class="badge amber">已排除 1 个</span></div><div class="progress"><span class="bar amber" style="--w: 82%"></span></div></div>
+                <div class="item" data-tip="只有通过一致率和偏差检查的评分器，才允许参与上线准入判断。"><div class="item-head"><h4>评分器准入资格</h4><span class="badge amber">已排除 1 个</span></div><div class="progress"><span class="bar amber" style="--w: 82%"></span></div></div>
               </div>
             </div>
           </div>
@@ -1112,7 +1112,7 @@
             <div class="template-grid">
               <div class="template-card" data-view="targets">
                 <div class="template-preview"><div class="mini-line"></div><div class="mini-line mid"></div><div class="mini-line short"></div></div>
-                <div class="template-body"><h4>被测对象注册表</h4><p id="pinnedTargetsText">18 个对象 · 4 个健康检查异常</p><span class="badge blue">打开</span></div>
+                <div class="template-body"><h4>智能体版本注册表</h4><p id="pinnedTargetsText">18 个版本 · 4 个健康检查异常</p><span class="badge blue">打开</span></div>
               </div>
               <div class="template-card" data-view="assets">
                 <div class="template-preview"><div class="mini-line mid"></div><div class="mini-line"></div><div class="mini-line short"></div></div>
@@ -1129,47 +1129,47 @@
         <section class="view" id="targets">
           <div class="page-title">
             <div class="icon">◈</div>
-            <h1>被测对象</h1>
+            <h1>智能体版本</h1>
             <div class="page-meta">
               <span class="prop">18 个活跃对象</span>
               <span class="prop">4 种接入模式</span>
-              <span class="prop">轨迹 Schema · 当前版本</span>
+              <span class="prop" data-tip="轨迹结构定义每一步运行记录需要包含哪些字段，例如输入、工具调用、状态变化和证据。">轨迹结构 · 当前版本</span>
               <span class="prop">密钥 · 租户隔离</span>
             </div>
           </div>
 
           <div class="toolbar">
             <div class="toolbar-left">
-              <button class="btn primary" id="addTarget" data-tip="创建可复现的被测对象版本，并记录运行时、工具清单、提示词和凭据策略。">添加被测对象</button>
+              <button class="btn primary" id="addTarget" data-tip="创建可复现的智能体版本，并记录运行时、工具清单、提示词和凭据策略。">添加智能体版本</button>
               <button class="btn" id="uploadTrace" data-tip="客户不希望改造生产代码时，可使用离线轨迹上传完成评估。">上传轨迹</button>
               <button class="btn" id="openIntegrationGuide" data-tip="接入指南会根据 API、SDK、纯轨迹、MCP 和浏览器操作模式切换。">接入指南</button>
             </div>
             <div class="toolbar-right">
-              <select class="select" id="targetFilterSelect" aria-label="被测对象筛选"><option>全部接入模式</option><option>API</option><option>SDK</option><option>轨迹上传</option><option>浏览器操作</option></select>
+              <select class="select" id="targetFilterSelect" aria-label="智能体版本筛选"><option>全部接入模式</option><option>API</option><option>SDK</option><option>轨迹上传</option><option>浏览器操作</option></select>
             </div>
           </div>
 
-          <div class="source-strip" data-tip="当前页的被测对象版本会作为后续评测运行、轨迹复核、报告和证据包的来源字段。">
+          <div class="source-strip" data-tip="当前页的智能体版本会作为后续评测运行、轨迹复核、报告和证据包的来源字段。">
             <strong>当前选择 · <span data-field="targetName">客服智能体</span></strong>
-            <div class="source-path">来源链路：被测对象注册表 → 选择版本 → 克隆评测集 → 新建运行</div>
+            <div class="source-path">来源链路：智能体版本注册表 → 选择版本 → 克隆评测集 → 新建运行</div>
             <div class="source-fields">
-              <span class="prop">Target · <span data-field="targetVersion">support-agent_2026_06_11</span></span>
+              <span class="prop" data-tip="Target 是平台内部字段，表示当前被评测的 Agent 或自动化流程版本。">智能体版本 · <span data-field="targetVersion">support-agent_2026_06_11</span></span>
               <span class="prop">接入 · <span data-field="targetMode">API 端点</span></span>
               <span class="prop">健康检查 · 通过</span>
-              <button class="btn mini" id="openTargetRun">用该对象新建运行</button>
+              <button class="btn mini" id="openTargetRun">用该版本新建运行</button>
             </div>
           </div>
 
           <div class="grid cols-main">
             <div class="card">
-              <h3>被测对象注册表</h3>
+              <h3>智能体版本注册表</h3>
               <div class="database">
                 <table>
                   <thead><tr><th>名称</th><th>版本</th><th>接入</th><th>健康度</th><th>最近运行</th></tr></thead>
                   <tbody id="targetTable">
                     <tr><td>客服智能体</td><td>2026.06.11</td><td><span class="badge blue">API</span></td><td><span class="badge green">健康</span></td><td><button class="btn mini" id="openTargetTrace">查看最近失败轨迹</button></td></tr>
                     <tr><td>财务对账智能体</td><td>2026.06.08</td><td><span class="badge green">SDK</span></td><td><span class="badge green">健康</span></td><td><button class="btn mini" data-flow="finance">查看观察报告</button></td></tr>
-                    <tr><td>浏览器下单智能体</td><td>2026.06.02</td><td><span class="badge purple">浏览器</span></td><td><span class="badge amber">沙箱预热中</span></td><td><button class="btn mini" data-flow="browser">查看阻断原因</button></td></tr>
+                    <tr><td>浏览器下单智能体</td><td>2026.06.02</td><td><span class="badge purple">浏览器</span></td><td><span class="badge amber">隔离环境预热中</span></td><td><button class="btn mini" data-flow="browser">查看阻断原因</button></td></tr>
                     <tr><td>历史轨迹导入</td><td>offline-v4</td><td><span class="badge">轨迹上传</span></td><td><span class="badge green" id="traceStatus">轨迹结构就绪</span></td><td><button class="btn mini" id="scoreUploadedTrace">进入评分队列</button></td></tr>
                   </tbody>
                 </table>
@@ -1177,7 +1177,7 @@
             </div>
 
             <div class="card side-panel">
-              <h3>接入配置 <span class="help" tabindex="0" data-tip="接入配置可选择 API 驱动、离线轨迹、SDK 埋点、MCP/A2A 中介，或浏览器/电脑操作沙箱。">?</span></h3>
+              <h3>接入配置 <span class="help" tabindex="0" data-tip="接入配置可选择 API 驱动、离线轨迹、SDK 埋点、MCP/A2A 中介，或浏览器/电脑操作隔离测试环境。">?</span></h3>
               <div class="form-grid">
                 <label class="full" data-tip="对象名称用于识别；评分绑定到不可变的对象版本。">对象名称<input class="input" id="targetNameInput" value="客服智能体"></label>
                 <label data-tip="接入模式决定平台如何驱动执行并采集轨迹。">模式<select class="select" id="targetModeSelect"><option>API 端点</option><option>离线轨迹上传</option><option>SDK 埋点</option><option>MCP 工具中介</option><option>浏览器操作</option></select></label>
@@ -1207,8 +1207,8 @@
           <div class="toolbar">
             <div class="toolbar-left">
               <button class="btn primary" id="createCase" data-tip="创建包含任务输入、参考答案、断言、标签、来源和审核状态的样例。">新建样例</button>
-              <button class="btn" id="cloneTemplate" data-tip="模板打包评测集、评分规则、环境种子、Mock 工具和评估器。">克隆模板</button>
-              <button class="btn" id="importDataset" data-tip="导入 JSONL、CSV、Benchmark 适配器或线上回流候选样例。">导入评测集</button>
+              <button class="btn" id="cloneTemplate" data-tip="模板打包评测集、评分规则、环境种子、模拟工具和评估器。">克隆模板</button>
+              <button class="btn" id="importDataset" data-tip="可导入 JSONL、CSV、公开基准适配器或线上回流候选样例；公开基准适配器用于把外部 Benchmark 转成平台样例格式。">导入评测集</button>
             </div>
             <div class="toolbar-right">
               <select class="select" id="assetViewSelect"><option>画廊视图</option><option>数据库视图</option><option>健康度视图</option></select>
@@ -1216,26 +1216,26 @@
           </div>
 
           <div class="template-grid">
-            <div class="template-card" id="openDatasetRun" data-tip="可复用客服评测套件，包含任务、断言、金标准轨迹和 Mock CRM 工具。">
+            <div class="template-card" id="openDatasetRun" data-tip="可复用客服评测套件，包含任务、断言、人工确认的标杆答案轨迹和模拟 CRM 工具。">
               <div class="template-preview"><div class="mini-line"></div><div class="mini-line mid"></div><div class="mini-line short"></div></div>
-              <div class="template-body"><h4 id="primaryDatasetTitle">客服运营回归集</h4><p id="primaryDatasetText">1,920 个样例 · 18 个环境 · 42 个评估器</p><div class="chips"><span class="badge green">已版本化</span><span class="badge">私有</span></div></div>
+              <div class="template-body"><h4 id="primaryDatasetTitle">客服运营复测集</h4><p id="primaryDatasetText">1,920 个样例 · 18 个环境 · 42 个评估器</p><div class="chips"><span class="badge green">已版本化</span><span class="badge">私有</span></div></div>
             </div>
             <div class="template-card" data-tip="浏览器任务使用 Playwright 终态校验，并保留截图证据。">
               <div class="template-preview"><div class="mini-line short"></div><div class="mini-line"></div><div class="mini-line mid"></div></div>
-              <div class="template-body"><h4>浏览器下单实验室</h4><p>680 个样例 · 9 个 Web 应用 · 14 个终态校验</p><div class="chips"><span class="badge purple">沙箱</span><span class="badge amber">观察</span></div></div>
+              <div class="template-body"><h4>浏览器下单实验室</h4><p>680 个样例 · 9 个 Web 应用 · 14 个终态校验</p><div class="chips"><span class="badge purple" data-tip="隔离测试环境会重置浏览器和数据，避免评测过程影响真实生产系统。">隔离测试</span><span class="badge amber">观察</span></div></div>
             </div>
             <div class="template-card" data-tip="面向高风险工具调用的安全与间接注入挑战集。">
               <div class="template-preview"><div class="mini-line"></div><div class="mini-line short"></div><div class="mini-line mid"></div></div>
-              <div class="template-body"><h4>安全红队包</h4><p>820 个样例 · 7 类攻击 · 裁判已校准</p><div class="chips"><span class="badge red">关键</span><span class="badge green">门禁就绪</span></div></div>
+              <div class="template-body"><h4>安全红队包</h4><p>820 个样例 · 7 类攻击 · 评分器已校准</p><div class="chips"><span class="badge red">关键</span><span class="badge green">准入就绪</span></div></div>
             </div>
           </div>
 
           <div class="source-strip" data-tip="评测资产页展示的数据会被运行页绑定为不可变快照，报告只引用具体版本。">
-            <strong>当前数据源 · <span data-field="datasetName">客服运营回归集</span> · <span data-field="datasetVersion">v43</span></strong>
-            <div class="source-path">来源链路：评测资产 → 样例数据库 → 生成 Dataset Snapshot → 运行页绑定</div>
+            <strong>当前数据源 · <span data-field="datasetName">客服运营复测集</span> · <span data-field="datasetVersion">v43</span></strong>
+            <div class="source-path">来源链路：评测资产 → 样例数据库 → 生成评测集快照 → 运行页绑定</div>
             <div class="source-fields">
               <span class="prop">样例 · <span data-field="caseId">coupon_conflict_0817</span></span>
-              <span class="prop">环境 · <span data-field="environment">CRM 沙箱</span></span>
+              <span class="prop" data-tip="隔离测试环境会使用可重置的数据和工具替身，避免评测影响真实系统。">环境 · <span data-field="environment">CRM 隔离测试环境</span></span>
               <span class="prop">来源 · <span data-field="caseSource">线上回流</span></span>
               <button class="btn mini" id="openCaseRun">用该样例集新建运行</button>
             </div>
@@ -1248,9 +1248,9 @@
                 <table>
                   <thead><tr><th>样例</th><th>能力</th><th>来源</th><th>环境</th><th>状态</th><th>动作</th></tr></thead>
                   <tbody id="caseTable">
-                    <tr><td>优惠券冲突退款</td><td>工具参数 + 政策规则</td><td><span class="badge blue">线上回流</span></td><td>CRM 沙箱</td><td><span class="badge green">已批准</span></td><td><button class="btn mini" id="openCaseTrace">查看对应失败轨迹</button></td></tr>
-                    <tr><td>PII 导出拒答</td><td>安全策略</td><td><span class="badge red">红队</span></td><td>Mock 数据仓库</td><td><span class="badge green">门禁集</span></td><td><button class="btn mini" data-flow="security">查看门禁覆盖</button></td></tr>
-                    <tr><td>发票表格歧义</td><td>多模态抽取</td><td><span class="badge purple">专家编写</span></td><td>文件沙箱</td><td><span class="badge amber">待复核</span></td><td><button class="btn mini" data-flow="invoice">分配人工复核</button></td></tr>
+                    <tr><td>优惠券冲突退款</td><td>工具参数 + 政策规则</td><td><span class="badge blue">线上回流</span></td><td>CRM 隔离测试环境</td><td><span class="badge green">已批准</span></td><td><button class="btn mini" id="openCaseTrace">查看对应失败轨迹</button></td></tr>
+                    <tr><td data-tip="PII 指个人敏感信息，例如姓名、手机号、邮箱、身份证号或地址。">个人敏感信息导出拒答</td><td>安全策略</td><td><span class="badge red">红队</span></td><td>模拟数据仓库</td><td><span class="badge green">准入集</span></td><td><button class="btn mini" data-flow="security">查看准入覆盖</button></td></tr>
+                    <tr><td>发票表格歧义</td><td>多模态抽取</td><td><span class="badge purple">专家编写</span></td><td>文件隔离测试环境</td><td><span class="badge amber">待复核</span></td><td><button class="btn mini" data-flow="invoice">分配人工复核</button></td></tr>
                   </tbody>
                 </table>
               </div>
@@ -1275,7 +1275,7 @@
                 <button class="btn mini" id="downloadSample">导出样例</button>
               </div>
             </div>
-            <div class="source-path">样例随工作区切换，字段包含输入、工具状态、断言、裁判 Rubric、重复试验策略和可追溯来源。</div>
+            <div class="source-path">样例随工作区切换，字段包含输入、工具状态、断言、评分标准、重复试验策略和可追溯来源。</div>
             <div class="sample-layout">
               <div class="database">
                 <table>
@@ -1302,29 +1302,29 @@
               <span class="prop">31 个运行中</span>
               <span class="prop">3,000 次试验排队中</span>
               <span class="prop">预算 · $480</span>
-              <span class="prop">沙箱池 · 已预热</span>
+              <span class="prop" data-tip="隔离测试环境池会提前准备浏览器、工具替身和测试数据，确保运行可以快速开始。">隔离环境池 · 已预热</span>
             </div>
           </div>
 
           <div class="grid cols-main">
             <div class="card">
               <h3>新建评测运行</h3>
-              <div class="source-strip" style="margin-bottom:12px;" data-tip="新建运行会绑定当前被测对象、评测集、环境和评估器版本，后续轨迹、报告、数据工单都继承该 Run Snapshot。">
-                <strong>运行输入 · <span data-field="runName">客服运营发布门禁</span></strong>
-                <div class="source-path">来源链路：Targets 选择 <span data-field="targetVersion">support-agent_2026_06_11</span> → Assets 选择 <span data-field="datasetVersion">v43</span> → Runs 创建 <span data-field="runId">run_20260611_1842</span></div>
+              <div class="source-strip" style="margin-bottom:12px;" data-tip="新建运行会绑定当前智能体版本、评测集、环境和评估器版本，后续轨迹、报告、数据任务都继承同一个运行快照（Run Snapshot）。">
+                <strong>运行输入 · <span data-field="runName">客服运营上线准入</span></strong>
+                <div class="source-path">来源链路：智能体版本选择 <span data-field="targetVersion">support-agent_2026_06_11</span> → 评测资产选择 <span data-field="datasetVersion">v43</span> → 评测运行创建 <span data-field="runId">run_20260611_1842</span></div>
                 <div class="source-fields">
-                  <span class="prop">Case · <span data-field="caseId">coupon_conflict_0817</span></span>
-                  <span class="prop">Trial · <span data-field="trialId">trial_002</span></span>
-                  <span class="prop">Trace · <span data-field="traceId">traj_refund_002</span></span>
+                  <span class="prop" data-tip="样例是一次评测任务的输入、期望行为和校验规则。">样例 · <span data-field="caseId">coupon_conflict_0817</span></span>
+                  <span class="prop" data-tip="单次试验是同一个样例的一次独立运行；重复试验用于衡量稳定性。">单次试验 · <span data-field="trialId">trial_002</span></span>
+                  <span class="prop" data-tip="运行轨迹记录这次试验每一步发生了什么。">轨迹 · <span data-field="traceId">traj_refund_002</span></span>
                 </div>
               </div>
               <div class="form-grid">
-                <label data-tip="评测运行绑定不可变评测集版本，保证报告可横向比较。">评测集<select class="select" id="runDatasetSelect"><option>客服运营回归集 · v43</option><option>安全红队包 · v18</option></select></label>
-                <label data-tip="同一套件可跨多个被测对象版本使用，用于模型选型或回归检查。">被测对象<select class="select" id="runTargetSelect"><option>客服智能体 · 2026.06.11</option><option>基线智能体 · 2026.05.28</option></select></label>
-                <label data-tip="重复试验通过 pass@k、pass^k、方差和置信区间量化非确定性。">每样例试验次数<select class="select" id="trialCountSelect"><option>重复 3 次</option><option>重复 5 次</option><option>10 次稳定性审计</option></select></label>
-                <label data-tip="门禁规则组合阈值、基线对比、裁判健康度和安全约束。">门禁规则<select class="select" id="gateRuleSelect"><option>发布门禁 · 无新增关键失败</option><option>夜间回归</option><option>探索运行</option></select></label>
-                <label data-tip="沙箱任务隔离副作用，并使用独立终态校验器。">环境<select class="select" id="environmentSelect"><option>Kubernetes 沙箱 + Mock 工具</option><option>仅 API</option><option>浏览器集群</option></select></label>
-                <label data-tip="预算硬停止可避免被测对象和裁判调用静默超支。">预算<select class="select" id="budgetSelect"><option>$480 硬停止</option><option>$1,000 硬停止</option></select></label>
+                <label data-tip="评测运行绑定不可变评测集版本，保证报告可横向比较。">评测集<select class="select" id="runDatasetSelect"><option>客服运营复测集 · v43</option><option>安全红队包 · v18</option></select></label>
+                <label data-tip="同一套件可跨多个智能体版本使用，用于模型选型或复测检查。">智能体版本<select class="select" id="runTargetSelect"><option>客服智能体 · 2026.06.11</option><option>基线智能体 · 2026.05.28</option></select></label>
+                <label data-tip="重复试验通过 3 次内成功率（pass@k）、连续 k 次成功率（pass^k）、波动范围和结果可信范围量化非确定性。">每样例试验次数<select class="select" id="trialCountSelect"><option>重复 3 次</option><option>重复 5 次</option><option>10 次稳定性审计</option></select></label>
+                <label data-tip="准入规则组合阈值、基线对比、评分器健康度和安全约束，决定是否允许发布或进入生产。">上线准入规则<select class="select" id="gateRuleSelect"><option>发布准入 · 无新增关键失败</option><option>夜间复测</option><option>探索运行</option></select></label>
+                <label data-tip="隔离测试环境会隔离副作用，并使用独立终态校验器确认任务结果。">环境<select class="select" id="environmentSelect"><option>Kubernetes 隔离环境 + 模拟工具</option><option>仅 API</option><option>浏览器集群</option></select></label>
+                <label data-tip="预算硬停止可避免智能体版本和评分器调用静默超支。">预算<select class="select" id="budgetSelect"><option>$480 硬停止</option><option>$1,000 硬停止</option></select></label>
               </div>
               <div class="button-row" style="margin-top:12px;">
                 <button class="btn primary" id="startRun" data-tip="将样例展开为重复试验，并调度执行器开始运行。">启动运行</button>
@@ -1336,8 +1336,8 @@
               <h3>运行状态</h3>
               <div class="list">
                 <div class="item"><div class="item-head"><h4 id="runStatus">排队中</h4><span class="badge amber">3,000 次试验</span></div><div class="progress"><span class="bar amber" style="--w:12%"></span></div></div>
-                <div class="item"><div class="item-head"><h4>pass@3</h4><span class="badge green">0.91 ± 0.02</span></div></div>
-                <div class="item"><div class="item-head"><h4>pass^3</h4><span class="badge amber">0.64 ± 0.04</span></div></div>
+                <div class="item" data-tip="3 次内成功率（pass@3）表示同一个样例重复 3 次时，至少成功 1 次的比例。"><div class="item-head"><h4>3 次内成功率</h4><span class="badge green">0.91 ± 0.02</span></div></div>
+                <div class="item" data-tip="连续 3 次成功率（pass^3）表示同一个样例重复 3 次全部成功的比例，更适合作为稳定性判断。"><div class="item-head"><h4>连续 3 次成功率</h4><span class="badge amber">0.64 ± 0.04</span></div></div>
                 <div class="item"><div class="item-head"><h4>基础设施失败</h4><span class="badge green">不计入得分</span></div></div>
               </div>
             </div>
@@ -1347,10 +1347,10 @@
               <h3>运行队列</h3>
               <div class="database">
                 <table>
-                <thead><tr><th>运行</th><th>被测对象</th><th>套件</th><th>进度</th><th>决策</th><th>动作</th></tr></thead>
+                <thead><tr><th>运行</th><th>智能体版本</th><th>套件</th><th>进度</th><th>决策</th><th>动作</th></tr></thead>
                 <tbody id="runQueueTable">
-                  <tr><td>客服运营发布门禁</td><td>客服智能体</td><td>回归集 v43</td><td><div class="progress"><span class="bar green" style="--w:92%"></span></div></td><td><span class="badge green">就绪</span></td><td><button class="btn mini" id="openRunTrace">查看失败轨迹</button></td></tr>
-                  <tr><td>浏览器下单稳定性</td><td>浏览器智能体</td><td>下单实验室</td><td><div class="progress"><span class="bar amber" style="--w:61%"></span></div></td><td><span class="badge amber">观察</span></td><td><button class="btn mini" data-flow="browser">查看沙箱截图</button></td></tr>
+                  <tr><td>客服运营上线准入</td><td>客服智能体</td><td>复测集 v43</td><td><div class="progress"><span class="bar green" style="--w:92%"></span></div></td><td><span class="badge green">就绪</span></td><td><button class="btn mini" id="openRunTrace">查看失败轨迹</button></td></tr>
+                  <tr><td>浏览器下单稳定性</td><td>浏览器智能体</td><td>下单实验室</td><td><div class="progress"><span class="bar amber" style="--w:61%"></span></div></td><td><span class="badge amber">观察</span></td><td><button class="btn mini" data-flow="browser">查看隔离环境截图</button></td></tr>
                 </tbody>
               </table>
             </div>
@@ -1369,15 +1369,15 @@
             </div>
           </div>
 
-          <div class="source-strip" data-tip="轨迹复核页的数据来自某一次 Trial，不是独立样例；可从运行队列、报告失败样例、在线回流或数据工单跳入。">
+          <div class="source-strip" data-tip="轨迹复核页的数据来自某一次单次试验（Trial），不是独立样例；可从运行队列、报告失败样例、在线回流或数据任务跳入。">
             <strong>轨迹来源 · <span data-field="traceId">traj_refund_002</span></strong>
-            <div class="source-path">来源链路：Runs / <span data-field="runId">run_20260611_1842</span> → Trial / <span data-field="trialId">trial_002</span> → Trajectory / <span data-field="traceId">traj_refund_002</span></div>
+            <div class="source-path">来源链路：评测运行 / <span data-field="runId">run_20260611_1842</span> → 单次试验 / <span data-field="trialId">trial_002</span> → 运行轨迹 / <span data-field="traceId">traj_refund_002</span></div>
             <div class="source-fields">
-              <span class="prop">被测对象 · <span data-field="targetVersion">support-agent_2026_06_11</span></span>
+              <span class="prop">智能体版本 · <span data-field="targetVersion">support-agent_2026_06_11</span></span>
               <span class="prop">评测集 · <span data-field="datasetVersion">customer_ops_regression_v43</span></span>
               <span class="prop">进入方式 · <span data-field="traceEntry">运行队列 → 查看失败轨迹</span></span>
               <button class="btn mini" id="openTraceReport">查看对应报告</button>
-              <button class="btn mini" id="openTraceDataLoop">生成数据工单</button>
+              <button class="btn mini" id="openTraceDataLoop" data-tip="数据任务会把失败原因转成可补充的样例、标杆答案、偏好对或校验器。">生成数据任务</button>
             </div>
           </div>
 
@@ -1385,7 +1385,7 @@
             <div class="card">
               <div class="toolbar">
                 <h3>轨迹时间线</h3>
-                <button class="btn primary" id="markStep" data-tip="步骤级标签会成为后续裁判和报告使用的金标准失败归因数据。">标记所选步骤</button>
+                <button class="btn primary" id="markStep" data-tip="步骤级标签会成为后续评分器和报告使用的人工确认失败归因数据。">标记所选步骤</button>
               </div>
               <div class="timeline">
                 <div id="traceTimeline">
@@ -1397,7 +1397,7 @@
               </div>
             </div>
             <div class="card side-panel">
-              <h3>证据面板 <span class="help" tabindex="0" data-tip="评估器证据引用让复核人可以从分数直接跳到失败步骤。">?</span></h3>
+              <h3>证据面板 <span class="help" tabindex="0" data-tip="评估器证据引用让复核人可以从分数直接跳到失败步骤，确认分数不是黑盒结论。">?</span></h3>
               <div class="code" id="traceEvidence">终态校验：
   no_unauthorized_refund: 失败
   crm_note_written: 失败
@@ -1416,29 +1416,29 @@
             <div class="icon">◷</div>
             <h1>报告</h1>
             <div class="page-meta">
-              <span class="prop">运行 · <span data-field="runName">客服运营发布门禁</span></span>
+              <span class="prop">运行 · <span data-field="runName">客服运营上线准入</span></span>
               <span class="prop">基线 · 2026.05.28</span>
-              <span class="prop">置信区间 · 已就绪</span>
+              <span class="prop" data-tip="结果可信范围（置信区间）表示真实成功率大概率落在哪个区间，避免只看一次运行分数。">结果可信范围 · 已就绪</span>
               <span class="prop">决策 · 待处理</span>
             </div>
           </div>
 
-          <div class="source-strip" data-tip="报告页只展示一个 Run Snapshot 的聚合结果，所有分数都可以下钻到对应 Trial 和 Trajectory。">
+          <div class="source-strip" data-tip="报告页只展示一个运行快照（Run Snapshot）的聚合结果，所有分数都可以下钻到对应单次试验和运行轨迹。">
             <strong>报告来源 · <span data-field="reportId">report_gate_20260611_1842</span></strong>
-            <div class="source-path">来源链路：Runs / <span data-field="runId">run_20260611_1842</span> → Evaluation Service → Report & Gate</div>
+            <div class="source-path">来源链路：评测运行 / <span data-field="runId">run_20260611_1842</span> → 评估服务 → 报告与上线准入</div>
             <div class="source-fields">
-              <span class="prop">Target · <span data-field="targetVersion">support-agent_2026_06_11</span></span>
-              <span class="prop">Dataset · <span data-field="datasetVersion">customer_ops_regression_v43</span></span>
-              <span class="prop">Evaluator · eval_set_customer_ops_42</span>
+              <span class="prop">智能体版本 · <span data-field="targetVersion">support-agent_2026_06_11</span></span>
+              <span class="prop">评测集 · <span data-field="datasetVersion">customer_ops_regression_v43</span></span>
+              <span class="prop" data-tip="评估器是一组自动检查、评分模型或人工复核规则。">评估器 · eval_set_customer_ops_42</span>
               <button class="btn mini" id="openReportTrace">打开代表失败轨迹</button>
-              <button class="btn mini" id="openReportCalibration">查看裁判依据</button>
+              <button class="btn mini" id="openReportCalibration">查看评分依据</button>
             </div>
           </div>
 
           <div class="grid cols-4">
-            <div class="card metric"><span>成功率</span><strong id="reportSuccessMetric">82%</strong><small>置信区间 ±3%</small></div>
-            <div class="card metric"><span>pass@3</span><strong id="reportPassAtMetric">91%</strong><small>考虑重试的可靠性</small></div>
-            <div class="card metric"><span>pass^3</span><strong id="reportPassPowerMetric">74%</strong><small>连续成功率</small></div>
+            <div class="card metric" data-tip="成功率展示任务通过比例；下方的 ±3% 是结果可信范围。"><span>成功率</span><strong id="reportSuccessMetric">82%</strong><small>结果可信范围 ±3%</small></div>
+            <div class="card metric" data-tip="3 次内成功率（pass@3）表示同一任务运行 3 次至少成功 1 次的比例，体现有重试时的可达上限。"><span>3 次内成功率</span><strong id="reportPassAtMetric">91%</strong><small>考虑重试的可靠性</small></div>
+            <div class="card metric" data-tip="连续 3 次成功率（pass^3）表示同一任务连续 3 次都成功的比例，更适合判断能否稳定上线。"><span>连续 3 次成功率</span><strong id="reportPassPowerMetric">74%</strong><small>稳定性指标</small></div>
             <div class="card metric"><span>单任务成本</span><strong id="reportCostMetric">$0.21</strong><small>缓存节省 31%</small></div>
           </div>
 
@@ -1451,17 +1451,17 @@
                   <tbody id="reportComparisonTable">
                     <tr><td>已修复</td><td>184</td><td><button class="btn mini" id="openFixedTrace">coupon_conflict_0817</button></td><td><span class="badge green">发布证据</span></td></tr>
                     <tr><td>新增失败</td><td>0 个关键 / 17 个非关键</td><td><button class="btn mini" data-flow="merge">crm_merge_unsafe_1188</button></td><td><span class="badge amber">监控</span></td></tr>
-                    <tr><td>持续失败</td><td>92</td><td><button class="btn mini" id="openFailureCluster">tool_recovery_timeout</button></td><td><span class="badge purple">数据工单</span></td></tr>
+                    <tr><td>持续失败</td><td>92</td><td><button class="btn mini" id="openFailureCluster">tool_recovery_timeout</button></td><td><span class="badge purple">数据任务</span></td></tr>
                   </tbody>
                 </table>
               </div>
-              <button class="btn primary" id="approveGate" style="margin-top:12px;" data-tip="审批门禁会附加报告、对比结果、裁判资格和证据包。">批准发布门禁</button>
+              <button class="btn primary" id="approveGate" style="margin-top:12px;" data-tip="批准上线准入会附加报告、对比结果、评分器资格和证据包，供发布或客户验收使用。">批准上线准入</button>
             </div>
             <div class="card side-panel">
-              <h3>门禁决策</h3>
+              <h3>上线准入决策</h3>
               <div class="callout">
                 <strong id="gateStatus">待复核</strong>
-                <p>无新增关键安全失败。差异具备统计显著性。1 个裁判因一致率较低被排除在门禁之外。</p>
+                <p>无新增关键安全失败。差异具备统计显著性。1 个评分器因一致率较低被排除在准入判断之外。</p>
               </div>
             </div>
           </div>
@@ -1470,21 +1470,21 @@
         <section class="view" id="calibration">
           <div class="page-title">
             <div class="icon">◎</div>
-            <h1>裁判校准</h1>
+            <h1>评分器校准</h1>
             <div class="page-meta">
-              <span class="prop">3 个裁判观察中</span>
-              <span class="prop">金标准轨迹集 · 970</span>
+              <span class="prop">3 个评分器观察中</span>
+              <span class="prop" data-tip="标杆答案轨迹是人工确认过的标准运行过程，用来校准自动评分器。">标杆答案轨迹集 · 970</span>
               <span class="prop">人工抽检 · 5%</span>
-              <span class="prop">可参与门禁 · 2</span>
+              <span class="prop">可参与准入 · 2</span>
             </div>
           </div>
 
-          <div class="source-strip" data-tip="裁判校准数据来自报告中的评估器证据和人工抽样结果，低健康度裁判不能单独阻断发布。">
-            <strong>裁判来源 · <span data-field="reportId">report_gate_20260611_1842</span></strong>
-            <div class="source-path">来源链路：Report → 低一致率裁判 → Gold Trace 抽样 → 门禁资格更新</div>
+          <div class="source-strip" data-tip="评分器校准数据来自报告中的评估器证据和人工抽样结果，低健康度评分器不能单独阻断发布。">
+            <strong>评分器来源 · <span data-field="reportId">report_gate_20260611_1842</span></strong>
+            <div class="source-path">来源链路：报告 → 低一致率评分器 → 标杆答案轨迹抽样 → 准入资格更新</div>
             <div class="source-fields">
-              <span class="prop">Run · <span data-field="runId">run_20260611_1842</span></span>
-              <span class="prop">Gold Trace · 970</span>
+              <span class="prop">运行 · <span data-field="runId">run_20260611_1842</span></span>
+              <span class="prop" data-tip="Gold Trace 是工程里常见叫法，这里对客户展示为标杆答案轨迹。">标杆答案轨迹 · 970</span>
               <span class="prop">抽样策略 · 边界分数 + 低置信度</span>
               <button class="btn mini" id="openCalibrationReport">回到报告</button>
             </div>
@@ -1492,25 +1492,25 @@
 
           <div class="grid cols-main">
             <div class="card">
-              <h3>裁判健康度数据库</h3>
+              <h3>评分器健康度数据库</h3>
               <div class="database">
                 <table>
-                  <thead><tr><th>裁判</th><th>金标准样例</th><th>一致率</th><th>偏差检查</th><th>门禁资格</th></tr></thead>
+                  <thead><tr><th>评分器</th><th>标杆样例</th><th>一致率</th><th>偏差检查</th><th>准入资格</th></tr></thead>
                   <tbody>
-                    <tr><td>客服运营裁判</td><td>312</td><td><span class="badge green">0.86</span></td><td>长度中性</td><td><span class="badge green">可用</span></td></tr>
-                    <tr><td>安全拒答裁判</td><td>238</td><td><span class="badge red">0.79</span></td><td>过度拒答漂移</td><td><span class="badge amber" id="judgeStatus">需要处理</span></td></tr>
-                    <tr><td>Pairwise 质量裁判</td><td>420</td><td><span class="badge green">0.88</span></td><td>位置中性</td><td><span class="badge green">可用</span></td></tr>
+                    <tr><td>客服运营评分器</td><td>312</td><td><span class="badge green">0.86</span></td><td>长度中性</td><td><span class="badge green">可用</span></td></tr>
+                    <tr><td>安全拒答评分器</td><td>238</td><td><span class="badge red">0.79</span></td><td>过度拒答漂移</td><td><span class="badge amber" id="judgeStatus">需要处理</span></td></tr>
+                    <tr><td>成对质量评分器</td><td>420</td><td><span class="badge green">0.88</span></td><td>位置中性</td><td><span class="badge green">可用</span></td></tr>
                   </tbody>
                 </table>
               </div>
-              <button class="btn danger" id="freezeJudge" style="margin-top:12px;" data-tip="低于一致率阈值的裁判仍可查看，但不能阻断发布。">从门禁排除弱裁判</button>
+              <button class="btn danger" id="freezeJudge" style="margin-top:12px;" data-tip="低于一致率阈值的评分器仍可查看，但不能阻断发布。">从准入判断排除弱评分器</button>
             </div>
             <div class="card side-panel">
               <h3>人工复核抽样</h3>
               <div class="list">
                 <div class="item"><div class="item-head"><h4>边界分数</h4><span class="badge amber">84</span></div><p>已分配给双人背靠背标注。</p></div>
                 <div class="item"><div class="item-head"><h4>低置信度</h4><span class="badge red">31</span></div><p>已升级到资深复核队列。</p></div>
-                <div class="item"><div class="item-head"><h4>校准锚点</h4><span class="badge green">200+</span></div><p>裁判阻断发布前必须满足该要求。</p></div>
+                <div class="item"><div class="item-head"><h4>校准锚点</h4><span class="badge green">200+</span></div><p>评分器阻断发布前必须满足该要求。</p></div>
               </div>
             </div>
           </div>
@@ -1521,20 +1521,20 @@
             <div class="icon">◌</div>
             <h1>在线监控</h1>
             <div class="page-meta">
-              <span class="prop">OpenTelemetry · 已连接</span>
+              <span class="prop" data-tip="OpenTelemetry 是常见的生产观测与轨迹采集标准；这里用于把线上 Agent 运行记录接入评测平台。">生产轨迹采集（OpenTelemetry） · 已连接</span>
               <span class="prop">42K 条轨迹 / 小时</span>
               <span class="prop">漂移告警 · 6</span>
               <span class="prop">回流队列 · 26</span>
             </div>
           </div>
 
-          <div class="source-strip" data-tip="在线监控页展示的是生产轨迹采样规则，选中轨迹会脱敏并转化为候选 Case，再进入评测资产和运行页。">
+          <div class="source-strip" data-tip="在线监控页展示的是生产轨迹采样规则，选中轨迹会脱敏并转化为候选样例，再进入评测资产和运行页。">
             <strong>生产数据源 · otel-stream/customer-support-prod</strong>
-            <div class="source-path">来源链路：生产 Agent → OpenTelemetry Collector → Online Monitor → 候选回归样例</div>
+            <div class="source-path">来源链路：生产 Agent → 轨迹采集服务（OpenTelemetry Collector） → 在线监控 → 候选复测样例</div>
             <div class="source-fields">
-              <span class="prop">Target · <span data-field="targetVersion">support-agent_2026_06_11</span></span>
+              <span class="prop">智能体版本 · <span data-field="targetVersion">support-agent_2026_06_11</span></span>
               <span class="prop">抽样窗口 · 2026-06-11 17:00-18:00</span>
-              <span class="prop">脱敏策略 · pii_policy_v12</span>
+              <span class="prop" data-tip="个人敏感信息（PII）会在进入评测资产前脱敏，降低合规风险。">脱敏策略 · pii_policy_v12</span>
               <button class="btn mini" id="openOnlineTrace">查看线上回流轨迹</button>
             </div>
           </div>
@@ -1543,22 +1543,22 @@
             <div class="card metric"><span>生产轨迹 / 小时</span><strong>42K</strong><small>抽样 6.4%</small></div>
             <div class="card metric"><span>异步评分延迟</span><strong>74s</strong><small>不阻塞生产链路</small></div>
             <div class="card metric"><span>质量告警</span><strong>6</strong><small>滑动窗口检测</small></div>
-            <div class="card metric"><span>回流队列</span><strong>26</strong><small>候选回归样例</small></div>
+            <div class="card metric"><span>回流队列</span><strong>26</strong><small>候选复测样例</small></div>
           </div>
 
           <div class="card">
             <div class="toolbar">
               <h3>生产接入规则</h3>
-              <button class="btn primary" id="ingestTrace" data-tip="选中的线上轨迹会先脱敏，再进入候选回归样例队列。">摄入所选轨迹</button>
+              <button class="btn primary" id="ingestTrace" data-tip="选中的线上轨迹会先脱敏，再进入候选复测样例队列。">摄入所选轨迹</button>
             </div>
               <div class="database">
                 <table>
                 <thead><tr><th>触发条件</th><th>抽样</th><th>评估器</th><th>动作</th><th>样例流向</th></tr></thead>
                 <tbody>
-                  <tr><td>用户负反馈</td><td>100%</td><td>满意度裁判</td><td>候选样例</td><td><button class="btn mini" id="openFeedbackCandidate">进入数据闭环</button></td></tr>
+                  <tr><td>用户负反馈</td><td>100%</td><td>满意度评分器</td><td>候选样例</td><td><button class="btn mini" id="openFeedbackCandidate">进入数据闭环</button></td></tr>
                   <tr><td>人工接管</td><td>100%</td><td>接管分类器</td><td>复核队列</td><td><button class="btn mini" data-flow="handoff">分配复核</button></td></tr>
-                  <tr><td>高风险工具调用</td><td>100%</td><td>安全策略裁判</td><td>告警 + 审计</td><td><button class="btn mini" data-flow="security">生成审计证据</button></td></tr>
-                  <tr><td>普通成功流量</td><td>3%</td><td>轻量质量裁判</td><td>趋势监控</td><td><button class="btn mini" data-flow="trend">查看趋势</button></td></tr>
+                  <tr><td>高风险工具调用</td><td>100%</td><td>安全策略评分器</td><td>告警 + 审计</td><td><button class="btn mini" data-flow="security">生成审计证据</button></td></tr>
+                  <tr><td>普通成功流量</td><td>3%</td><td>轻量质量评分器</td><td>趋势监控</td><td><button class="btn mini" data-flow="trend">查看趋势</button></td></tr>
                 </tbody>
               </table>
             </div>
@@ -1570,20 +1570,20 @@
             <div class="icon">↻</div>
             <h1>数据闭环</h1>
             <div class="page-meta">
-              <span class="prop">12 个开放工单</span>
-              <span class="prop">86K 条 SFT 数据</span>
-              <span class="prop">12K 对 DPO 偏好</span>
+              <span class="prop">12 个开放数据任务</span>
+              <span class="prop" data-tip="训练对话数据（SFT）可用于监督微调或知识补强。">86K 条训练对话数据（SFT）</span>
+              <span class="prop" data-tip="偏好对数据（DPO）记录两个回答或两条轨迹的优劣偏好，可用于偏好优化。">12K 对偏好对数据（DPO）</span>
               <span class="prop">授权已检查</span>
             </div>
           </div>
 
-          <div class="source-strip" data-tip="数据闭环页的数据来自失败轨迹聚类或线上回流，工单要能追溯到原始 Run、Case 和 Evidence。">
-            <strong>工单来源 · <span data-field="failureCluster">政策冲突澄清</span></strong>
-            <div class="source-path">来源链路：Trace / <span data-field="traceId">traj_refund_002</span> → Failure Cluster → Data Work Order</div>
+          <div class="source-strip" data-tip="数据闭环页的数据来自失败轨迹聚类或线上回流，数据任务要能追溯到原始运行、样例和证据。">
+            <strong>数据任务来源 · <span data-field="failureCluster">政策冲突澄清</span></strong>
+            <div class="source-path">来源链路：运行轨迹 / <span data-field="traceId">traj_refund_002</span> → 失败聚类 → 数据任务</div>
             <div class="source-fields">
-              <span class="prop">Case · <span data-field="caseId">coupon_conflict_0817</span></span>
+              <span class="prop">样例 · <span data-field="caseId">coupon_conflict_0817</span></span>
               <span class="prop">证据 · <span data-field="evidenceStep">step_003 refund.request</span></span>
-              <span class="prop">建议资产 · 偏好对 + 金标准轨迹</span>
+              <span class="prop">建议资产 · 偏好对 + 标杆答案轨迹</span>
               <button class="btn mini" id="openDataLoopTrace">回看证据轨迹</button>
             </div>
           </div>
@@ -1595,19 +1595,19 @@
                 <table>
                   <thead><tr><th>聚类</th><th>占比</th><th>证据</th><th>数据产品</th></tr></thead>
                   <tbody>
-                    <tr><td>超时后的工具恢复</td><td>28%</td><td>184 条轨迹</td><td>金标准轨迹包</td></tr>
+                    <tr><td>超时后的工具恢复</td><td>28%</td><td>184 条轨迹</td><td>标杆答案轨迹包</td></tr>
                     <tr><td>政策冲突澄清</td><td>17%</td><td><button class="btn mini" id="openPolicyTrace">96 条轨迹</button></td><td>偏好对</td></tr>
                     <tr><td>间接提示注入</td><td>9%</td><td>41 条轨迹</td><td>安全红队集</td></tr>
                   </tbody>
                 </table>
               </div>
-              <button class="btn primary" id="createWorkOrder" style="margin-top:12px;" data-tip="工单会明确缺失的数据资产：样例、金标准轨迹、偏好、红队样本或校验逻辑。">创建数据工单</button>
+              <button class="btn primary" id="createWorkOrder" style="margin-top:12px;" data-tip="数据任务会明确缺失的数据资产：样例、标杆答案轨迹、偏好、红队样本或校验逻辑。">创建数据任务</button>
             </div>
             <div class="card side-panel">
               <h3>导出格式</h3>
               <div class="list">
-                <div class="item"><div class="item-head"><h4>SFT 对话</h4><span class="badge green">86K</span></div></div>
-                <div class="item"><div class="item-head"><h4>DPO 偏好对</h4><span class="badge purple">12K</span></div></div>
+                <div class="item" data-tip="SFT 是监督微调数据，这里以可训练的对话样本形式导出。"><div class="item-head"><h4>训练对话数据</h4><span class="badge green">86K</span></div></div>
+                <div class="item" data-tip="DPO 是偏好优化数据，这里以优劣回答或优劣轨迹对导出。"><div class="item-head"><h4>偏好对数据</h4><span class="badge purple">12K</span></div></div>
                 <div class="item"><div class="item-head"><h4>过程奖励步骤</h4><span class="badge blue">420K</span></div></div>
                 <div class="item"><div class="item-head"><h4>校验器模板</h4><span class="badge amber">38</span></div></div>
               </div>
@@ -1621,28 +1621,28 @@
             <h1>管理</h1>
             <div class="page-meta">
               <span class="prop">租户 · Acme AI</span>
-              <span class="prop">RBAC 角色 · 5</span>
+              <span class="prop" data-tip="RBAC 是按角色分配权限的常见方式；这里展示平台内管理员、构建者、开发者、复核人和只读角色。">角色权限（RBAC） · 5</span>
               <span class="prop">审计事件 · 81K</span>
               <span class="prop">部署 · 私有化就绪</span>
             </div>
           </div>
 
-          <div class="source-strip" data-tip="管理页的证据包来自同一个 Run Snapshot，包含被测对象、评测集、评估器、裁判排除记录和数据授权。">
+          <div class="source-strip" data-tip="管理页的证据包来自同一个运行快照（Run Snapshot），包含智能体版本、评测集、评估器、评分器排除记录和数据授权。">
             <strong>证据包来源 · <span data-field="reportId">report_gate_20260611_1842</span></strong>
-            <div class="source-path">来源链路：Report & Gate → Audit Bundle → 客户交付 / 合规复核</div>
+            <div class="source-path">来源链路：报告与上线准入 → 审计证据包 → 客户交付 / 合规复核</div>
             <div class="source-fields">
-              <span class="prop">Run · <span data-field="runId">run_20260611_1842</span></span>
-              <span class="prop">Target · <span data-field="targetVersion">support-agent_2026_06_11</span></span>
-              <span class="prop">Dataset · <span data-field="datasetVersion">customer_ops_regression_v43</span></span>
+              <span class="prop">运行 · <span data-field="runId">run_20260611_1842</span></span>
+              <span class="prop">智能体版本 · <span data-field="targetVersion">support-agent_2026_06_11</span></span>
+              <span class="prop">评测集 · <span data-field="datasetVersion">customer_ops_regression_v43</span></span>
               <button class="btn mini" id="openAuditReport">回到报告</button>
             </div>
           </div>
 
           <div class="grid cols-4">
-            <div class="card metric"><span>RBAC 角色</span><strong>5</strong><small>管理员 · 构建者 · 开发者 · 复核人 · 只读</small></div>
+            <div class="card metric" data-tip="角色权限（RBAC）用于控制谁能创建运行、审批准入、导出证据包或修改评测资产。"><span>角色权限</span><strong>5</strong><small>管理员 · 构建者 · 开发者 · 复核人 · 只读</small></div>
             <div class="card metric"><span>审计事件</span><strong>81K</strong><small>不可变日志链</small></div>
-            <div class="card metric"><span>裁判成本</span><strong>$9.8K</strong><small>缓存节省 31%</small></div>
-            <div class="card metric"><span>PII 脱敏</span><strong>132</strong><small>抽样审计通过</small></div>
+            <div class="card metric"><span>评分器成本</span><strong>$9.8K</strong><small>缓存节省 31%</small></div>
+            <div class="card metric" data-tip="个人敏感信息（PII）包括手机号、地址、证件号等，进入评测和报告前需要脱敏。"><span>个人敏感信息脱敏</span><strong>132</strong><small>抽样审计通过</small></div>
           </div>
 
           <div class="grid cols-main">
@@ -1650,18 +1650,18 @@
               <h3>信任控制</h3>
               <div class="list">
                 <div class="item"><div class="item-head"><h4>租户隔离</h4><span class="badge green">就绪</span></div><p>组织、团队和项目边界。</p></div>
-                <div class="item"><div class="item-head"><h4>审计日志</h4><span class="badge green">就绪</span></div><p>评测集编辑、运行、门禁、导出和裁判变更。</p></div>
+                <div class="item"><div class="item-head"><h4>审计日志</h4><span class="badge green">就绪</span></div><p>评测集编辑、运行、准入审批、导出和评分器变更。</p></div>
                 <div class="item"><div class="item-head"><h4>私有化部署</h4><span class="badge amber">已准备</span></div><p>核心服务避免对外部系统形成硬依赖。</p></div>
               </div>
-              <button class="btn primary" id="runAudit" style="margin-top:12px;" data-tip="证据包包含运行配置、评测集快照、被测对象版本、裁判排除记录、审计日志和数据授权。">生成证据包</button>
+              <button class="btn primary" id="runAudit" style="margin-top:12px;" data-tip="证据包包含运行配置、评测集快照、智能体版本、评分器排除记录、审计日志和数据授权。">生成证据包</button>
             </div>
             <div class="card side-panel">
               <h3>审计日志</h3>
               <div class="code" id="auditStatus">证据包：草稿
 评测集快照：customer_ops_regression_v43
-被测对象：support-agent_2026_06_11
-门禁：待处理
-已排除裁判：1
+智能体版本：support-agent_2026_06_11
+上线准入：待处理
+已排除评分器：1
 数据授权：允许训练</div>
             </div>
           </div>
@@ -1694,34 +1694,34 @@
               <p>受众、套餐、部署模式和客户价值说明。</p>
               <span class="badge green">已发布</span>
             </div>
-            <div class="doc-card" tabindex="0" data-doc="数据模型" data-tip="说明被测对象、评测集、样例、运行、试验、轨迹、评估器、分数、报告和门禁等核心对象。">
+            <div class="doc-card" tabindex="0" data-doc="数据模型" data-tip="说明智能体版本、评测集、样例、运行、单次试验、运行轨迹、评估器、分数、报告和上线准入等核心对象。">
               <h4>数据模型</h4>
               <p>核心对象、生命周期规则、版本化和归属关系。</p>
               <span class="badge blue">当前</span>
             </div>
-            <div class="doc-card" tabindex="0" data-doc="智能体接入与运行测评技术方案" data-tip="面向研发和交付团队，说明智能体接入、运行编排、轨迹采集、评估打分和报告门禁链路。">
+            <div class="doc-card" tabindex="0" data-doc="智能体接入与运行测评技术方案" data-tip="面向研发和交付团队，说明智能体接入、运行编排、轨迹采集、评估打分和上线准入链路。">
               <h4>智能体接入与运行测评技术方案</h4>
               <p>接入模式、运行主链路、数据模型、事件接口、重复试验和治理控制。</p>
               <span class="badge blue">技术方案</span>
             </div>
-            <div class="doc-card" tabindex="0" data-doc="运行编排" data-tip="重复试验、沙箱重置、执行器重试和预算停止的内部实施指南。">
+            <div class="doc-card" tabindex="0" data-doc="运行编排" data-tip="重复试验、隔离环境重置、执行器重试和预算停止的内部实施指南。">
               <h4>运行编排</h4>
-              <p>调度器、执行器池、沙箱池和校验器隔离。</p>
+              <p>调度器、执行器池、隔离环境池和校验器隔离。</p>
               <span class="badge">操作指南</span>
             </div>
-            <div class="doc-card" tabindex="0" data-doc="裁判治理" data-tip="裁判发布规则包含金标准覆盖、一致率阈值、偏差检查和门禁资格。">
-              <h4>裁判治理</h4>
-              <p>金标准轨迹、人工抽样、升级、排除和审计链路。</p>
+            <div class="doc-card" tabindex="0" data-doc="评分器治理" data-tip="评分器发布规则包含标杆答案覆盖、一致率阈值、偏差检查和准入资格。">
+              <h4>评分器治理</h4>
+              <p>标杆答案轨迹、人工抽样、升级、排除和审计链路。</p>
               <span class="badge amber">需季度复核</span>
             </div>
-            <div class="doc-card" tabindex="0" data-doc="数据闭环手册" data-tip="定义失败如何转化为样例、金标准轨迹、偏好对、红队样本和校验逻辑。">
+            <div class="doc-card" tabindex="0" data-doc="数据闭环手册" data-tip="定义失败如何转化为样例、标杆答案轨迹、偏好对、红队样本和校验逻辑。">
               <h4>数据闭环手册</h4>
-              <p>失败聚类、工单模板、导出和验证运行。</p>
+              <p>失败聚类、数据任务模板、导出和验证运行。</p>
               <span class="badge purple">数据运营</span>
             </div>
-            <div class="doc-card" tabindex="0" data-doc="信任与部署" data-tip="租户隔离、PII 脱敏、审计日志、私有化部署和证据包的安全指南。">
+            <div class="doc-card" tabindex="0" data-doc="信任与部署" data-tip="租户隔离、个人敏感信息（PII）脱敏、审计日志、私有化部署和证据包的安全指南。">
               <h4>信任与部署</h4>
-              <p>RBAC、审计、数据授权、裁判网关控制和私有化安装。</p>
+              <p>角色权限（RBAC）、审计、数据授权、评分器网关控制和私有化安装。</p>
               <span class="badge green">就绪</span>
             </div>
           </div>
@@ -1758,14 +1758,14 @@
       targetName: "客服智能体",
       targetVersion: "support-agent_2026_06_11",
       targetMode: "API 端点",
-      datasetName: "客服运营回归集",
+      datasetName: "客服运营复测集",
       datasetVersion: "customer_ops_regression_v43",
-      runName: "客服运营发布门禁",
+      runName: "客服运营上线准入",
       runId: "run_20260611_1842",
       reportId: "report_gate_20260611_1842",
       caseId: "coupon_conflict_0817",
       caseSource: "线上回流",
-      environment: "CRM 沙箱",
+      environment: "CRM 隔离测试环境",
       trialId: "trial_002",
       trialNumber: "2/3",
       traceId: "traj_refund_002",
@@ -1778,39 +1778,39 @@
         label: "客服运营",
         breadcrumb: "Acme AI 平台 / 客服运营 / 评测工作区",
         sidebarTitle: "客服智能体 v18",
-        sidebarText: "不稳定样例复跑后可进入门禁审批。",
+        sidebarText: "不稳定样例复跑后可进入上线准入审批。",
         sidebarBadge: "发布窗口 18:00",
         counts: { targets: "18", assets: "9,420", online: "26", workOrders: "12" },
         metrics: {
           decisions: "47",
           decisionText: "31 次发布 · 4 次回滚 · 12 次选型",
-          gateLabel: "发布门禁",
+          gateLabel: "上线准入",
           gateValue: "68%",
-          gateText: "覆盖活跃被测对象的 CI 门禁",
+          gateText: "覆盖活跃智能体版本的 CI 发布检查",
           judgeValue: "0.86",
-          judgeText: "3 个裁判需要校准",
+          judgeText: "3 个评分器需要校准",
           assetsValue: "9,420",
           assetsText: "本月新增 184 个"
         },
         tasks: [
-          ["复核新增失败样例", "客服运营回归集", "AI 平台", "高", "今日到期", "red", "amber"],
-          ["批准发布门禁", "客服智能体 v18", "智能体团队", "就绪", "证据已附加", "green", "blue"],
-          ["校准安全裁判", "风险拒答裁判", "标注运营", "中", "低于阈值", "amber", "red"],
-          ["创建训练数据工单", "工具恢复失败", "数据运营", "增长", "草稿", "purple", ""]
+          ["复核新增失败样例", "客服运营复测集", "AI 平台", "高", "今日到期", "red", "amber"],
+          ["批准上线准入", "客服智能体 v18", "智能体团队", "就绪", "证据已附加", "green", "blue"],
+          ["校准安全评分器", "风险拒答评分器", "标注运营", "中", "低于阈值", "amber", "red"],
+          ["创建训练数据任务", "工具恢复失败", "数据运营", "增长", "草稿", "purple", ""]
         ],
-        pinned: ["18 个对象 · 4 个健康检查异常", "9,420 个资产 · 本月新增 184 个", "31 个运行中 · 7 个等待复核"],
+        pinned: ["18 个版本 · 4 个健康检查异常", "9,420 个资产 · 本月新增 184 个", "31 个运行中 · 7 个等待复核"],
         context: {
           targetName: "客服智能体",
           targetVersion: "support-agent_2026_06_11",
           targetMode: "API 端点",
-          datasetName: "客服运营回归集",
+          datasetName: "客服运营复测集",
           datasetVersion: "customer_ops_regression_v43",
-          runName: "客服运营发布门禁",
+          runName: "客服运营上线准入",
           runId: "run_20260611_1842",
           reportId: "report_gate_20260611_1842",
           caseId: "coupon_conflict_0817",
           caseSource: "线上回流",
-          environment: "CRM 沙箱",
+          environment: "CRM 隔离测试环境",
           trialId: "trial_002",
           trialNumber: "2/3",
           traceId: "traj_refund_002",
@@ -1821,21 +1821,21 @@
         targetRows: [
           ["客服智能体", "2026.06.11", "API", "blue", "健康", "green", "查看最近失败轨迹", "openTargetTrace"],
           ["财务对账智能体", "2026.06.08", "SDK", "green", "健康", "green", "查看观察报告", "flow:finance"],
-          ["浏览器下单智能体", "2026.06.02", "浏览器", "purple", "沙箱预热中", "amber", "查看阻断原因", "flow:browser"],
+          ["浏览器下单智能体", "2026.06.02", "浏览器", "purple", "隔离环境预热中", "amber", "查看阻断原因", "flow:browser"],
           ["历史轨迹导入", "offline-v4", "轨迹上传", "", "轨迹结构就绪", "green", "进入评分队列", "scoreUploadedTrace"]
         ],
         endpoint: "https://agent.internal/v1/chat/completions",
-        datasetCard: ["客服运营回归集", "1,920 个样例 · 18 个环境 · 42 个评估器"],
+        datasetCard: ["客服运营复测集", "1,920 个样例 · 18 个环境 · 42 个评估器"],
         caseRows: [
-          ["优惠券冲突退款", "工具参数 + 政策规则", "线上回流", "blue", "CRM 沙箱", "已批准", "green", "查看对应失败轨迹", "openCaseTrace"],
-          ["PII 导出拒答", "安全策略", "红队", "red", "Mock 数据仓库", "门禁集", "green", "查看门禁覆盖", "flow:security"],
-          ["发票表格歧义", "多模态抽取", "专家编写", "purple", "文件沙箱", "待复核", "amber", "分配人工复核", "flow:invoice"]
+          ["优惠券冲突退款", "工具参数 + 政策规则", "线上回流", "blue", "CRM 隔离测试环境", "已批准", "green", "查看对应失败轨迹", "openCaseTrace"],
+          ["个人敏感信息导出拒答", "安全策略", "红队", "red", "模拟数据仓库", "准入集", "green", "查看准入覆盖", "flow:security"],
+          ["发票表格歧义", "多模态抽取", "专家编写", "purple", "文件隔离测试环境", "待复核", "amber", "分配人工复核", "flow:invoice"]
         ],
-        runOptions: ["客服运营回归集 · v43", "安全红队包 · v18"],
+        runOptions: ["客服运营复测集 · v43", "安全红队包 · v18"],
         targetOptions: ["客服智能体 · 2026.06.11", "基线智能体 · 2026.05.28"],
         runRows: [
-          ["客服运营发布门禁", "客服智能体", "回归集 v43", "92%", "green", "就绪", "green", "查看失败轨迹", "openRunTrace"],
-          ["浏览器下单稳定性", "浏览器智能体", "下单实验室", "61%", "amber", "观察", "amber", "查看沙箱截图", "flow:browser"]
+          ["客服运营上线准入", "客服智能体", "复测集 v43", "92%", "green", "就绪", "green", "查看失败轨迹", "openRunTrace"],
+          ["浏览器下单稳定性", "浏览器智能体", "下单实验室", "61%", "amber", "观察", "amber", "查看隔离环境截图", "flow:browser"]
         ],
         timeline: [
           ["00:01", "用户", "blue", "客户要求退款，同时保留优惠券权益。", ""],
@@ -1847,7 +1847,7 @@
         comparisonRows: [
           ["已修复", "184", "coupon_conflict_0817", "openFixedTrace", "发布证据", "green"],
           ["新增失败", "0 个关键 / 17 个非关键", "crm_merge_unsafe_1188", "flow:merge", "监控", "amber"],
-          ["持续失败", "92", "tool_recovery_timeout", "openFailureCluster", "数据工单", "purple"]
+          ["持续失败", "92", "tool_recovery_timeout", "openFailureCluster", "数据任务", "purple"]
         ],
         sample: {
           id: "case_coupon_conflict_0817",
@@ -1858,7 +1858,7 @@
           expected: "先识别优惠券政策冲突，向用户澄清；不得在未写入 CRM 备注前执行 full refund。",
           assertions: "policy_conflict_checked=true; no_unauthorized_refund=true; crm_note_written=true",
           rubric: "工具顺序 35%，政策遵循 35%，沟通澄清 20%，审计留痕 10%",
-          repeat: "repeat=3; sandbox_reset=per_trial; pass^3 门禁阈值 0.72",
+          repeat: "重复 3 次；每次试验重置隔离环境；连续 3 次成功率（pass^3）准入阈值 0.72",
           source: "prod_trace traj_refund_002 → 人审通过 → customer_ops_regression_v43"
         }
       },
@@ -1872,33 +1872,33 @@
         metrics: {
           decisions: "29",
           decisionText: "12 次发布 · 2 次回滚 · 15 次对账策略调整",
-          gateLabel: "月结门禁",
+          gateLabel: "月结准入",
           gateValue: "54%",
           gateText: "覆盖 AP/AR 对账与发票抽取流程",
           judgeValue: "0.83",
-          judgeText: "2 个金额容差裁判需要校准",
+          judgeText: "2 个金额容差评分器需要校准",
           assetsValue: "5,860",
           assetsText: "本月新增 96 个财务样例"
         },
         tasks: [
           ["复核高金额差异", "供应商对账集", "财务共享中心", "高", "今日到期", "red", "amber"],
-          ["观察月结门禁", "财务对账智能体 v7", "财务智能体团队", "中", "需二次抽样", "amber", "blue"],
-          ["校准金额容差裁判", "invoice_amount_judge", "标注运营", "中", "低于阈值", "amber", "red"],
-          ["创建发票抽取工单", "税率识别失败", "数据运营", "增长", "草稿", "purple", ""]
+          ["观察月结准入", "财务对账智能体 v7", "财务智能体团队", "中", "需二次抽样", "amber", "blue"],
+          ["校准金额容差评分器", "invoice_amount_scorer", "标注运营", "中", "低于阈值", "amber", "red"],
+          ["创建发票抽取数据任务", "税率识别失败", "数据运营", "增长", "草稿", "purple", ""]
         ],
-        pinned: ["12 个对象 · 2 个健康检查异常", "5,860 个资产 · 本月新增 96 个", "18 个运行中 · 5 个等待复核"],
+        pinned: ["12 个版本 · 2 个健康检查异常", "5,860 个资产 · 本月新增 96 个", "18 个运行中 · 5 个等待复核"],
         context: {
           targetName: "财务对账智能体",
           targetVersion: "finance-agent_2026_06_08",
           targetMode: "SDK 埋点",
-          datasetName: "供应商对账回归集",
+          datasetName: "供应商对账复测集",
           datasetVersion: "finance_reconciliation_v21",
-          runName: "供应商对账月结门禁",
+          runName: "供应商对账月结准入",
           runId: "run_finance_20260612_0905",
           reportId: "report_finance_month_close_0905",
           caseId: "invoice_tax_mismatch_0442",
           caseSource: "人工接管回流",
-          environment: "ERP Mock 沙箱",
+          environment: "ERP 模拟隔离环境",
           trialId: "trial_fin_004",
           trialNumber: "4/5",
           traceId: "traj_invoice_tax_004",
@@ -1913,17 +1913,17 @@
           ["历史月结轨迹", "offline-fin-v9", "轨迹上传", "", "已校验", "green", "进入评分队列", "scoreUploadedTrace"]
         ],
         endpoint: "https://finance-agent.internal/v1/evaluate",
-        datasetCard: ["供应商对账回归集", "1,260 个样例 · 8 个 ERP 环境 · 31 个评估器"],
+        datasetCard: ["供应商对账复测集", "1,260 个样例 · 8 个 ERP 环境 · 31 个评估器"],
         caseRows: [
-          ["发票税率不一致", "表格抽取 + 金额容差", "人工接管", "blue", "ERP Mock 沙箱", "待复核", "amber", "查看对应失败轨迹", "openCaseTrace"],
-          ["供应商名称歧义", "实体匹配", "线上回流", "green", "主数据 Mock", "已批准", "green", "查看门禁覆盖", "flow:finance"],
-          ["费用科目越权", "安全策略", "红队", "red", "权限沙箱", "门禁集", "green", "分配人工复核", "flow:security"]
+          ["发票税率不一致", "表格抽取 + 金额容差", "人工接管", "blue", "ERP 模拟隔离环境", "待复核", "amber", "查看对应失败轨迹", "openCaseTrace"],
+          ["供应商名称歧义", "实体匹配", "线上回流", "green", "主数据模拟系统", "已批准", "green", "查看准入覆盖", "flow:finance"],
+          ["费用科目越权", "安全策略", "红队", "red", "权限隔离环境", "准入集", "green", "分配人工复核", "flow:security"]
         ],
-        runOptions: ["供应商对账回归集 · v21", "费用审核红队包 · v9"],
+        runOptions: ["供应商对账复测集 · v21", "费用审核红队包 · v9"],
         targetOptions: ["财务对账智能体 · 2026.06.08", "基线财务智能体 · 2026.05.18"],
         runRows: [
-          ["供应商对账月结门禁", "财务对账智能体", "对账集 v21", "76%", "amber", "观察", "amber", "查看失败轨迹", "openRunTrace"],
-          ["费用审核安全回归", "费用审核智能体", "红队包 v9", "88%", "green", "可发布", "green", "查看裁判依据", "flow:security"]
+          ["供应商对账月结准入", "财务对账智能体", "对账集 v21", "76%", "amber", "观察", "amber", "查看失败轨迹", "openRunTrace"],
+          ["费用审核安全复测", "费用审核智能体", "红队包 v9", "88%", "green", "可发布", "green", "查看评分依据", "flow:security"]
         ],
         timeline: [
           ["00:01", "系统输入", "blue", "上传供应商发票、PO 与收货单三方匹配任务。", ""],
@@ -1935,7 +1935,7 @@
         comparisonRows: [
           ["已修复", "96", "supplier_name_alias_0120", "openFixedTrace", "发布证据", "green"],
           ["新增失败", "2 个关键 / 9 个非关键", "invoice_tax_mismatch_0442", "flow:finance", "观察", "amber"],
-          ["持续失败", "41", "approval_before_adjustment", "openFailureCluster", "数据工单", "purple"]
+          ["持续失败", "41", "approval_before_adjustment", "openFailureCluster", "数据任务", "purple"]
         ],
         sample: {
           id: "case_invoice_tax_mismatch_0442",
@@ -1946,7 +1946,7 @@
           expected: "识别税率不一致，生成复核建议；不得在人工审批前写入调账草稿。",
           assertions: "tax_mismatch_detected=true; adjustment_not_posted=true; reviewer_note_created=true",
           rubric: "金额准确性 40%，审批边界 30%，证据引用 20%，可解释性 10%",
-          repeat: "repeat=5; amount_tolerance=0.01; pass^5 月结阈值 0.60",
+          repeat: "重复 5 次；金额容差 0.01；连续 5 次成功率（pass^5）月结准入阈值 0.60",
           source: "manual_handoff traj_invoice_tax_004 → 财务专家复核 → finance_reconciliation_v21"
         }
       },
@@ -1954,13 +1954,13 @@
         label: "浏览器操作实验室",
         breadcrumb: "Acme AI 平台 / 浏览器操作实验室 / Web 任务评测",
         sidebarTitle: "浏览器下单智能体 v12",
-        sidebarText: "沙箱终态校验失败，需要查看截图和 DOM 断言。",
-        sidebarBadge: "沙箱池 72%",
+        sidebarText: "隔离环境终态校验失败，需要查看截图和 DOM 断言。",
+        sidebarBadge: "隔离环境池 72%",
         counts: { targets: "9", assets: "3,240", online: "14", workOrders: "7" },
         metrics: {
           decisions: "18",
           decisionText: "8 次发布 · 3 次阻断 · 7 次模型选型",
-          gateLabel: "沙箱门禁",
+          gateLabel: "隔离环境准入",
           gateValue: "41%",
           gateText: "覆盖浏览器下单、表单提交和后台查询",
           judgeValue: "0.88",
@@ -1970,11 +1970,11 @@
         },
         tasks: [
           ["查看阻断截图", "浏览器下单实验室", "Web Agent 团队", "高", "今日到期", "red", "amber"],
-          ["复跑沙箱失败任务", "浏览器下单智能体 v12", "平台工程", "中", "沙箱可用", "amber", "blue"],
+          ["复跑隔离环境失败任务", "浏览器下单智能体 v12", "平台工程", "中", "隔离环境可用", "amber", "blue"],
           ["校准 DOM 终态校验", "checkout_dom_checker", "评测工程", "中", "需复核", "amber", "red"],
-          ["创建网页异常数据工单", "地址表单恢复失败", "数据运营", "增长", "草稿", "purple", ""]
+          ["创建网页异常数据任务", "地址表单恢复失败", "数据运营", "增长", "草稿", "purple", ""]
         ],
-        pinned: ["9 个对象 · 3 个沙箱异常", "3,240 个资产 · 本月新增 63 个", "14 个运行中 · 9 个等待复核"],
+        pinned: ["9 个版本 · 3 个隔离环境异常", "3,240 个资产 · 本月新增 63 个", "14 个运行中 · 9 个等待复核"],
         context: {
           targetName: "浏览器下单智能体",
           targetVersion: "browser-agent_2026_06_02",
@@ -1985,7 +1985,7 @@
           runId: "run_browser_20260612_1018",
           reportId: "report_browser_checkout_1018",
           caseId: "checkout_address_recovery_0209",
-          caseSource: "沙箱失败回流",
+          caseSource: "隔离环境失败回流",
           environment: "Playwright 浏览器集群",
           trialId: "trial_browser_006",
           trialNumber: "6/10",
@@ -1995,7 +1995,7 @@
           evidenceStep: "step_007 click_submit"
         },
         targetRows: [
-          ["浏览器下单智能体", "2026.06.02", "浏览器", "purple", "沙箱预热中", "amber", "查看阻断原因", "openTargetTrace"],
+          ["浏览器下单智能体", "2026.06.02", "浏览器", "purple", "隔离环境预热中", "amber", "查看阻断原因", "openTargetTrace"],
           ["后台查询智能体", "2026.06.03", "浏览器", "purple", "健康", "green", "查看截图证据", "flow:browser"],
           ["表单填写智能体", "2026.05.29", "API", "blue", "观察", "amber", "查看观察报告", "flow:browser"],
           ["历史浏览器轨迹", "offline-web-v3", "轨迹上传", "", "已校验", "green", "进入评分队列", "scoreUploadedTrace"]
@@ -2003,15 +2003,15 @@
         endpoint: "browser://playwright-cluster/acme-checkout",
         datasetCard: ["浏览器下单实验室", "680 个样例 · 9 个 Web 应用 · 14 个终态校验"],
         caseRows: [
-          ["收货地址恢复", "表单状态 + 错误恢复", "沙箱失败回流", "blue", "Playwright 浏览器集群", "待复核", "amber", "查看对应失败轨迹", "openCaseTrace"],
-          ["优惠码弹窗遮挡", "视觉定位", "专家编写", "purple", "Checkout Mock", "已批准", "green", "查看门禁覆盖", "flow:browser"],
-          ["后台订单查询", "多页面导航", "线上回流", "green", "Admin Mock", "观察", "amber", "分配人工复核", "flow:handoff"]
+          ["收货地址恢复", "表单状态 + 错误恢复", "隔离环境失败回流", "blue", "Playwright 浏览器集群", "待复核", "amber", "查看对应失败轨迹", "openCaseTrace"],
+          ["优惠码弹窗遮挡", "视觉定位", "专家编写", "purple", "Checkout 模拟系统", "已批准", "green", "查看准入覆盖", "flow:browser"],
+          ["后台订单查询", "多页面导航", "线上回流", "green", "Admin 模拟系统", "观察", "amber", "分配人工复核", "flow:handoff"]
         ],
-        runOptions: ["浏览器下单实验室 · v12", "后台查询回归集 · v6"],
+        runOptions: ["浏览器下单实验室 · v12", "后台查询复测集 · v6"],
         targetOptions: ["浏览器下单智能体 · 2026.06.02", "基线浏览器智能体 · 2026.05.21"],
         runRows: [
           ["浏览器下单稳定性", "浏览器下单智能体", "下单实验室 v12", "61%", "amber", "观察", "amber", "查看失败轨迹", "openRunTrace"],
-          ["后台查询终态回归", "后台查询智能体", "查询集 v6", "83%", "green", "可发布", "green", "查看沙箱截图", "flow:browser"]
+          ["后台查询终态复测", "后台查询智能体", "查询集 v6", "83%", "green", "可发布", "green", "查看隔离环境截图", "flow:browser"]
         ],
         timeline: [
           ["00:01", "页面", "blue", "打开结账页，购物车已有 2 件商品。", ""],
@@ -2023,7 +2023,7 @@
         comparisonRows: [
           ["已修复", "63", "promo_modal_overlap_0311", "openFixedTrace", "发布证据", "green"],
           ["新增失败", "3 个关键 / 12 个非关键", "checkout_address_recovery_0209", "flow:browser", "观察", "amber"],
-          ["持续失败", "57", "form_state_recovery", "openFailureCluster", "数据工单", "purple"]
+          ["持续失败", "57", "form_state_recovery", "openFailureCluster", "数据任务", "purple"]
         ],
         sample: {
           id: "case_checkout_address_recovery_0209",
@@ -2034,8 +2034,8 @@
           expected: "检测地区字段丢失并重新选择；提交前通过 DOM 终态校验，不得创建缺地址订单。",
           assertions: "address_region_present=true; order_created=true; no_duplicate_submit=true",
           rubric: "终态正确 45%，页面恢复 25%，动作经济性 15%，截图证据 15%",
-          repeat: "repeat=10; browser_context_reset=per_trial; pass^10 沙箱阈值 0.46",
-          source: "sandbox_failure traj_checkout_006 → Web 复核 → browser_checkout_lab_v12"
+          repeat: "重复 10 次；每次试验重置浏览器上下文；连续 10 次成功率（pass^10）隔离环境阈值 0.46",
+          source: "隔离环境失败 traj_checkout_006 → Web 复核 → browser_checkout_lab_v12"
         }
       }
     };
@@ -2047,18 +2047,18 @@
       initialState: "初始状态",
       expected: "期望行为",
       assertions: "终态断言",
-      rubric: "裁判 Rubric",
+      rubric: "评分标准",
       repeat: "重复试验",
       source: "来源链路"
     };
     const docDetails = {
-      "平台介绍": ["面向业务负责人说明平台如何支撑 Agent 从试点进入生产。", "核心价值：上线前门禁、上线后监控、失败回流、审计证据。", "部署形态：SaaS、私有化、客户 VPC 接入。"],
-      "数据模型": ["Target、Dataset、Case、Run、Trial、Trajectory、Evaluator、Report 统一版本化。", "每个页面展示的数据都能回溯到同一个 Run Snapshot 或线上 Trace。"],
-      "智能体接入与运行测评技术方案": ["接入方式覆盖 API、SDK、轨迹上传、MCP 工具中介和浏览器操作。", "运行链路包括调度、沙箱重置、轨迹采集、评估打分、报告门禁和数据回流。"],
-      "运行编排": ["调度器按 Case 展开 Trial，执行器负责工具调用和环境复位。", "重复试验用于计算 pass@k、pass^k、方差和置信区间。"],
-      "裁判治理": ["裁判必须通过金标准一致率、偏差检查和人工抽样。", "低健康度裁判可观察但不能单独阻断发布。"],
-      "数据闭环手册": ["失败聚类可生成新 Case、金标准轨迹、偏好对、红队样本和校验器模板。", "每个数据工单保留原始轨迹、证据步骤、授权状态和回归验证结果。"],
-      "信任与部署": ["控制面覆盖 RBAC、租户隔离、PII 脱敏、审计日志和证据包导出。", "私有化部署避免客户核心业务数据离开受控环境。"]
+      "平台介绍": ["面向业务负责人说明平台如何支撑 Agent 从试点进入生产。", "核心价值：上线前准入、上线后监控、失败回流、审计证据。", "部署形态：SaaS、私有化、客户 VPC 接入。"],
+      "数据模型": ["智能体版本、评测集、样例、运行、单次试验、运行轨迹、评估器和报告统一版本化。", "每个页面展示的数据都能回溯到同一个运行快照（Run Snapshot）或线上轨迹。"],
+      "智能体接入与运行测评技术方案": ["接入方式覆盖 API、SDK、轨迹上传、MCP 工具中介和浏览器操作。", "运行链路包括调度、隔离环境重置、轨迹采集、评估打分、上线准入和数据回流。"],
+      "运行编排": ["调度器按样例展开单次试验，执行器负责工具调用和环境复位。", "重复试验用于计算 3 次内成功率（pass@k）、连续 k 次成功率（pass^k）、波动范围和结果可信范围。"],
+      "评分器治理": ["评分器必须通过标杆答案一致率、偏差检查和人工抽样。", "低健康度评分器可观察但不能单独阻断发布。"],
+      "数据闭环手册": ["失败聚类可生成新样例、标杆答案轨迹、偏好对、红队样本和校验器模板。", "每个数据任务保留原始轨迹、证据步骤、授权状态和复测验证结果。"],
+      "信任与部署": ["控制面覆盖角色权限（RBAC）、租户隔离、个人敏感信息（PII）脱敏、审计日志和证据包导出。", "私有化部署避免客户核心业务数据离开受控环境。"]
     };
 
     function showToast(message) {
@@ -2197,7 +2197,7 @@
 - 初始状态：${sample.initialState}
 - 期望行为：${sample.expected}
 - 断言：${sample.assertions}
-- Rubric：${sample.rubric}
+- 评分标准：${sample.rubric}
 - 重复试验：${sample.repeat}
 - 来源：${sample.source}`;
       }
@@ -2228,7 +2228,7 @@
         if (node) node.onclick = handler;
       };
       bind("openTargetTrace", () => {
-        openWithContext("trace", { traceEntry: "被测对象注册表 → 查看最近失败轨迹" }, "已打开当前工作区最近失败轨迹。");
+        openWithContext("trace", { traceEntry: "智能体版本注册表 → 查看最近失败轨迹" }, "已打开当前工作区最近失败轨迹。");
       });
       bind("scoreUploadedTrace", () => {
         openWithContext("runs", {
@@ -2239,7 +2239,7 @@
           runId: "run_offline_trace_v4",
           trialId: "offline_trial_001",
           traceId: "offline_traj_001",
-          traceEntry: "被测对象注册表 → 离线轨迹进入评分队列"
+          traceEntry: "智能体版本注册表 → 离线轨迹进入评分队列"
         }, "离线轨迹已带入运行页，只执行评估不驱动 Agent。");
       });
       bind("openCaseTrace", () => {
@@ -2255,7 +2255,7 @@
         openWithContext("data-loop", {
           failureCluster: evaluationContext.failureCluster,
           evidenceStep: evaluationContext.evidenceStep,
-          traceEntry: "报告版本对比 → 持续失败 → 数据工单"
+          traceEntry: "报告版本对比 → 持续失败 → 数据任务"
         }, "已打开持续失败聚类对应的数据闭环。");
       });
       document.querySelectorAll("[data-flow]").forEach((button) => {
@@ -2431,7 +2431,7 @@
       openModal("命令搜索", [
         `当前工作区：${workspaceConfigs[currentWorkspace].label}`,
         `可直接跳转：${evaluationContext.targetName}、${evaluationContext.datasetVersion}、${evaluationContext.runId}、${evaluationContext.traceId}`,
-        "最近结果：运行队列、样例数据库、报告门禁、数据工单"
+        "最近结果：运行队列、样例数据库、上线准入报告、数据任务"
       ]);
       showToast("已打开搜索结果面板。");
     });
@@ -2441,10 +2441,10 @@
         document.querySelectorAll("[data-home-tab]").forEach((item) => item.classList.toggle("active", item === tab));
         const tabName = tab.dataset.homeTab;
         const messages = {
-          "概览": "概览 · 展示当前工作区的发布门禁、待处理事项和可下钻入口。",
-          "看板": `看板 · ${evaluationContext.runName} 正在跟踪复核、裁判校准、数据工单和门禁审批。`,
-          "日历": "日历 · 今日 18:00 发布窗口，20:00 自动触发夜间回归，次日 09:30 复核抽样。",
-          "最近决策": `最近决策 · ${evaluationContext.reportId} 已生成，弱裁判处理后可进入证据包。`
+          "概览": "概览 · 展示当前工作区的上线准入、待处理事项和可下钻入口。",
+          "看板": `看板 · ${evaluationContext.runName} 正在跟踪复核、评分器校准、数据任务和准入审批。`,
+          "日历": "日历 · 今日 18:00 发布窗口，20:00 自动触发夜间复测，次日 09:30 复核抽样。",
+          "最近决策": `最近决策 · ${evaluationContext.reportId} 已生成，弱评分器处理后可进入证据包。`
         };
         setText("homeTabPanel", messages[tabName]);
         showToast(`已切换首页视图：${tabName}`);
@@ -2469,14 +2469,14 @@
           targetName: `${config.context.targetName} 试点`,
           targetVersion: `${currentWorkspace}-pilot-agent_2026_06_12`,
           targetMode: config.context.targetMode,
-          runName: `${config.label}首次回归`,
+          runName: `${config.label}首次复测`,
           runId: `run_${currentWorkspace}_pilot_20260612`,
           reportId: `report_${currentWorkspace}_pilot_20260612`,
-          traceEntry: "被测对象注册表 → 开始首次运行"
+          traceEntry: "智能体版本注册表 → 开始首次运行"
         }, `已选择${config.label}试点，可创建首次运行。`);
       });
       bindDynamicActions();
-      showToast("被测对象已添加，连接健康检查通过。");
+      showToast("智能体版本已添加，连接健康检查通过。");
     });
 
     document.getElementById("uploadTrace").addEventListener("click", () => {
@@ -2486,9 +2486,9 @@
 
     document.getElementById("openIntegrationGuide").addEventListener("click", () => {
       openModal(`${evaluationContext.targetMode} 接入指南`, [
-        `被测对象：${evaluationContext.targetName} / ${evaluationContext.targetVersion}`,
+        `智能体版本：${evaluationContext.targetName} / ${evaluationContext.targetVersion}`,
         `端点或运行环境：${document.getElementById("targetEndpointInput").value}`,
-        "接入后平台会采集输入、工具调用、状态变更、终态断言和裁判证据。",
+        "接入后平台会采集输入、工具调用、状态变更、终态断言和评分证据。",
         "低改造路径可先上传历史轨迹，再逐步接入 SDK 或 OpenTelemetry。"
       ]);
       showToast("已打开当前接入模式的指南。");
@@ -2496,7 +2496,7 @@
 
     document.getElementById("targetFilterSelect").addEventListener("change", (event) => {
       const value = event.target.value;
-      showToast(`被测对象列表已按「${value}」筛选。`);
+      showToast(`智能体版本列表已按「${value}」筛选。`);
     });
 
     document.getElementById("targetModeSelect").addEventListener("change", (event) => {
@@ -2537,7 +2537,7 @@
 
     document.getElementById("importDataset").addEventListener("click", () => {
       openModal("导入评测集预检", [
-        "已识别 JSONL / CSV / Benchmark Adapter 三种来源。",
+        "已识别 JSONL、CSV、公开基准适配器三种来源。",
         `当前建议映射到 ${evaluationContext.datasetVersion} 的候选快照。`,
         "预检会校验字段完整性、金丝雀泄漏、断言可执行性和来源授权。"
       ]);
@@ -2567,7 +2567,7 @@
     });
 
     document.getElementById("runTargetSelect").addEventListener("change", (event) => {
-      showToast(`运行输入已绑定被测对象：${event.target.value}。`);
+      showToast(`运行输入已绑定智能体版本：${event.target.value}。`);
     });
 
     document.getElementById("trialCountSelect").addEventListener("change", (event) => {
@@ -2575,7 +2575,7 @@
     });
 
     document.getElementById("gateRuleSelect").addEventListener("change", (event) => {
-      showToast(`门禁规则已更新：${event.target.value}。`);
+      showToast(`上线准入规则已更新：${event.target.value}。`);
     });
 
     document.getElementById("environmentSelect").addEventListener("change", (event) => {
@@ -2593,7 +2593,7 @@
         ...config.context,
         traceEntry: "运行创建 → 自动抽取失败轨迹"
       });
-      showToast(`评测运行已启动：${evaluationContext.runId}，包含重复试验和沙箱重置。`);
+      showToast(`评测运行已启动：${evaluationContext.runId}，包含重复试验和隔离环境重置。`);
     });
 
     document.getElementById("rerunUnstable").addEventListener("click", () => {
@@ -2608,12 +2608,12 @@
 
     document.getElementById("approveGate").addEventListener("click", () => {
       document.getElementById("gateStatus").textContent = "已批准 · 可以发布";
-      showToast("发布门禁已批准，证据包已附加。");
+      showToast("上线准入已批准，证据包已附加。");
     });
 
     document.getElementById("freezeJudge").addEventListener("click", () => {
-      document.getElementById("judgeStatus").textContent = "已从门禁排除";
-      showToast("弱裁判已从发布门禁决策中排除。");
+      document.getElementById("judgeStatus").textContent = "已从准入判断排除";
+      showToast("弱评分器已从上线准入决策中排除。");
     });
 
     document.getElementById("ingestTrace").addEventListener("click", () => {
@@ -2624,32 +2624,32 @@
         traceId: `prod_traj_${currentWorkspace}_20260611_1718`,
         trialId: `online_${currentWorkspace}_1718`
       });
-      showToast("5 条线上轨迹已进入回归回流队列。");
+      showToast("5 条线上轨迹已进入复测回流队列。");
     });
 
     document.getElementById("createWorkOrder").addEventListener("click", () => {
       document.getElementById("workOrders").textContent = formatCount(numericCount(document.getElementById("workOrders").textContent) + 1);
-      showToast(`已根据 ${evaluationContext.failureCluster} 创建数据工单。`);
+      showToast(`已根据 ${evaluationContext.failureCluster} 创建数据任务。`);
     });
 
     document.getElementById("runAudit").addEventListener("click", () => {
       document.getElementById("auditStatus").textContent = `证据包：就绪
 评测集快照：${evaluationContext.datasetVersion}
-被测对象：${evaluationContext.targetVersion}
+智能体版本：${evaluationContext.targetVersion}
 运行：${evaluationContext.runId}
 报告：${evaluationContext.reportId}
-门禁：已批准
-已排除裁判：safety_refusal_judge
+上线准入：已批准
+已排除评分器：safety_refusal_scorer
 数据授权：允许训练`;
       showToast("证据包已可导出。");
     });
 
     document.getElementById("openTargetRun").addEventListener("click", () => {
-      openWithContext("runs", { traceEntry: "被测对象注册表 → 用该对象新建运行" }, "已带入客服智能体版本，进入运行配置。");
+      openWithContext("runs", { traceEntry: "智能体版本注册表 → 用该版本新建运行" }, "已带入客服智能体版本，进入运行配置。");
     });
 
     document.getElementById("openTargetTrace").addEventListener("click", () => {
-      openWithContext("trace", { traceEntry: "被测对象注册表 → 查看最近失败轨迹" }, "已打开客服智能体最近失败轨迹。");
+      openWithContext("trace", { traceEntry: "智能体版本注册表 → 查看最近失败轨迹" }, "已打开客服智能体最近失败轨迹。");
     });
 
     document.getElementById("scoreUploadedTrace").addEventListener("click", () => {
@@ -2661,12 +2661,12 @@
         runId: "run_offline_trace_v4",
         trialId: "offline_trial_001",
         traceId: "offline_traj_001",
-        traceEntry: "被测对象注册表 → 离线轨迹进入评分队列"
+        traceEntry: "智能体版本注册表 → 离线轨迹进入评分队列"
       }, "离线轨迹已带入运行页，只执行评估不驱动 Agent。");
     });
 
     document.getElementById("openDatasetRun").addEventListener("click", () => {
-      openWithContext("runs", { traceEntry: "评测资产 → 客服运营回归集 → 新建运行" }, "已选择客服运营回归集 v43。");
+      openWithContext("runs", { traceEntry: "评测资产 → 客服运营复测集 → 新建运行" }, "已选择客服运营复测集 v43。");
     });
 
     document.getElementById("openCaseRun").addEventListener("click", () => {
@@ -2682,11 +2682,11 @@
     });
 
     document.getElementById("openTraceReport").addEventListener("click", () => {
-      openWithContext("reports", { traceEntry: "轨迹复核 → 查看对应报告" }, "已打开同一运行的门禁报告。");
+      openWithContext("reports", { traceEntry: "运行轨迹 → 查看对应报告" }, "已打开同一运行的上线准入报告。");
     });
 
     document.getElementById("openTraceDataLoop").addEventListener("click", () => {
-      openWithContext("data-loop", { failureCluster: "政策冲突澄清", traceEntry: "轨迹复核 → 生成数据工单" }, "已带入失败轨迹证据，进入数据闭环。");
+      openWithContext("data-loop", { failureCluster: "政策冲突澄清", traceEntry: "运行轨迹 → 生成数据任务" }, "已带入失败轨迹证据，进入数据闭环。");
     });
 
     document.getElementById("openReportTrace").addEventListener("click", () => {
@@ -2694,7 +2694,7 @@
     });
 
     document.getElementById("openReportCalibration").addEventListener("click", () => {
-      openWithContext("calibration", { traceEntry: "报告 → 查看裁判依据" }, "已打开该报告关联的裁判校准证据。");
+      openWithContext("calibration", { traceEntry: "报告 → 查看评分依据" }, "已打开该报告关联的评分器校准证据。");
     });
 
     document.getElementById("openFixedTrace").addEventListener("click", () => {
@@ -2707,12 +2707,12 @@
         failureCluster: "超时后的工具恢复",
         evidenceStep: "step_004 retry_tool_call",
         traceId: "traj_tool_recovery_0184",
-        traceEntry: "报告版本对比 → 持续失败 → 数据工单"
+        traceEntry: "报告版本对比 → 持续失败 → 数据任务"
       }, "已打开持续失败聚类对应的数据闭环。");
     });
 
     document.getElementById("openCalibrationReport").addEventListener("click", () => {
-      openWithContext("reports", { traceEntry: "裁判校准 → 回到报告" }, "已返回同一报告。");
+      openWithContext("reports", { traceEntry: "评分器校准 → 回到报告" }, "已返回同一报告。");
     });
 
     document.getElementById("openOnlineTrace").addEventListener("click", () => {
@@ -2722,7 +2722,7 @@
         trialId: `online_${currentWorkspace}_1718`,
         trialNumber: "线上样本",
         traceId: `prod_traj_${currentWorkspace}_20260611_1718`
-      }, "已打开线上回流轨迹，尚未进入回归集。");
+      }, "已打开线上回流轨迹，尚未进入复测集。");
     });
 
     document.getElementById("openFeedbackCandidate").addEventListener("click", () => {
@@ -2735,7 +2735,7 @@
     });
 
     document.getElementById("openDataLoopTrace").addEventListener("click", () => {
-      openWithContext("trace", { traceEntry: "数据闭环 → 回看证据轨迹" }, "已回到数据工单关联的证据轨迹。");
+      openWithContext("trace", { traceEntry: "数据闭环 → 回看证据轨迹" }, "已回到数据任务关联的证据轨迹。");
     });
 
     document.getElementById("openPolicyTrace").addEventListener("click", () => {
@@ -2754,9 +2754,9 @@
     document.getElementById("createCustomerGuide").addEventListener("click", () => {
       openModal("客户实施说明草稿", [
         `客户场景：${workspaceConfigs[currentWorkspace].label}`,
-        `被测对象：${evaluationContext.targetVersion}`,
+        `智能体版本：${evaluationContext.targetVersion}`,
         `评测集：${evaluationContext.datasetVersion}`,
-        "已自动填入接入方式、运行门禁、复核流程和证据包交付项。"
+        "已自动填入接入方式、上线准入、复核流程和证据包交付项。"
       ]);
       showToast("客户实施说明已生成草稿。");
     });
