@@ -77,6 +77,7 @@ for (const text of forbiddenCustomerCopy) {
 }
 
 const requiredProductTerms = [
+  "智能体列表",
   "智能体版本",
   "评测资产",
   "评测运行",
@@ -86,6 +87,7 @@ const requiredProductTerms = [
   "在线监控",
   "数据闭环",
   "管理",
+  "运行目的",
   "上线准入",
   "3 次内成功率",
   "连续 3 次成功率",

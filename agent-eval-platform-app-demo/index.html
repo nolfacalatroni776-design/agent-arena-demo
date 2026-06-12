@@ -996,7 +996,7 @@
       <nav class="nav" aria-label="工作区导航">
         <div class="nav-title">工作区</div>
         <button class="active" data-view="home"><span class="emoji">⌂</span><span>首页</span><small>42</small></button>
-        <button data-view="targets" data-tip="这里管理要被评测的 Agent、机器人或自动化流程版本；平台会按版本保存接入方式、工具清单和运行证据。"><span class="emoji">◈</span><span>智能体版本</span><small id="targetCount">18</small></button>
+        <button data-view="targets" data-tip="这里管理要接入和评测的 Agent、机器人或自动化流程；进入详情后可查看具体版本、接入方式和运行证据。"><span class="emoji">◈</span><span>智能体列表</span><small id="targetCount">18</small></button>
         <button data-view="assets"><span class="emoji">▦</span><span>评测资产</span><small id="assetCount">9,420</small></button>
         <button data-view="runs"><span class="emoji">▶</span><span>评测运行</span><small>31</small></button>
         <button data-view="trace" data-tip="运行轨迹记录 Agent 每一步输入、工具调用、页面操作、结果和证据，方便定位失败原因。"><span class="emoji">⌁</span><span>运行轨迹</span><small>7</small></button>
@@ -1019,7 +1019,7 @@
     <main class="main">
       <header class="topbar">
         <div class="breadcrumb" id="breadcrumb">Acme AI 平台 / 客服运营 / 评测工作区</div>
-        <button class="search" id="globalSearch" type="button">搜索智能体版本、样例、运行、轨迹、报告...</button>
+        <button class="search" id="globalSearch" type="button">搜索智能体、版本、样例、运行、轨迹、报告...</button>
         <div class="top-actions">
           <select class="select" id="workspaceMode" aria-label="工作区模式">
             <option value="support">客服运营</option>
@@ -1061,7 +1061,7 @@
             <div class="card metric" data-tip="上线准入决定某个 Agent 版本是否可以进入发布或生产；它会综合重复试验、评分器健康度和结果可信范围。">
               <span id="metricGateLabel">上线准入</span>
               <strong id="metricGateValue">68%</strong>
-              <small id="metricGateText">覆盖活跃智能体版本的 CI 发布检查</small>
+              <small id="metricGateText">覆盖活跃智能体的 CI 发布检查</small>
             </div>
             <div class="card metric" data-tip="评分器一致率表示自动评分结果和人工确认结果有多接近；低一致率评分器不能单独决定上线。">
               <span>评分器一致率</span>
@@ -1084,7 +1084,7 @@
               <div class="database">
                 <table>
                   <thead>
-                    <tr><th>动作</th><th>对象</th><th>负责人</th><th>影响</th><th>状态</th></tr>
+                    <tr><th>动作</th><th>关联项</th><th>负责人</th><th>影响</th><th>状态</th></tr>
                   </thead>
                   <tbody>
                     <tr id="taskRow1"><td>复核新增失败样例</td><td>客服运营复测集</td><td>AI 平台</td><td><span class="badge red">高</span></td><td><span class="badge amber">今日到期</span></td></tr>
@@ -1112,7 +1112,7 @@
             <div class="template-grid">
               <div class="template-card" data-view="targets">
                 <div class="template-preview"><div class="mini-line"></div><div class="mini-line mid"></div><div class="mini-line short"></div></div>
-                <div class="template-body"><h4>智能体版本注册表</h4><p id="pinnedTargetsText">18 个版本 · 4 个健康检查异常</p><span class="badge blue">打开</span></div>
+                <div class="template-body"><h4>智能体列表</h4><p id="pinnedTargetsText">18 个智能体 · 4 个健康检查异常</p><span class="badge blue">打开</span></div>
               </div>
               <div class="template-card" data-view="assets">
                 <div class="template-preview"><div class="mini-line mid"></div><div class="mini-line"></div><div class="mini-line short"></div></div>
@@ -1129,9 +1129,9 @@
         <section class="view" id="targets">
           <div class="page-title">
             <div class="icon">◈</div>
-            <h1>智能体版本</h1>
+            <h1>智能体列表</h1>
             <div class="page-meta">
-              <span class="prop">18 个活跃对象</span>
+              <span class="prop">18 个活跃智能体</span>
               <span class="prop">4 种接入模式</span>
               <span class="prop" data-tip="轨迹结构定义每一步运行记录需要包含哪些字段，例如输入、工具调用、状态变化和证据。">轨迹结构 · 当前版本</span>
               <span class="prop">密钥 · 租户隔离</span>
@@ -1140,20 +1140,20 @@
 
           <div class="toolbar">
             <div class="toolbar-left">
-              <button class="btn primary" id="addTarget" data-tip="创建可复现的智能体版本，并记录运行时、工具清单、提示词和凭据策略。">添加智能体版本</button>
+              <button class="btn primary" id="addTarget" data-tip="添加一个要接入和评测的智能体；保存时会自动生成可追溯的版本记录。">添加智能体</button>
               <button class="btn" id="uploadTrace" data-tip="客户不希望改造生产代码时，可使用离线轨迹上传完成评估。">上传轨迹</button>
               <button class="btn" id="openIntegrationGuide" data-tip="接入指南会根据 API、SDK、纯轨迹、MCP 和浏览器操作模式切换。">接入指南</button>
             </div>
             <div class="toolbar-right">
-              <select class="select" id="targetFilterSelect" aria-label="智能体版本筛选"><option>全部接入模式</option><option>API</option><option>SDK</option><option>轨迹上传</option><option>浏览器操作</option></select>
+              <select class="select" id="targetFilterSelect" aria-label="智能体列表筛选"><option>全部接入模式</option><option>API</option><option>SDK</option><option>轨迹上传</option><option>浏览器操作</option></select>
             </div>
           </div>
 
-          <div class="source-strip" data-tip="当前页的智能体版本会作为后续评测运行、轨迹复核、报告和证据包的来源字段。">
+          <div class="source-strip" data-tip="当前选择的智能体版本会作为后续评测运行、轨迹复核、报告和证据包的来源字段。">
             <strong>当前选择 · <span data-field="targetName">客服智能体</span></strong>
-            <div class="source-path">来源链路：智能体版本注册表 → 选择版本 → 克隆评测集 → 新建运行</div>
+            <div class="source-path">来源链路：智能体列表 → 选择版本 → 克隆评测集 → 新建运行</div>
             <div class="source-fields">
-              <span class="prop" data-tip="Target 是平台内部字段，表示当前被评测的 Agent 或自动化流程版本。">智能体版本 · <span data-field="targetVersion">support-agent_2026_06_11</span></span>
+              <span class="prop" data-tip="平台会把当前被评测的 Agent 或自动化流程保存为可追溯的版本记录，后续运行、轨迹和报告都引用同一份记录。">智能体版本 · <span data-field="targetVersion">support-agent_2026_06_11</span></span>
               <span class="prop">接入 · <span data-field="targetMode">API 端点</span></span>
               <span class="prop">健康检查 · 通过</span>
               <button class="btn mini" id="openTargetRun">用该版本新建运行</button>
@@ -1162,7 +1162,7 @@
 
           <div class="grid cols-main">
             <div class="card">
-              <h3>智能体版本注册表</h3>
+              <h3>智能体列表</h3>
               <div class="database">
                 <table>
                   <thead><tr><th>名称</th><th>版本</th><th>接入</th><th>健康度</th><th>最近运行</th></tr></thead>
@@ -1179,7 +1179,7 @@
             <div class="card side-panel">
               <h3>接入配置 <span class="help" tabindex="0" data-tip="接入配置可选择 API 驱动、离线轨迹、SDK 埋点、MCP/A2A 中介，或浏览器/电脑操作隔离测试环境。">?</span></h3>
               <div class="form-grid">
-                <label class="full" data-tip="对象名称用于识别；评分绑定到不可变的对象版本。">对象名称<input class="input" id="targetNameInput" value="客服智能体"></label>
+                <label class="full" data-tip="智能体名称用于识别；评分绑定到不可变的智能体版本。">智能体名称<input class="input" id="targetNameInput" value="客服智能体"></label>
                 <label data-tip="接入模式决定平台如何驱动执行并采集轨迹。">模式<select class="select" id="targetModeSelect"><option>API 端点</option><option>离线轨迹上传</option><option>SDK 埋点</option><option>MCP 工具中介</option><option>浏览器操作</option></select></label>
                 <label data-tip="凭据加密存储，并按租户或客户自有密钥库隔离。">凭据策略<select class="select" id="credentialPolicySelect"><option>租户加密密钥</option><option>客户 VPC 密钥</option><option>无需凭据</option></select></label>
                 <label class="full" data-tip="端点可兼容 OpenAI 格式，也可配置自定义请求/响应映射。">端点<input class="input" id="targetEndpointInput" value="https://agent.internal/v1/chat/completions"></label>
@@ -1311,7 +1311,7 @@
               <h3>新建评测运行</h3>
               <div class="source-strip" style="margin-bottom:12px;" data-tip="新建运行会绑定当前智能体版本、评测集、环境和评估器版本，后续轨迹、报告、数据任务都继承同一个运行快照（Run Snapshot）。">
                 <strong>运行输入 · <span data-field="runName">客服运营上线准入</span></strong>
-                <div class="source-path">来源链路：智能体版本选择 <span data-field="targetVersion">support-agent_2026_06_11</span> → 评测资产选择 <span data-field="datasetVersion">v43</span> → 评测运行创建 <span data-field="runId">run_20260611_1842</span></div>
+                <div class="source-path">来源链路：智能体列表 → 选择版本 <span data-field="targetVersion">support-agent_2026_06_11</span> → 评测资产选择 <span data-field="datasetVersion">v43</span> → 评测运行创建 <span data-field="runId">run_20260611_1842</span></div>
                 <div class="source-fields">
                   <span class="prop" data-tip="样例是一次评测任务的输入、期望行为和校验规则。">样例 · <span data-field="caseId">coupon_conflict_0817</span></span>
                   <span class="prop" data-tip="单次试验是同一个样例的一次独立运行；重复试验用于衡量稳定性。">单次试验 · <span data-field="trialId">trial_002</span></span>
@@ -1321,8 +1321,9 @@
               <div class="form-grid">
                 <label data-tip="评测运行绑定不可变评测集版本，保证报告可横向比较。">评测集<select class="select" id="runDatasetSelect"><option>客服运营复测集 · v43</option><option>安全红队包 · v18</option></select></label>
                 <label data-tip="同一套件可跨多个智能体版本使用，用于模型选型或复测检查。">智能体版本<select class="select" id="runTargetSelect"><option>客服智能体 · 2026.06.11</option><option>基线智能体 · 2026.05.28</option></select></label>
+                <label data-tip="运行目的说明这次评测为什么执行，会影响调度时间、报告模板和是否进入上线审批；它不是通过或失败的判定规则。">运行目的<select class="select" id="runPurposeSelect"><option>发布前检查</option><option>夜间复测</option><option>探索分析</option></select></label>
                 <label data-tip="重复试验通过 3 次内成功率（pass@k）、连续 k 次成功率（pass^k）、波动范围和结果可信范围量化非确定性。">每样例试验次数<select class="select" id="trialCountSelect"><option>重复 3 次</option><option>重复 5 次</option><option>10 次稳定性审计</option></select></label>
-                <label data-tip="准入规则组合阈值、基线对比、评分器健康度和安全约束，决定是否允许发布或进入生产。">上线准入规则<select class="select" id="gateRuleSelect"><option>发布准入 · 无新增关键失败</option><option>夜间复测</option><option>探索运行</option></select></label>
+                <label data-tip="上线准入规则只描述能否发布或进入生产的判定条件，例如关键失败、稳定性、安全策略和基线对比。">上线准入规则<select class="select" id="gateRuleSelect"><option>无新增关键失败</option><option>关键能力稳定达标</option><option>安全策略全部通过</option></select></label>
                 <label data-tip="隔离测试环境会隔离副作用，并使用独立终态校验器确认任务结果。">环境<select class="select" id="environmentSelect"><option>Kubernetes 隔离环境 + 模拟工具</option><option>仅 API</option><option>浏览器集群</option></select></label>
                 <label data-tip="预算硬停止可避免智能体版本和评分器调用静默超支。">预算<select class="select" id="budgetSelect"><option>$480 硬停止</option><option>$1,000 硬停止</option></select></label>
               </div>
@@ -1786,7 +1787,7 @@
           decisionText: "31 次发布 · 4 次回滚 · 12 次选型",
           gateLabel: "上线准入",
           gateValue: "68%",
-          gateText: "覆盖活跃智能体版本的 CI 发布检查",
+          gateText: "覆盖活跃智能体的 CI 发布检查",
           judgeValue: "0.86",
           judgeText: "3 个评分器需要校准",
           assetsValue: "9,420",
@@ -1798,7 +1799,7 @@
           ["校准安全评分器", "风险拒答评分器", "标注运营", "中", "低于阈值", "amber", "red"],
           ["创建训练数据任务", "工具恢复失败", "数据运营", "增长", "草稿", "purple", ""]
         ],
-        pinned: ["18 个版本 · 4 个健康检查异常", "9,420 个资产 · 本月新增 184 个", "31 个运行中 · 7 个等待复核"],
+        pinned: ["18 个智能体 · 4 个健康检查异常", "9,420 个资产 · 本月新增 184 个", "31 个运行中 · 7 个等待复核"],
         context: {
           targetName: "客服智能体",
           targetVersion: "support-agent_2026_06_11",
@@ -1886,7 +1887,7 @@
           ["校准金额容差评分器", "invoice_amount_scorer", "标注运营", "中", "低于阈值", "amber", "red"],
           ["创建发票抽取数据任务", "税率识别失败", "数据运营", "增长", "草稿", "purple", ""]
         ],
-        pinned: ["12 个版本 · 2 个健康检查异常", "5,860 个资产 · 本月新增 96 个", "18 个运行中 · 5 个等待复核"],
+        pinned: ["12 个智能体 · 2 个健康检查异常", "5,860 个资产 · 本月新增 96 个", "18 个运行中 · 5 个等待复核"],
         context: {
           targetName: "财务对账智能体",
           targetVersion: "finance-agent_2026_06_08",
@@ -1974,7 +1975,7 @@
           ["校准 DOM 终态校验", "checkout_dom_checker", "评测工程", "中", "需复核", "amber", "red"],
           ["创建网页异常数据任务", "地址表单恢复失败", "数据运营", "增长", "草稿", "purple", ""]
         ],
-        pinned: ["9 个版本 · 3 个隔离环境异常", "3,240 个资产 · 本月新增 63 个", "14 个运行中 · 9 个等待复核"],
+        pinned: ["9 个智能体 · 3 个隔离环境异常", "3,240 个资产 · 本月新增 63 个", "14 个运行中 · 9 个等待复核"],
         context: {
           targetName: "浏览器下单智能体",
           targetVersion: "browser-agent_2026_06_02",
@@ -2228,7 +2229,7 @@
         if (node) node.onclick = handler;
       };
       bind("openTargetTrace", () => {
-        openWithContext("trace", { traceEntry: "智能体版本注册表 → 查看最近失败轨迹" }, "已打开当前工作区最近失败轨迹。");
+        openWithContext("trace", { traceEntry: "智能体列表 → 查看最近失败轨迹" }, "已打开当前工作区最近失败轨迹。");
       });
       bind("scoreUploadedTrace", () => {
         openWithContext("runs", {
@@ -2239,7 +2240,7 @@
           runId: "run_offline_trace_v4",
           trialId: "offline_trial_001",
           traceId: "offline_traj_001",
-          traceEntry: "智能体版本注册表 → 离线轨迹进入评分队列"
+          traceEntry: "智能体列表 → 离线轨迹进入评分队列"
         }, "离线轨迹已带入运行页，只执行评估不驱动 Agent。");
       });
       bind("openCaseTrace", () => {
@@ -2472,11 +2473,11 @@
           runName: `${config.label}首次复测`,
           runId: `run_${currentWorkspace}_pilot_20260612`,
           reportId: `report_${currentWorkspace}_pilot_20260612`,
-          traceEntry: "智能体版本注册表 → 开始首次运行"
+          traceEntry: "智能体列表 → 开始首次运行"
         }, `已选择${config.label}试点，可创建首次运行。`);
       });
       bindDynamicActions();
-      showToast("智能体版本已添加，连接健康检查通过。");
+      showToast("智能体已添加，并生成可追溯版本记录。");
     });
 
     document.getElementById("uploadTrace").addEventListener("click", () => {
@@ -2496,7 +2497,7 @@
 
     document.getElementById("targetFilterSelect").addEventListener("change", (event) => {
       const value = event.target.value;
-      showToast(`智能体版本列表已按「${value}」筛选。`);
+      showToast(`智能体列表已按「${value}」筛选。`);
     });
 
     document.getElementById("targetModeSelect").addEventListener("change", (event) => {
@@ -2568,6 +2569,10 @@
 
     document.getElementById("runTargetSelect").addEventListener("change", (event) => {
       showToast(`运行输入已绑定智能体版本：${event.target.value}。`);
+    });
+
+    document.getElementById("runPurposeSelect").addEventListener("change", (event) => {
+      showToast(`运行目的已更新：${event.target.value}。`);
     });
 
     document.getElementById("trialCountSelect").addEventListener("change", (event) => {
@@ -2645,11 +2650,11 @@
     });
 
     document.getElementById("openTargetRun").addEventListener("click", () => {
-      openWithContext("runs", { traceEntry: "智能体版本注册表 → 用该版本新建运行" }, "已带入客服智能体版本，进入运行配置。");
+      openWithContext("runs", { traceEntry: "智能体列表 → 用该版本新建运行" }, "已带入客服智能体版本，进入运行配置。");
     });
 
     document.getElementById("openTargetTrace").addEventListener("click", () => {
-      openWithContext("trace", { traceEntry: "智能体版本注册表 → 查看最近失败轨迹" }, "已打开客服智能体最近失败轨迹。");
+      openWithContext("trace", { traceEntry: "智能体列表 → 查看最近失败轨迹" }, "已打开客服智能体最近失败轨迹。");
     });
 
     document.getElementById("scoreUploadedTrace").addEventListener("click", () => {
@@ -2661,7 +2666,7 @@
         runId: "run_offline_trace_v4",
         trialId: "offline_trial_001",
         traceId: "offline_traj_001",
-        traceEntry: "智能体版本注册表 → 离线轨迹进入评分队列"
+        traceEntry: "智能体列表 → 离线轨迹进入评分队列"
       }, "离线轨迹已带入运行页，只执行评估不驱动 Agent。");
     });
 
