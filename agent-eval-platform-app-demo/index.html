@@ -910,21 +910,21 @@
       </nav>
 
       <div class="sidebar-note">
-        <strong>客服智能体 v18</strong>
-        <span>不稳定样例复跑后可进入门禁审批。</span>
-        <span class="badge green">发布窗口 18:00</span>
+        <strong id="sidebarContextTitle">客服智能体 v18</strong>
+        <span id="sidebarContextText">不稳定样例复跑后可进入门禁审批。</span>
+        <span class="badge green" id="sidebarContextBadge">发布窗口 18:00</span>
       </div>
     </aside>
 
     <main class="main">
       <header class="topbar">
-        <div class="breadcrumb">Acme AI 平台 / 客服运营 / 评测工作区</div>
+        <div class="breadcrumb" id="breadcrumb">Acme AI 平台 / 客服运营 / 评测工作区</div>
         <div class="search">搜索被测对象、样例、运行、轨迹、报告...</div>
         <div class="top-actions">
-          <select class="select" aria-label="工作区模式">
-            <option>客服运营</option>
-            <option>财务智能体</option>
-            <option>浏览器操作实验室</option>
+          <select class="select" id="workspaceMode" aria-label="工作区模式">
+            <option value="support">客服运营</option>
+            <option value="finance">财务智能体</option>
+            <option value="browser">浏览器操作实验室</option>
           </select>
           <button class="btn" id="quickTour">命令面板</button>
           <button class="btn primary" data-view="runs">新建运行</button>
@@ -938,7 +938,7 @@
             <h1>评测工作区</h1>
             <div class="page-meta">
               <span class="prop">负责人 · AI 平台</span>
-              <span class="prop">项目 · 客服运营</span>
+              <span class="prop">项目 · <span id="homeProject">客服运营</span></span>
               <span class="prop">决策 SLA · 4 小时</span>
               <span class="prop">最近同步 · 2026-06-11</span>
             </div>
@@ -954,23 +954,23 @@
           <div class="grid cols-4">
             <div class="card metric" data-tip="本周基于平台证据做出的发布、回滚、模型选型或数据生产决策。">
               <span>本周决策</span>
-              <strong>47</strong>
-              <small>31 次发布 · 4 次回滚 · 12 次选型</small>
+              <strong id="metricDecisions">47</strong>
+              <small id="metricDecisionText">31 次发布 · 4 次回滚 · 12 次选型</small>
             </div>
             <div class="card metric" data-tip="发布门禁使用重复试验、裁判健康度和置信区间，而不是依赖单次分数。">
-              <span>发布门禁</span>
-              <strong>68%</strong>
-              <small>覆盖活跃被测对象的 CI 门禁</small>
+              <span id="metricGateLabel">发布门禁</span>
+              <strong id="metricGateValue">68%</strong>
+              <small id="metricGateText">覆盖活跃被测对象的 CI 门禁</small>
             </div>
             <div class="card metric" data-tip="裁判健康度由金标准一致率和人工抽检结果持续更新。">
               <span>裁判一致率</span>
-              <strong>0.86</strong>
-              <small>3 个裁判需要校准</small>
+              <strong id="metricJudgeValue">0.86</strong>
+              <small id="metricJudgeText">3 个裁判需要校准</small>
             </div>
             <div class="card metric" data-tip="可复用资产包括评测集、样例、环境模板、Mock 工具、评估器、Rubric 和金标准轨迹。">
               <span>评测资产</span>
-              <strong>9,420</strong>
-              <small>本月新增 184 个</small>
+              <strong id="metricAssetsValue">9,420</strong>
+              <small id="metricAssetsText">本月新增 184 个</small>
             </div>
           </div>
 
@@ -986,10 +986,10 @@
                     <tr><th>动作</th><th>对象</th><th>负责人</th><th>影响</th><th>状态</th></tr>
                   </thead>
                   <tbody>
-                    <tr><td>复核新增失败样例</td><td>客服运营回归集</td><td>AI 平台</td><td><span class="badge red">高</span></td><td><span class="badge amber">今日到期</span></td></tr>
-                    <tr><td>批准发布门禁</td><td>客服智能体 v18</td><td>智能体团队</td><td><span class="badge green">就绪</span></td><td><span class="badge blue">证据已附加</span></td></tr>
-                    <tr><td>校准安全裁判</td><td>风险拒答裁判</td><td>标注运营</td><td><span class="badge amber">中</span></td><td><span class="badge red">低于阈值</span></td></tr>
-                    <tr><td>创建训练数据工单</td><td>工具恢复失败</td><td>数据运营</td><td><span class="badge purple">增长</span></td><td><span class="badge">草稿</span></td></tr>
+                    <tr id="taskRow1"><td>复核新增失败样例</td><td>客服运营回归集</td><td>AI 平台</td><td><span class="badge red">高</span></td><td><span class="badge amber">今日到期</span></td></tr>
+                    <tr id="taskRow2"><td>批准发布门禁</td><td>客服智能体 v18</td><td>智能体团队</td><td><span class="badge green">就绪</span></td><td><span class="badge blue">证据已附加</span></td></tr>
+                    <tr id="taskRow3"><td>校准安全裁判</td><td>风险拒答裁判</td><td>标注运营</td><td><span class="badge amber">中</span></td><td><span class="badge red">低于阈值</span></td></tr>
+                    <tr id="taskRow4"><td>创建训练数据工单</td><td>工具恢复失败</td><td>数据运营</td><td><span class="badge purple">增长</span></td><td><span class="badge">草稿</span></td></tr>
                   </tbody>
                 </table>
               </div>
@@ -1011,15 +1011,15 @@
             <div class="template-grid">
               <div class="template-card" data-view="targets">
                 <div class="template-preview"><div class="mini-line"></div><div class="mini-line mid"></div><div class="mini-line short"></div></div>
-                <div class="template-body"><h4>被测对象注册表</h4><p>18 个对象 · 4 个健康检查异常</p><span class="badge blue">打开</span></div>
+                <div class="template-body"><h4>被测对象注册表</h4><p id="pinnedTargetsText">18 个对象 · 4 个健康检查异常</p><span class="badge blue">打开</span></div>
               </div>
               <div class="template-card" data-view="assets">
                 <div class="template-preview"><div class="mini-line mid"></div><div class="mini-line"></div><div class="mini-line short"></div></div>
-                <div class="template-body"><h4>评测资产</h4><p>9,420 个资产 · 本月新增 184 个</p><span class="badge green">打开</span></div>
+                <div class="template-body"><h4>评测资产</h4><p id="pinnedAssetsText">9,420 个资产 · 本月新增 184 个</p><span class="badge green">打开</span></div>
               </div>
               <div class="template-card" data-view="runs">
                 <div class="template-preview"><div class="mini-line"></div><div class="mini-line"></div><div class="mini-line mid"></div></div>
-                <div class="template-body"><h4>运行队列</h4><p>31 个运行中 · 7 个等待复核</p><span class="badge amber">打开</span></div>
+                <div class="template-body"><h4>运行队列</h4><p id="pinnedRunsText">31 个运行中 · 7 个等待复核</p><span class="badge amber">打开</span></div>
               </div>
             </div>
           </div>
@@ -1078,10 +1078,10 @@
             <div class="card side-panel">
               <h3>接入配置 <span class="help" tabindex="0" data-tip="接入配置可选择 API 驱动、离线轨迹、SDK 埋点、MCP/A2A 中介，或浏览器/电脑操作沙箱。">?</span></h3>
               <div class="form-grid">
-                <label class="full" data-tip="对象名称用于识别；评分绑定到不可变的对象版本。">对象名称<input class="input" value="客服智能体"></label>
-                <label data-tip="接入模式决定平台如何驱动执行并采集轨迹。">模式<select class="select"><option>API 端点</option><option>离线轨迹上传</option><option>SDK 埋点</option><option>MCP 工具中介</option><option>浏览器操作</option></select></label>
+                <label class="full" data-tip="对象名称用于识别；评分绑定到不可变的对象版本。">对象名称<input class="input" id="targetNameInput" value="客服智能体"></label>
+                <label data-tip="接入模式决定平台如何驱动执行并采集轨迹。">模式<select class="select" id="targetModeSelect"><option>API 端点</option><option>离线轨迹上传</option><option>SDK 埋点</option><option>MCP 工具中介</option><option>浏览器操作</option></select></label>
                 <label data-tip="凭据加密存储，并按租户或客户自有密钥库隔离。">凭据策略<select class="select"><option>租户加密密钥</option><option>客户 VPC 密钥</option><option>无需凭据</option></select></label>
-                <label class="full" data-tip="端点可兼容 OpenAI 格式，也可配置自定义请求/响应映射。">端点<input class="input" value="https://agent.internal/v1/chat/completions"></label>
+                <label class="full" data-tip="端点可兼容 OpenAI 格式，也可配置自定义请求/响应映射。">端点<input class="input" id="targetEndpointInput" value="https://agent.internal/v1/chat/completions"></label>
               </div>
               <div class="button-row" style="margin-top:12px;">
                 <button class="btn primary">测试连接</button>
@@ -1117,7 +1117,7 @@
           <div class="template-grid">
             <div class="template-card" id="openDatasetRun" data-tip="可复用客服评测套件，包含任务、断言、金标准轨迹和 Mock CRM 工具。">
               <div class="template-preview"><div class="mini-line"></div><div class="mini-line mid"></div><div class="mini-line short"></div></div>
-              <div class="template-body"><h4>客服运营回归集</h4><p>1,920 个样例 · 18 个环境 · 42 个评估器</p><div class="chips"><span class="badge green">已版本化</span><span class="badge">私有</span></div></div>
+              <div class="template-body"><h4 id="primaryDatasetTitle">客服运营回归集</h4><p id="primaryDatasetText">1,920 个样例 · 18 个环境 · 42 个评估器</p><div class="chips"><span class="badge green">已版本化</span><span class="badge">私有</span></div></div>
             </div>
             <div class="template-card" data-tip="浏览器任务使用 Playwright 终态校验，并保留截图证据。">
               <div class="template-preview"><div class="mini-line short"></div><div class="mini-line"></div><div class="mini-line mid"></div></div>
@@ -1146,7 +1146,7 @@
               <div class="database">
                 <table>
                   <thead><tr><th>样例</th><th>能力</th><th>来源</th><th>环境</th><th>状态</th><th>动作</th></tr></thead>
-                  <tbody>
+                  <tbody id="caseTable">
                     <tr><td>优惠券冲突退款</td><td>工具参数 + 政策规则</td><td><span class="badge blue">线上回流</span></td><td>CRM 沙箱</td><td><span class="badge green">已批准</span></td><td><button class="btn mini" id="openCaseTrace">查看对应失败轨迹</button></td></tr>
                     <tr><td>PII 导出拒答</td><td>安全策略</td><td><span class="badge red">红队</span></td><td>Mock 数据仓库</td><td><span class="badge green">门禁集</span></td><td><button class="btn mini" data-flow="security">查看门禁覆盖</button></td></tr>
                     <tr><td>发票表格歧义</td><td>多模态抽取</td><td><span class="badge purple">专家编写</span></td><td>文件沙箱</td><td><span class="badge amber">待复核</span></td><td><button class="btn mini" data-flow="invoice">分配人工复核</button></td></tr>
@@ -1190,8 +1190,8 @@
                 </div>
               </div>
               <div class="form-grid">
-                <label data-tip="评测运行绑定不可变评测集版本，保证报告可横向比较。">评测集<select class="select"><option>客服运营回归集 · v43</option><option>安全红队包 · v18</option></select></label>
-                <label data-tip="同一套件可跨多个被测对象版本使用，用于模型选型或回归检查。">被测对象<select class="select"><option>客服智能体 · 2026.06.11</option><option>基线智能体 · 2026.05.28</option></select></label>
+                <label data-tip="评测运行绑定不可变评测集版本，保证报告可横向比较。">评测集<select class="select" id="runDatasetSelect"><option>客服运营回归集 · v43</option><option>安全红队包 · v18</option></select></label>
+                <label data-tip="同一套件可跨多个被测对象版本使用，用于模型选型或回归检查。">被测对象<select class="select" id="runTargetSelect"><option>客服智能体 · 2026.06.11</option><option>基线智能体 · 2026.05.28</option></select></label>
                 <label data-tip="重复试验通过 pass@k、pass^k、方差和置信区间量化非确定性。">每样例试验次数<select class="select"><option>重复 3 次</option><option>重复 5 次</option><option>10 次稳定性审计</option></select></label>
                 <label data-tip="门禁规则组合阈值、基线对比、裁判健康度和安全约束。">门禁规则<select class="select"><option>发布门禁 · 无新增关键失败</option><option>夜间回归</option><option>探索运行</option></select></label>
                 <label data-tip="沙箱任务隔离副作用，并使用独立终态校验器。">环境<select class="select"><option>Kubernetes 沙箱 + Mock 工具</option><option>仅 API</option><option>浏览器集群</option></select></label>
@@ -1219,7 +1219,7 @@
               <div class="database">
                 <table>
                 <thead><tr><th>运行</th><th>被测对象</th><th>套件</th><th>进度</th><th>决策</th><th>动作</th></tr></thead>
-                <tbody>
+                <tbody id="runQueueTable">
                   <tr><td>客服运营发布门禁</td><td>客服智能体</td><td>回归集 v43</td><td><div class="progress"><span class="bar green" style="--w:92%"></span></div></td><td><span class="badge green">就绪</span></td><td><button class="btn mini" id="openRunTrace">查看失败轨迹</button></td></tr>
                   <tr><td>浏览器下单稳定性</td><td>浏览器智能体</td><td>下单实验室</td><td><div class="progress"><span class="bar amber" style="--w:61%"></span></div></td><td><span class="badge amber">观察</span></td><td><button class="btn mini" data-flow="browser">查看沙箱截图</button></td></tr>
                 </tbody>
@@ -1259,10 +1259,12 @@
                 <button class="btn primary" id="markStep" data-tip="步骤级标签会成为后续裁判和报告使用的金标准失败归因数据。">标记所选步骤</button>
               </div>
               <div class="timeline">
-                <div class="step"><strong>00:01</strong><span class="badge blue">用户</span><div>客户要求退款，同时保留优惠券权益。</div><span></span></div>
-                <div class="step"><strong>00:04</strong><span class="badge green">工具调用</span><div>order.lookup 返回 coupon_redeemed=true，refund_window=open。</div><span class="badge green">正确</span></div>
-                <div class="step"><strong>00:07</strong><span class="badge red">工具调用</span><div>refund.request(amount=full) 在检查政策冲突前被执行。</div><span class="badge red" id="selectedStep">待标注</span></div>
-                <div class="step"><strong>00:09</strong><span class="badge amber">状态变化</span><div>CRM 审计备注为空，退款状态被阻断。</div><span class="badge amber">证据</span></div>
+                <div id="traceTimeline">
+                  <div class="step"><strong>00:01</strong><span class="badge blue">用户</span><div>客户要求退款，同时保留优惠券权益。</div><span></span></div>
+                  <div class="step"><strong>00:04</strong><span class="badge green">工具调用</span><div>order.lookup 返回 coupon_redeemed=true，refund_window=open。</div><span class="badge green">正确</span></div>
+                  <div class="step"><strong>00:07</strong><span class="badge red">工具调用</span><div>refund.request(amount=full) 在检查政策冲突前被执行。</div><span class="badge red" id="selectedStep">待标注</span></div>
+                  <div class="step"><strong>00:09</strong><span class="badge amber">状态变化</span><div>CRM 审计备注为空，退款状态被阻断。</div><span class="badge amber">证据</span></div>
+                </div>
               </div>
             </div>
             <div class="card side-panel">
@@ -1305,10 +1307,10 @@
           </div>
 
           <div class="grid cols-4">
-            <div class="card metric"><span>成功率</span><strong>82%</strong><small>置信区间 ±3%</small></div>
-            <div class="card metric"><span>pass@3</span><strong>91%</strong><small>考虑重试的可靠性</small></div>
-            <div class="card metric"><span>pass^3</span><strong>74%</strong><small>连续成功率</small></div>
-            <div class="card metric"><span>单任务成本</span><strong>$0.21</strong><small>缓存节省 31%</small></div>
+            <div class="card metric"><span>成功率</span><strong id="reportSuccessMetric">82%</strong><small>置信区间 ±3%</small></div>
+            <div class="card metric"><span>pass@3</span><strong id="reportPassAtMetric">91%</strong><small>考虑重试的可靠性</small></div>
+            <div class="card metric"><span>pass^3</span><strong id="reportPassPowerMetric">74%</strong><small>连续成功率</small></div>
+            <div class="card metric"><span>单任务成本</span><strong id="reportCostMetric">$0.21</strong><small>缓存节省 31%</small></div>
           </div>
 
           <div class="grid cols-main">
@@ -1317,7 +1319,7 @@
               <div class="database">
                 <table>
                   <thead><tr><th>变化</th><th>样例数</th><th>代表样例</th><th>决策</th></tr></thead>
-                  <tbody>
+                  <tbody id="reportComparisonTable">
                     <tr><td>已修复</td><td>184</td><td><button class="btn mini" id="openFixedTrace">coupon_conflict_0817</button></td><td><span class="badge green">发布证据</span></td></tr>
                     <tr><td>新增失败</td><td>0 个关键 / 17 个非关键</td><td><button class="btn mini" data-flow="merge">crm_merge_unsafe_1188</button></td><td><span class="badge amber">监控</span></td></tr>
                     <tr><td>持续失败</td><td>92</td><td><button class="btn mini" id="openFailureCluster">tool_recovery_timeout</button></td><td><span class="badge purple">数据工单</span></td></tr>
@@ -1609,6 +1611,7 @@
     const floatingTip = document.getElementById("floatingTip");
     let activeTipTrigger = null;
     let tipFrame = null;
+    let currentWorkspace = "support";
     const evaluationContext = {
       targetName: "客服智能体",
       targetVersion: "support-agent_2026_06_11",
@@ -1628,12 +1631,417 @@
       failureCluster: "政策冲突澄清",
       evidenceStep: "step_003 refund.request"
     };
+    const workspaceConfigs = {
+      support: {
+        label: "客服运营",
+        breadcrumb: "Acme AI 平台 / 客服运营 / 评测工作区",
+        sidebarTitle: "客服智能体 v18",
+        sidebarText: "不稳定样例复跑后可进入门禁审批。",
+        sidebarBadge: "发布窗口 18:00",
+        counts: { targets: "18", assets: "9,420", online: "26", workOrders: "12" },
+        metrics: {
+          decisions: "47",
+          decisionText: "31 次发布 · 4 次回滚 · 12 次选型",
+          gateLabel: "发布门禁",
+          gateValue: "68%",
+          gateText: "覆盖活跃被测对象的 CI 门禁",
+          judgeValue: "0.86",
+          judgeText: "3 个裁判需要校准",
+          assetsValue: "9,420",
+          assetsText: "本月新增 184 个"
+        },
+        tasks: [
+          ["复核新增失败样例", "客服运营回归集", "AI 平台", "高", "今日到期", "red", "amber"],
+          ["批准发布门禁", "客服智能体 v18", "智能体团队", "就绪", "证据已附加", "green", "blue"],
+          ["校准安全裁判", "风险拒答裁判", "标注运营", "中", "低于阈值", "amber", "red"],
+          ["创建训练数据工单", "工具恢复失败", "数据运营", "增长", "草稿", "purple", ""]
+        ],
+        pinned: ["18 个对象 · 4 个健康检查异常", "9,420 个资产 · 本月新增 184 个", "31 个运行中 · 7 个等待复核"],
+        context: {
+          targetName: "客服智能体",
+          targetVersion: "support-agent_2026_06_11",
+          targetMode: "API 端点",
+          datasetName: "客服运营回归集",
+          datasetVersion: "customer_ops_regression_v43",
+          runName: "客服运营发布门禁",
+          runId: "run_20260611_1842",
+          reportId: "report_gate_20260611_1842",
+          caseId: "coupon_conflict_0817",
+          caseSource: "线上回流",
+          environment: "CRM 沙箱",
+          trialId: "trial_002",
+          trialNumber: "2/3",
+          traceId: "traj_refund_002",
+          traceEntry: "工作区切换 → 客服运营默认运行",
+          failureCluster: "政策冲突澄清",
+          evidenceStep: "step_003 refund.request"
+        },
+        targetRows: [
+          ["客服智能体", "2026.06.11", "API", "blue", "健康", "green", "查看最近失败轨迹", "openTargetTrace"],
+          ["财务对账智能体", "2026.06.08", "SDK", "green", "健康", "green", "查看观察报告", "flow:finance"],
+          ["浏览器下单智能体", "2026.06.02", "浏览器", "purple", "沙箱预热中", "amber", "查看阻断原因", "flow:browser"],
+          ["历史轨迹导入", "offline-v4", "轨迹上传", "", "轨迹结构就绪", "green", "进入评分队列", "scoreUploadedTrace"]
+        ],
+        endpoint: "https://agent.internal/v1/chat/completions",
+        datasetCard: ["客服运营回归集", "1,920 个样例 · 18 个环境 · 42 个评估器"],
+        caseRows: [
+          ["优惠券冲突退款", "工具参数 + 政策规则", "线上回流", "blue", "CRM 沙箱", "已批准", "green", "查看对应失败轨迹", "openCaseTrace"],
+          ["PII 导出拒答", "安全策略", "红队", "red", "Mock 数据仓库", "门禁集", "green", "查看门禁覆盖", "flow:security"],
+          ["发票表格歧义", "多模态抽取", "专家编写", "purple", "文件沙箱", "待复核", "amber", "分配人工复核", "flow:invoice"]
+        ],
+        runOptions: ["客服运营回归集 · v43", "安全红队包 · v18"],
+        targetOptions: ["客服智能体 · 2026.06.11", "基线智能体 · 2026.05.28"],
+        runRows: [
+          ["客服运营发布门禁", "客服智能体", "回归集 v43", "92%", "green", "就绪", "green", "查看失败轨迹", "openRunTrace"],
+          ["浏览器下单稳定性", "浏览器智能体", "下单实验室", "61%", "amber", "观察", "amber", "查看沙箱截图", "flow:browser"]
+        ],
+        timeline: [
+          ["00:01", "用户", "blue", "客户要求退款，同时保留优惠券权益。", ""],
+          ["00:04", "工具调用", "green", "order.lookup 返回 coupon_redeemed=true，refund_window=open。", "正确", "green"],
+          ["00:07", "工具调用", "red", "refund.request(amount=full) 在检查政策冲突前被执行。", "待标注", "red"],
+          ["00:09", "状态变化", "amber", "CRM 审计备注为空，退款状态被阻断。", "证据", "amber"]
+        ],
+        reportMetrics: ["82%", "91%", "74%", "$0.21"],
+        comparisonRows: [
+          ["已修复", "184", "coupon_conflict_0817", "openFixedTrace", "发布证据", "green"],
+          ["新增失败", "0 个关键 / 17 个非关键", "crm_merge_unsafe_1188", "flow:merge", "监控", "amber"],
+          ["持续失败", "92", "tool_recovery_timeout", "openFailureCluster", "数据工单", "purple"]
+        ]
+      },
+      finance: {
+        label: "财务智能体",
+        breadcrumb: "Acme AI 平台 / 财务智能体 / 对账评测工作区",
+        sidebarTitle: "财务对账智能体 v7",
+        sidebarText: "供应商发票差异样例需要复核后才能解除观察。",
+        sidebarBadge: "月结窗口 20:00",
+        counts: { targets: "12", assets: "5,860", online: "18", workOrders: "9" },
+        metrics: {
+          decisions: "29",
+          decisionText: "12 次发布 · 2 次回滚 · 15 次对账策略调整",
+          gateLabel: "月结门禁",
+          gateValue: "54%",
+          gateText: "覆盖 AP/AR 对账与发票抽取流程",
+          judgeValue: "0.83",
+          judgeText: "2 个金额容差裁判需要校准",
+          assetsValue: "5,860",
+          assetsText: "本月新增 96 个财务样例"
+        },
+        tasks: [
+          ["复核高金额差异", "供应商对账集", "财务共享中心", "高", "今日到期", "red", "amber"],
+          ["观察月结门禁", "财务对账智能体 v7", "财务智能体团队", "中", "需二次抽样", "amber", "blue"],
+          ["校准金额容差裁判", "invoice_amount_judge", "标注运营", "中", "低于阈值", "amber", "red"],
+          ["创建发票抽取工单", "税率识别失败", "数据运营", "增长", "草稿", "purple", ""]
+        ],
+        pinned: ["12 个对象 · 2 个健康检查异常", "5,860 个资产 · 本月新增 96 个", "18 个运行中 · 5 个等待复核"],
+        context: {
+          targetName: "财务对账智能体",
+          targetVersion: "finance-agent_2026_06_08",
+          targetMode: "SDK 埋点",
+          datasetName: "供应商对账回归集",
+          datasetVersion: "finance_reconciliation_v21",
+          runName: "供应商对账月结门禁",
+          runId: "run_finance_20260612_0905",
+          reportId: "report_finance_month_close_0905",
+          caseId: "invoice_tax_mismatch_0442",
+          caseSource: "人工接管回流",
+          environment: "ERP Mock 沙箱",
+          trialId: "trial_fin_004",
+          trialNumber: "4/5",
+          traceId: "traj_invoice_tax_004",
+          traceEntry: "工作区切换 → 财务智能体默认运行",
+          failureCluster: "税率识别失败",
+          evidenceStep: "step_005 erp.post_adjustment"
+        },
+        targetRows: [
+          ["财务对账智能体", "2026.06.08", "SDK", "green", "观察", "amber", "查看观察报告", "openTargetTrace"],
+          ["发票抽取智能体", "2026.06.05", "API", "blue", "健康", "green", "查看失败轨迹", "flow:invoice"],
+          ["费用审核智能体", "2026.06.01", "MCP", "purple", "需限流", "amber", "查看阻断原因", "flow:finance"],
+          ["历史月结轨迹", "offline-fin-v9", "轨迹上传", "", "已校验", "green", "进入评分队列", "scoreUploadedTrace"]
+        ],
+        endpoint: "https://finance-agent.internal/v1/evaluate",
+        datasetCard: ["供应商对账回归集", "1,260 个样例 · 8 个 ERP 环境 · 31 个评估器"],
+        caseRows: [
+          ["发票税率不一致", "表格抽取 + 金额容差", "人工接管", "blue", "ERP Mock 沙箱", "待复核", "amber", "查看对应失败轨迹", "openCaseTrace"],
+          ["供应商名称歧义", "实体匹配", "线上回流", "green", "主数据 Mock", "已批准", "green", "查看门禁覆盖", "flow:finance"],
+          ["费用科目越权", "安全策略", "红队", "red", "权限沙箱", "门禁集", "green", "分配人工复核", "flow:security"]
+        ],
+        runOptions: ["供应商对账回归集 · v21", "费用审核红队包 · v9"],
+        targetOptions: ["财务对账智能体 · 2026.06.08", "基线财务智能体 · 2026.05.18"],
+        runRows: [
+          ["供应商对账月结门禁", "财务对账智能体", "对账集 v21", "76%", "amber", "观察", "amber", "查看失败轨迹", "openRunTrace"],
+          ["费用审核安全回归", "费用审核智能体", "红队包 v9", "88%", "green", "可发布", "green", "查看裁判依据", "flow:security"]
+        ],
+        timeline: [
+          ["00:01", "系统输入", "blue", "上传供应商发票、PO 与收货单三方匹配任务。", ""],
+          ["00:05", "工具调用", "green", "erp.lookup_invoice 返回 tax_rate=13%，po_rate=9%。", "正确", "green"],
+          ["00:11", "工具调用", "red", "erp.post_adjustment 在人工审批前写入调账草稿。", "待标注", "red"],
+          ["00:15", "状态变化", "amber", "月结批次被标记为需要财务复核。", "证据", "amber"]
+        ],
+        reportMetrics: ["78%", "86%", "61%", "$0.34"],
+        comparisonRows: [
+          ["已修复", "96", "supplier_name_alias_0120", "openFixedTrace", "发布证据", "green"],
+          ["新增失败", "2 个关键 / 9 个非关键", "invoice_tax_mismatch_0442", "flow:finance", "观察", "amber"],
+          ["持续失败", "41", "approval_before_adjustment", "openFailureCluster", "数据工单", "purple"]
+        ]
+      },
+      browser: {
+        label: "浏览器操作实验室",
+        breadcrumb: "Acme AI 平台 / 浏览器操作实验室 / Web 任务评测",
+        sidebarTitle: "浏览器下单智能体 v12",
+        sidebarText: "沙箱终态校验失败，需要查看截图和 DOM 断言。",
+        sidebarBadge: "沙箱池 72%",
+        counts: { targets: "9", assets: "3,240", online: "14", workOrders: "7" },
+        metrics: {
+          decisions: "18",
+          decisionText: "8 次发布 · 3 次阻断 · 7 次模型选型",
+          gateLabel: "沙箱门禁",
+          gateValue: "41%",
+          gateText: "覆盖浏览器下单、表单提交和后台查询",
+          judgeValue: "0.88",
+          judgeText: "终态校验器健康",
+          assetsValue: "3,240",
+          assetsText: "本月新增 63 个 Web 任务"
+        },
+        tasks: [
+          ["查看阻断截图", "浏览器下单实验室", "Web Agent 团队", "高", "今日到期", "red", "amber"],
+          ["复跑沙箱失败任务", "浏览器下单智能体 v12", "平台工程", "中", "沙箱可用", "amber", "blue"],
+          ["校准 DOM 终态校验", "checkout_dom_checker", "评测工程", "中", "需复核", "amber", "red"],
+          ["创建网页异常数据工单", "地址表单恢复失败", "数据运营", "增长", "草稿", "purple", ""]
+        ],
+        pinned: ["9 个对象 · 3 个沙箱异常", "3,240 个资产 · 本月新增 63 个", "14 个运行中 · 9 个等待复核"],
+        context: {
+          targetName: "浏览器下单智能体",
+          targetVersion: "browser-agent_2026_06_02",
+          targetMode: "浏览器操作",
+          datasetName: "浏览器下单实验室",
+          datasetVersion: "browser_checkout_lab_v12",
+          runName: "浏览器下单稳定性",
+          runId: "run_browser_20260612_1018",
+          reportId: "report_browser_checkout_1018",
+          caseId: "checkout_address_recovery_0209",
+          caseSource: "沙箱失败回流",
+          environment: "Playwright 浏览器集群",
+          trialId: "trial_browser_006",
+          trialNumber: "6/10",
+          traceId: "traj_checkout_006",
+          traceEntry: "工作区切换 → 浏览器实验室默认运行",
+          failureCluster: "地址表单恢复失败",
+          evidenceStep: "step_007 click_submit"
+        },
+        targetRows: [
+          ["浏览器下单智能体", "2026.06.02", "浏览器", "purple", "沙箱预热中", "amber", "查看阻断原因", "openTargetTrace"],
+          ["后台查询智能体", "2026.06.03", "浏览器", "purple", "健康", "green", "查看截图证据", "flow:browser"],
+          ["表单填写智能体", "2026.05.29", "API", "blue", "观察", "amber", "查看观察报告", "flow:browser"],
+          ["历史浏览器轨迹", "offline-web-v3", "轨迹上传", "", "已校验", "green", "进入评分队列", "scoreUploadedTrace"]
+        ],
+        endpoint: "browser://playwright-cluster/acme-checkout",
+        datasetCard: ["浏览器下单实验室", "680 个样例 · 9 个 Web 应用 · 14 个终态校验"],
+        caseRows: [
+          ["收货地址恢复", "表单状态 + 错误恢复", "沙箱失败回流", "blue", "Playwright 浏览器集群", "待复核", "amber", "查看对应失败轨迹", "openCaseTrace"],
+          ["优惠码弹窗遮挡", "视觉定位", "专家编写", "purple", "Checkout Mock", "已批准", "green", "查看门禁覆盖", "flow:browser"],
+          ["后台订单查询", "多页面导航", "线上回流", "green", "Admin Mock", "观察", "amber", "分配人工复核", "flow:handoff"]
+        ],
+        runOptions: ["浏览器下单实验室 · v12", "后台查询回归集 · v6"],
+        targetOptions: ["浏览器下单智能体 · 2026.06.02", "基线浏览器智能体 · 2026.05.21"],
+        runRows: [
+          ["浏览器下单稳定性", "浏览器下单智能体", "下单实验室 v12", "61%", "amber", "观察", "amber", "查看失败轨迹", "openRunTrace"],
+          ["后台查询终态回归", "后台查询智能体", "查询集 v6", "83%", "green", "可发布", "green", "查看沙箱截图", "flow:browser"]
+        ],
+        timeline: [
+          ["00:01", "页面", "blue", "打开结账页，购物车已有 2 件商品。", ""],
+          ["00:08", "浏览器动作", "green", "填写联系人与手机号，DOM 断言通过。", "正确", "green"],
+          ["00:14", "浏览器动作", "red", "点击提交前没有恢复被清空的收货地址二级区域。", "待标注", "red"],
+          ["00:18", "终态校验", "amber", "Playwright 断言 address.region 不存在，订单未创建。", "证据", "amber"]
+        ],
+        reportMetrics: ["69%", "81%", "48%", "$0.52"],
+        comparisonRows: [
+          ["已修复", "63", "promo_modal_overlap_0311", "openFixedTrace", "发布证据", "green"],
+          ["新增失败", "3 个关键 / 12 个非关键", "checkout_address_recovery_0209", "flow:browser", "观察", "amber"],
+          ["持续失败", "57", "form_state_recovery", "openFailureCluster", "数据工单", "purple"]
+        ]
+      }
+    };
 
     function showToast(message) {
       toast.textContent = message;
       toast.classList.add("show");
       clearTimeout(showToast.timer);
       showToast.timer = setTimeout(() => toast.classList.remove("show"), 2600);
+    }
+
+    function setText(id, value) {
+      const node = document.getElementById(id);
+      if (node) node.textContent = value;
+    }
+
+    function badge(label, color = "") {
+      return `<span class="badge ${color}">${label}</span>`;
+    }
+
+    function actionButton(label, action) {
+      if (action?.startsWith("flow:")) {
+        return `<button class="btn mini" data-flow="${action.slice(5)}">${label}</button>`;
+      }
+      return `<button class="btn mini" id="${action}">${label}</button>`;
+    }
+
+    function fillSelect(id, options) {
+      const select = document.getElementById(id);
+      if (!select) return;
+      select.innerHTML = options.map((option) => `<option>${option}</option>`).join("");
+    }
+
+    function renderTasks(tasks) {
+      tasks.forEach((task, index) => {
+        const row = document.getElementById(`taskRow${index + 1}`);
+        if (!row) return;
+        row.innerHTML = `<td>${task[0]}</td><td>${task[1]}</td><td>${task[2]}</td><td>${badge(task[3], task[5])}</td><td>${badge(task[4], task[6])}</td>`;
+      });
+    }
+
+    function renderTargetRows(rows) {
+      const body = document.getElementById("targetTable");
+      if (!body) return;
+      body.innerHTML = rows.map((row, index) => `
+        <tr><td>${row[0]}</td><td>${row[1]}</td><td>${badge(row[2], row[3])}</td><td><span class="badge ${row[5]}" ${index === rows.length - 1 ? 'id="traceStatus"' : ""}>${row[4]}</span></td><td>${actionButton(row[6], row[7])}</td></tr>
+      `).join("");
+    }
+
+    function renderCaseRows(rows) {
+      const body = document.getElementById("caseTable");
+      if (!body) return;
+      body.innerHTML = rows.map((row) => `
+        <tr><td>${row[0]}</td><td>${row[1]}</td><td>${badge(row[2], row[3])}</td><td>${row[4]}</td><td>${badge(row[5], row[6])}</td><td>${actionButton(row[7], row[8])}</td></tr>
+      `).join("");
+    }
+
+    function renderRunRows(rows) {
+      const body = document.getElementById("runQueueTable");
+      if (!body) return;
+      body.innerHTML = rows.map((row) => `
+        <tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td><td><div class="progress"><span class="bar ${row[4]}" style="--w:${row[3]}"></span></div></td><td>${badge(row[5], row[6])}</td><td>${actionButton(row[7], row[8])}</td></tr>
+      `).join("");
+    }
+
+    function renderTimeline(steps) {
+      const timeline = document.getElementById("traceTimeline");
+      if (!timeline) return;
+      timeline.innerHTML = steps.map((step, index) => `
+        <div class="step"><strong>${step[0]}</strong><span class="badge ${step[2]}">${step[1]}</span><div>${step[3]}</div><span class="${index === 2 ? "badge " + step[5] : step[4] ? "badge " + step[5] : ""}" ${index === 2 ? 'id="selectedStep"' : ""}>${step[4] || ""}</span></div>
+      `).join("");
+    }
+
+    function renderComparisonRows(rows) {
+      const body = document.getElementById("reportComparisonTable");
+      if (!body) return;
+      body.innerHTML = rows.map((row) => `
+        <tr><td>${row[0]}</td><td>${row[1]}</td><td>${actionButton(row[2], row[3])}</td><td>${badge(row[4], row[5])}</td></tr>
+      `).join("");
+    }
+
+    function formatCount(value) {
+      return Number(value).toLocaleString("en-US");
+    }
+
+    function numericCount(text) {
+      return Number(String(text).replace(/,/g, "")) || 0;
+    }
+
+    function bindDynamicActions() {
+      const bind = (id, handler) => {
+        const node = document.getElementById(id);
+        if (node) node.onclick = handler;
+      };
+      bind("openTargetTrace", () => {
+        openWithContext("trace", { traceEntry: "被测对象注册表 → 查看最近失败轨迹" }, "已打开当前工作区最近失败轨迹。");
+      });
+      bind("scoreUploadedTrace", () => {
+        openWithContext("runs", {
+          targetName: "历史轨迹导入",
+          targetVersion: "offline-trace-import_v4",
+          targetMode: "轨迹上传",
+          runName: "历史轨迹离线评分",
+          runId: "run_offline_trace_v4",
+          trialId: "offline_trial_001",
+          traceId: "offline_traj_001",
+          traceEntry: "被测对象注册表 → 离线轨迹进入评分队列"
+        }, "离线轨迹已带入运行页，只执行评估不驱动 Agent。");
+      });
+      bind("openCaseTrace", () => {
+        openWithContext("trace", { traceEntry: "样例数据库 → 查看对应失败轨迹" }, "已打开该样例在当前运行中的失败轨迹。");
+      });
+      bind("openRunTrace", () => {
+        openWithContext("trace", { traceEntry: "运行队列 → 查看失败轨迹" }, "已从运行队列打开失败轨迹。");
+      });
+      bind("openFixedTrace", () => {
+        openWithContext("trace", { traceEntry: "报告版本对比 → 已修复代表样例" }, "已打开已修复样例的轨迹证据。");
+      });
+      bind("openFailureCluster", () => {
+        openWithContext("data-loop", {
+          failureCluster: evaluationContext.failureCluster,
+          evidenceStep: evaluationContext.evidenceStep,
+          traceEntry: "报告版本对比 → 持续失败 → 数据工单"
+        }, "已打开持续失败聚类对应的数据闭环。");
+      });
+      document.querySelectorAll("[data-flow]").forEach((button) => {
+        button.onclick = () => {
+          const flow = button.dataset.flow;
+          const targetView = flow === "browser" ? "trace" : flow === "security" ? "calibration" : flow === "handoff" ? "calibration" : "reports";
+          openWithContext(targetView, { traceEntry: `${button.textContent.trim()} → ${flow}` }, "已按该行数据打开关联上下文。");
+        };
+      });
+    }
+
+    function applyWorkspace(mode, shouldToast = false) {
+      const config = workspaceConfigs[mode] || workspaceConfigs.support;
+      currentWorkspace = mode;
+      setText("breadcrumb", config.breadcrumb);
+      setText("homeProject", config.label);
+      setText("sidebarContextTitle", config.sidebarTitle);
+      setText("sidebarContextText", config.sidebarText);
+      setText("sidebarContextBadge", config.sidebarBadge);
+      setText("targetCount", config.counts.targets);
+      setText("assetCount", config.counts.assets);
+      setText("onlineQueue", config.counts.online);
+      setText("workOrders", config.counts.workOrders);
+      setText("metricDecisions", config.metrics.decisions);
+      setText("metricDecisionText", config.metrics.decisionText);
+      setText("metricGateLabel", config.metrics.gateLabel);
+      setText("metricGateValue", config.metrics.gateValue);
+      setText("metricGateText", config.metrics.gateText);
+      setText("metricJudgeValue", config.metrics.judgeValue);
+      setText("metricJudgeText", config.metrics.judgeText);
+      setText("metricAssetsValue", config.metrics.assetsValue);
+      setText("metricAssetsText", config.metrics.assetsText);
+      setText("pinnedTargetsText", config.pinned[0]);
+      setText("pinnedAssetsText", config.pinned[1]);
+      setText("pinnedRunsText", config.pinned[2]);
+      setText("primaryDatasetTitle", config.datasetCard[0]);
+      setText("primaryDatasetText", config.datasetCard[1]);
+      setText("reportSuccessMetric", config.reportMetrics[0]);
+      setText("reportPassAtMetric", config.reportMetrics[1]);
+      setText("reportPassPowerMetric", config.reportMetrics[2]);
+      setText("reportCostMetric", config.reportMetrics[3]);
+      const targetInput = document.getElementById("targetNameInput");
+      if (targetInput) targetInput.value = config.context.targetName;
+      const targetEndpoint = document.getElementById("targetEndpointInput");
+      if (targetEndpoint) targetEndpoint.value = config.endpoint;
+      const targetMode = document.getElementById("targetModeSelect");
+      if (targetMode) targetMode.value = config.context.targetMode;
+      fillSelect("runDatasetSelect", config.runOptions);
+      fillSelect("runTargetSelect", config.targetOptions);
+      renderTasks(config.tasks);
+      renderTargetRows(config.targetRows);
+      renderCaseRows(config.caseRows);
+      renderRunRows(config.runRows);
+      renderTimeline(config.timeline);
+      renderComparisonRows(config.comparisonRows);
+      document.getElementById("runStatus").textContent = "排队中";
+      document.getElementById("gateStatus").textContent = "待复核";
+      document.getElementById("judgeStatus").textContent = "需要处理";
+      updateContext(config.context);
+      bindDynamicActions();
+      if (shouldToast) showToast(`已切换到${config.label}，任务、运行、轨迹和报告上下文已更新。`);
     }
 
     function activateView(id) {
@@ -1735,24 +2143,31 @@
       button.addEventListener("click", () => activateView(button.dataset.view));
     });
 
-    updateContext();
+    document.getElementById("workspaceMode").addEventListener("change", (event) => {
+      applyWorkspace(event.target.value, true);
+    });
+
+    applyWorkspace("support");
 
     document.getElementById("addTarget").addEventListener("click", () => {
-      document.getElementById("targetCount").textContent = "19";
+      const config = workspaceConfigs[currentWorkspace];
+      const nextCount = formatCount(numericCount(document.getElementById("targetCount").textContent) + 1);
+      document.getElementById("targetCount").textContent = nextCount;
       document.getElementById("targetTable").insertAdjacentHTML("afterbegin", `
-        <tr><td>零售运营试点</td><td>2026.06.12</td><td><span class="badge blue">API</span></td><td><span class="badge green">健康</span></td><td><button class="btn mini" id="openRetailRun">开始首次运行</button></td></tr>
+        <tr><td>${config.context.targetName} 试点</td><td>2026.06.12</td><td><span class="badge blue">${config.context.targetMode}</span></td><td><span class="badge green">健康</span></td><td><button class="btn mini" id="openRetailRun">开始首次运行</button></td></tr>
       `);
       document.getElementById("openRetailRun").addEventListener("click", () => {
         openWithContext("runs", {
-          targetName: "零售运营试点",
-          targetVersion: "retail-agent_2026_06_12",
-          targetMode: "API 端点",
-          runName: "零售运营首次回归",
-          runId: "run_20260612_0910",
-          reportId: "report_retail_20260612_0910",
+          targetName: `${config.context.targetName} 试点`,
+          targetVersion: `${currentWorkspace}-pilot-agent_2026_06_12`,
+          targetMode: config.context.targetMode,
+          runName: `${config.label}首次回归`,
+          runId: `run_${currentWorkspace}_pilot_20260612`,
+          reportId: `report_${currentWorkspace}_pilot_20260612`,
           traceEntry: "被测对象注册表 → 开始首次运行"
-        }, "已选择零售运营试点，可创建首次运行。");
+        }, `已选择${config.label}试点，可创建首次运行。`);
       });
+      bindDynamicActions();
       showToast("被测对象已添加，连接健康检查通过。");
     });
 
@@ -1762,21 +2177,20 @@
     });
 
     document.getElementById("createCase").addEventListener("click", () => {
-      document.getElementById("assetCount").textContent = "9,421";
+      document.getElementById("assetCount").textContent = formatCount(numericCount(document.getElementById("assetCount").textContent) + 1);
       showToast("新样例已创建，包含参考、标签和审核状态。");
     });
 
     document.getElementById("cloneTemplate").addEventListener("click", () => {
-      document.getElementById("assetCount").textContent = "9,422";
+      document.getElementById("assetCount").textContent = formatCount(numericCount(document.getElementById("assetCount").textContent) + 1);
       showToast("评测模板已克隆到私有资产库。");
     });
 
     document.getElementById("startRun").addEventListener("click", () => {
+      const config = workspaceConfigs[currentWorkspace];
       document.getElementById("runStatus").textContent = "运行中 · 2,418 / 3,000 次试验";
       updateContext({
-        runId: "run_20260611_1842",
-        trialId: "trial_002",
-        traceId: "traj_refund_002",
+        ...config.context,
         traceEntry: "运行创建 → 自动抽取失败轨迹"
       });
       showToast(`评测运行已启动：${evaluationContext.runId}，包含重复试验和沙箱重置。`);
@@ -1803,19 +2217,18 @@
     });
 
     document.getElementById("ingestTrace").addEventListener("click", () => {
-      document.getElementById("onlineQueue").textContent = "31";
+      document.getElementById("onlineQueue").textContent = formatCount(numericCount(document.getElementById("onlineQueue").textContent) + 5);
       updateContext({
         caseSource: "线上回流",
         traceEntry: "在线监控 → 摄入所选轨迹",
-        traceId: "prod_traj_20260611_1718",
-        trialId: "online_sample_1718",
-        failureCluster: "政策冲突澄清"
+        traceId: `prod_traj_${currentWorkspace}_20260611_1718`,
+        trialId: `online_${currentWorkspace}_1718`
       });
       showToast("5 条线上轨迹已进入回归回流队列。");
     });
 
     document.getElementById("createWorkOrder").addEventListener("click", () => {
-      document.getElementById("workOrders").textContent = "13";
+      document.getElementById("workOrders").textContent = formatCount(numericCount(document.getElementById("workOrders").textContent) + 1);
       showToast(`已根据 ${evaluationContext.failureCluster} 创建数据工单。`);
     });
 
@@ -1906,9 +2319,9 @@
       openWithContext("trace", {
         caseSource: "生产抽样",
         traceEntry: "在线监控 → 查看线上回流轨迹",
-        trialId: "online_sample_1718",
+        trialId: `online_${currentWorkspace}_1718`,
         trialNumber: "线上样本",
-        traceId: "prod_traj_20260611_1718"
+        traceId: `prod_traj_${currentWorkspace}_20260611_1718`
       }, "已打开线上回流轨迹，尚未进入回归集。");
     });
 
@@ -1917,7 +2330,7 @@
         caseSource: "用户负反馈",
         failureCluster: "满意度下降候选样例",
         traceEntry: "在线监控 → 用户负反馈 → 数据闭环",
-        traceId: "prod_traj_feedback_0931"
+        traceId: `prod_traj_${currentWorkspace}_feedback_0931`
       }, "用户负反馈轨迹已进入候选样例队列。");
     });
 

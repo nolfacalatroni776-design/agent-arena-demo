@@ -221,8 +221,116 @@ async function runViewport(client, width, height, label) {
   if (!lineage.backTrace.entry?.includes("数据闭环")) failures.push(`${label} back trace entry should mention data loop`);
   if (lineage.backTrace.traceId !== "traj_refund_002") failures.push(`${label} back trace id should remain selected trajectory`);
 
+  const workspaceSwitch = await evaluate(client, `(() => {
+    const select = document.querySelector('#workspaceMode');
+    const field = (selector) => document.querySelector(selector)?.textContent.trim();
+    const setMode = (mode) => {
+      select.value = mode;
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+      document.querySelector('[data-view="runs"]')?.click();
+      document.querySelector('#openRunTrace')?.click();
+      const snapshot = {
+        mode,
+        active: document.querySelector('.view.active')?.id,
+        breadcrumb: field('#breadcrumb'),
+        project: field('#homeProject'),
+        task: field('#taskRow1'),
+        target: field('#trace [data-field="targetVersion"]'),
+        dataset: field('#trace [data-field="datasetVersion"]'),
+        runId: field('#trace [data-field="runId"]'),
+        traceId: field('#trace [data-field="traceId"]'),
+        caseId: field('#trace [data-field="caseId"]'),
+        entry: field('#trace [data-field="traceEntry"]'),
+        timeline: field('#traceTimeline'),
+        reportMetric: field('#reportSuccessMetric'),
+        targetInput: document.querySelector('#targetNameInput')?.value,
+        runQueue: field('#runQueueTable')
+      };
+      document.querySelector('[data-view="home"]')?.click();
+      return snapshot;
+    };
+    return {
+      finance: setMode('finance'),
+      browser: setMode('browser')
+    };
+  })()`);
+
+  if (workspaceSwitch.finance.active !== "trace") failures.push(`${label} finance switch should open trace from run queue`);
+  if (!workspaceSwitch.finance.breadcrumb?.includes("财务智能体")) failures.push(`${label} finance breadcrumb not updated`);
+  if (workspaceSwitch.finance.project !== "财务智能体") failures.push(`${label} finance home project not updated`);
+  if (!workspaceSwitch.finance.task?.includes("供应商对账")) failures.push(`${label} finance tasks not updated`);
+  if (workspaceSwitch.finance.target !== "finance-agent_2026_06_08") failures.push(`${label} finance target not updated: ${workspaceSwitch.finance.target}`);
+  if (workspaceSwitch.finance.dataset !== "finance_reconciliation_v21") failures.push(`${label} finance dataset not updated`);
+  if (workspaceSwitch.finance.runId !== "run_finance_20260612_0905") failures.push(`${label} finance run id not updated`);
+  if (workspaceSwitch.finance.traceId !== "traj_invoice_tax_004") failures.push(`${label} finance trace id not updated`);
+  if (workspaceSwitch.finance.caseId !== "invoice_tax_mismatch_0442") failures.push(`${label} finance case id not updated`);
+  if (!workspaceSwitch.finance.timeline?.includes("erp.post_adjustment")) failures.push(`${label} finance trace timeline not updated`);
+  if (workspaceSwitch.finance.targetInput !== "财务对账智能体") failures.push(`${label} finance target form not updated`);
+  if (!workspaceSwitch.finance.runQueue?.includes("供应商对账月结门禁")) failures.push(`${label} finance run queue not updated`);
+
+  if (workspaceSwitch.browser.active !== "trace") failures.push(`${label} browser switch should open trace from run queue`);
+  if (!workspaceSwitch.browser.breadcrumb?.includes("浏览器操作实验室")) failures.push(`${label} browser breadcrumb not updated`);
+  if (workspaceSwitch.browser.project !== "浏览器操作实验室") failures.push(`${label} browser home project not updated`);
+  if (!workspaceSwitch.browser.task?.includes("阻断截图")) failures.push(`${label} browser tasks not updated`);
+  if (workspaceSwitch.browser.target !== "browser-agent_2026_06_02") failures.push(`${label} browser target not updated`);
+  if (workspaceSwitch.browser.dataset !== "browser_checkout_lab_v12") failures.push(`${label} browser dataset not updated`);
+  if (workspaceSwitch.browser.runId !== "run_browser_20260612_1018") failures.push(`${label} browser run id not updated`);
+  if (workspaceSwitch.browser.traceId !== "traj_checkout_006") failures.push(`${label} browser trace id not updated`);
+  if (workspaceSwitch.browser.caseId !== "checkout_address_recovery_0209") failures.push(`${label} browser case id not updated`);
+  if (!workspaceSwitch.browser.timeline?.includes("Playwright")) failures.push(`${label} browser trace timeline not updated`);
+  if (workspaceSwitch.browser.targetInput !== "浏览器下单智能体") failures.push(`${label} browser target form not updated`);
+  if (!workspaceSwitch.browser.runQueue?.includes("浏览器下单稳定性")) failures.push(`${label} browser run queue not updated`);
+
+  const workspaceActions = await evaluate(client, `(() => {
+    const select = document.querySelector('#workspaceMode');
+    const setMode = (mode) => {
+      select.value = mode;
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+    };
+    const field = (selector) => document.querySelector(selector)?.textContent.trim();
+    setMode('finance');
+    document.querySelector('[data-view="runs"]')?.click();
+    document.querySelector('#startRun')?.click();
+    const finance = {
+      runId: field('#runs [data-field="runId"]'),
+      target: field('#runs [data-field="targetVersion"]'),
+      trace: field('#runs [data-field="traceId"]'),
+      status: field('#runStatus')
+    };
+    setMode('browser');
+    document.querySelector('[data-view="assets"]')?.click();
+    const beforeAssets = field('#assetCount');
+    document.querySelector('#createCase')?.click();
+    document.querySelector('#cloneTemplate')?.click();
+    const browserAssets = field('#assetCount');
+    setMode('browser');
+    document.querySelector('[data-view="online"]')?.click();
+    const beforeOnline = field('#onlineQueue');
+    document.querySelector('#ingestTrace')?.click();
+    const afterOnline = field('#onlineQueue');
+    document.querySelector('#openOnlineTrace')?.click();
+    const traceId = field('#trace [data-field="traceId"]');
+    return { finance, beforeAssets, browserAssets, beforeOnline, afterOnline, traceId };
+  })()`);
+
+  if (workspaceActions.finance.runId !== "run_finance_20260612_0905") failures.push(`${label} finance start run should keep finance run id`);
+  if (workspaceActions.finance.target !== "finance-agent_2026_06_08") failures.push(`${label} finance start run should keep finance target`);
+  if (workspaceActions.finance.trace !== "traj_invoice_tax_004") failures.push(`${label} finance start run should keep finance trace`);
+  if (!workspaceActions.finance.status?.includes("运行中")) failures.push(`${label} finance start run status missing`);
+  if (workspaceActions.beforeAssets !== "3,240") failures.push(`${label} browser asset count should reset to browser workspace before asset actions`);
+  if (workspaceActions.browserAssets !== "3,242") failures.push(`${label} browser asset actions should increment from browser count, got ${workspaceActions.browserAssets}`);
+  if (workspaceActions.beforeOnline !== "14") failures.push(`${label} browser online count should reset to browser workspace`);
+  if (workspaceActions.afterOnline !== "19") failures.push(`${label} browser online ingest should add five, got ${workspaceActions.afterOnline}`);
+  if (workspaceActions.traceId !== "prod_traj_browser_20260611_1718") failures.push(`${label} browser online trace id should be workspace-specific`);
+
   const flow = await evaluate(client, `(() => {
     const click = (selector) => document.querySelector(selector)?.click();
+    const setMode = (mode) => {
+      const select = document.querySelector('#workspaceMode');
+      select.value = mode;
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+    };
+    setMode('support');
     click('[data-view="targets"]');
     click('#addTarget');
     click('#uploadTrace');
