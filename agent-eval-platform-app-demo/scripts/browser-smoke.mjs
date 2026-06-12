@@ -323,6 +323,130 @@ async function runViewport(client, width, height, label) {
   if (workspaceActions.afterOnline !== "19") failures.push(`${label} browser online ingest should add five, got ${workspaceActions.afterOnline}`);
   if (workspaceActions.traceId !== "prod_traj_browser_20260611_1718") failures.push(`${label} browser online trace id should be workspace-specific`);
 
+  const sampleChecks = await evaluate(client, `(() => {
+    const click = (selector) => document.querySelector(selector)?.click();
+    const field = (selector) => document.querySelector(selector)?.textContent.trim();
+    const setMode = (mode) => {
+      const select = document.querySelector('#workspaceMode');
+      select.value = mode;
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+    };
+    setMode('support');
+    click('[data-view="assets"]');
+    const supportJsonl = field('#sampleOutput');
+    click('[data-sample-format="csv"]');
+    const supportCsv = field('#sampleOutput');
+    click('[data-sample-format="markdown"]');
+    const supportMarkdown = field('#sampleOutput');
+    click('#downloadSample');
+    const exportModal = {
+      open: !document.querySelector('#actionModal')?.hidden,
+      title: field('#modalTitle'),
+      body: field('#modalBody')
+    };
+    click('#closeModal');
+    setMode('finance');
+    click('[data-view="assets"]');
+    const financeSample = field('#sampleOutput');
+    setMode('browser');
+    click('[data-view="assets"]');
+    const browserSample = field('#sampleOutput');
+    return { supportJsonl, supportCsv, supportMarkdown, exportModal, financeSample, browserSample };
+  })()`);
+
+  if (!sampleChecks.supportJsonl?.includes("case_coupon_conflict_0817") && !sampleChecks.supportJsonl?.includes("coupon_conflict_0817")) {
+    failures.push(`${label} support sample JSONL should include support case id`);
+  }
+  if (!sampleChecks.supportCsv?.includes("dataset,case_id,task")) failures.push(`${label} sample CSV header missing`);
+  if (!sampleChecks.supportCsv?.includes("优惠券冲突退款")) failures.push(`${label} sample CSV should include support case`);
+  if (!sampleChecks.supportMarkdown?.includes("# 优惠券冲突退款")) failures.push(`${label} sample Markdown title missing`);
+  if (!sampleChecks.exportModal.open) failures.push(`${label} sample export should open modal`);
+  if (!sampleChecks.exportModal.title?.includes("评测集样例导出")) failures.push(`${label} sample export modal title missing`);
+  if (!sampleChecks.exportModal.body?.includes("优惠券冲突退款")) failures.push(`${label} sample export modal should include sample body`);
+  if (!sampleChecks.financeSample?.includes("发票税率不一致")) failures.push(`${label} finance sample should update with workspace`);
+  if (!sampleChecks.browserSample?.includes("收货地址恢复")) failures.push(`${label} browser sample should update with workspace`);
+
+  const interactionAudit = await evaluate(client, `(async () => {
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    const visible = (element) => {
+      if (!element) return false;
+      const rect = element.getBoundingClientRect();
+      const style = getComputedStyle(element);
+      return rect.width > 0 && rect.height > 0 && style.visibility !== 'hidden' && style.display !== 'none';
+    };
+    const signature = () => JSON.stringify({
+      active: document.querySelector('.view.active')?.id,
+      toast: document.querySelector('#toast')?.textContent.trim(),
+      toastShown: document.querySelector('#toast')?.classList.contains('show'),
+      modalOpen: !document.querySelector('#actionModal')?.hidden,
+      modalTitle: document.querySelector('#modalTitle')?.textContent.trim(),
+      targetCount: document.querySelector('#targetCount')?.textContent.trim(),
+      assetCount: document.querySelector('#assetCount')?.textContent.trim(),
+      onlineQueue: document.querySelector('#onlineQueue')?.textContent.trim(),
+      workOrders: document.querySelector('#workOrders')?.textContent.trim(),
+      runStatus: document.querySelector('#runStatus')?.textContent.trim(),
+      sample: document.querySelector('#sampleOutput')?.textContent.trim(),
+      tabPanel: document.querySelector('#homeTabPanel')?.textContent.trim(),
+      traceStatus: document.querySelector('#traceStatus')?.textContent.trim(),
+      gateStatus: document.querySelector('#gateStatus')?.textContent.trim(),
+      judgeStatus: document.querySelector('#judgeStatus')?.textContent.trim(),
+      auditStatus: document.querySelector('#auditStatus')?.textContent.trim(),
+      targetNameInput: document.querySelector('#targetNameInput')?.value,
+      targetEndpointInput: document.querySelector('#targetEndpointInput')?.value
+    });
+    const closeModal = () => {
+      if (!document.querySelector('#actionModal')?.hidden) document.querySelector('#closeModal')?.click();
+    };
+    const resetWorkspace = () => {
+      const select = document.querySelector('#workspaceMode');
+      select.value = 'support';
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+    };
+    const failures = [];
+    resetWorkspace();
+    document.querySelector('[data-view="home"]')?.click();
+    const views = Array.from(document.querySelectorAll('.view'));
+    for (const view of views) {
+      document.querySelector(\`[data-view="\${view.id}"]\`)?.click();
+      await sleep(30);
+      const controls = Array.from(view.querySelectorAll('button, .template-card[tabindex], .doc-card[tabindex], select, input'))
+        .filter(visible)
+        .filter((element) => element.id !== 'closeModal');
+      for (const control of controls) {
+        const label = control.textContent.trim() || control.getAttribute('aria-label') || control.id || control.tagName;
+        const before = signature();
+        try {
+          if (control.tagName === 'SELECT') {
+            if (control.options.length < 2) continue;
+            control.selectedIndex = (control.selectedIndex + 1) % control.options.length;
+            control.dispatchEvent(new Event('change', { bubbles: true }));
+          } else if (control.tagName === 'INPUT') {
+            control.focus();
+            control.value = control.value.includes('试点') ? control.value : \`\${control.value} 试点\`;
+            control.dispatchEvent(new Event('input', { bubbles: true }));
+            control.dispatchEvent(new Event('change', { bubbles: true }));
+          } else {
+            control.click();
+          }
+          await sleep(70);
+          const after = signature();
+          const reacted = before !== after;
+          if (!reacted) failures.push(\`\${view.id}: \${label} had no observable reaction\`);
+          closeModal();
+        } catch (error) {
+          failures.push(\`\${view.id}: \${label} threw \${error.message}\`);
+        }
+        if (document.querySelector('.view.active')?.id !== view.id) {
+          document.querySelector(\`[data-view="\${view.id}"]\`)?.click();
+          await sleep(30);
+        }
+      }
+    }
+    return failures;
+  })()`);
+
+  for (const issue of interactionAudit) failures.push(`${label} interaction audit: ${issue}`);
+
   const flow = await evaluate(client, `(() => {
     const click = (selector) => document.querySelector(selector)?.click();
     const setMode = (mode) => {

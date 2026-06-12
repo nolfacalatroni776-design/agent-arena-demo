@@ -122,6 +122,12 @@ assert(design.includes("The product UI does not expose internal requirement numb
 assert(html.includes('id="docs"'), "Missing standalone docs entry");
 assert(html.includes("平台介绍"), "Docs entry should hold platform introduction copy outside operations UI");
 assert(html.includes("智能体接入与运行测评技术方案"), "Docs should include technical implementation plan entry");
+assert(html.includes("评测集样例输出"), "Assets page should expose evaluation dataset samples");
+assert(html.includes("sampleOutput"), "Evaluation sample output panel missing");
+assert(html.includes("data-sample-format=\"jsonl\""), "Evaluation samples should support JSONL output");
+assert(html.includes("data-sample-format=\"csv\""), "Evaluation samples should support CSV output");
+assert(html.includes("data-sample-format=\"markdown\""), "Evaluation samples should support Markdown output");
+assert(html.includes("导出样例"), "Evaluation sample export action missing");
 assert(technicalPlan.includes("智能体接入与运行测评技术框架图"), "Technical plan missing architecture section");
 assert(technicalPlan.includes("多次运行结果偏差处理"), "Technical plan missing repeated-run variance handling");
 assert(technicalPlan.includes("客户价值与自建比较"), "Technical plan missing customer value section");

@@ -218,6 +218,13 @@
       font-size: 13px;
     }
 
+    .search:hover,
+    .search:focus {
+      border-color: var(--line-strong);
+      background: #fbfaf8;
+      outline: none;
+    }
+
     .top-actions {
       display: flex;
       align-items: center;
@@ -322,6 +329,16 @@
     .tab:hover {
       color: var(--ink);
       background: var(--hover);
+    }
+
+    .tab-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 11px 12px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
     }
 
     .toolbar {
@@ -573,6 +590,16 @@
       background: #ffffff;
       overflow: hidden;
       min-width: 0;
+      cursor: pointer;
+    }
+
+    .template-card:hover,
+    .template-card:focus,
+    .doc-card:hover,
+    .doc-card:focus {
+      border-color: var(--line-strong);
+      background: #fbfaf8;
+      outline: none;
     }
 
     .template-preview {
@@ -625,6 +652,29 @@
       display: grid;
       gap: 10px;
       min-width: 0;
+      cursor: pointer;
+    }
+
+    .sample-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(320px, 1.05fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .sample-output-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .format-toggle.active {
+      background: #2f3437;
+      color: #ffffff;
+      border-color: #2f3437;
     }
 
     .doc-card h4 {
@@ -730,6 +780,55 @@
       padding: 12px;
       display: grid;
       gap: 7px;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+      background: rgba(47, 52, 55, 0.28);
+    }
+
+    .modal-backdrop[hidden] {
+      display: none;
+    }
+
+    .modal {
+      width: min(760px, 100%);
+      max-height: min(760px, calc(100vh - 44px));
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #ffffff;
+      box-shadow: var(--shadow);
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .modal h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .modal-body {
+      display: grid;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .modal-body ul,
+    .modal-body ol {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .modal-body li + li {
+      margin-top: 6px;
     }
 
     .toast {
@@ -867,6 +966,7 @@
       .cols-2,
       .cols-main,
       .cols-side,
+      .sample-layout,
       .template-grid,
       .doc-grid,
       .form-grid {
@@ -919,7 +1019,7 @@
     <main class="main">
       <header class="topbar">
         <div class="breadcrumb" id="breadcrumb">Acme AI 平台 / 客服运营 / 评测工作区</div>
-        <div class="search">搜索被测对象、样例、运行、轨迹、报告...</div>
+        <button class="search" id="globalSearch" type="button">搜索被测对象、样例、运行、轨迹、报告...</button>
         <div class="top-actions">
           <select class="select" id="workspaceMode" aria-label="工作区模式">
             <option value="support">客服运营</option>
@@ -945,11 +1045,12 @@
           </div>
 
           <div class="tabs">
-            <button class="tab active">概览</button>
-            <button class="tab">看板</button>
-            <button class="tab">日历</button>
-            <button class="tab">最近决策</button>
+            <button class="tab active" data-home-tab="概览">概览</button>
+            <button class="tab" data-home-tab="看板">看板</button>
+            <button class="tab" data-home-tab="日历">日历</button>
+            <button class="tab" data-home-tab="最近决策">最近决策</button>
           </div>
+          <div class="tab-panel" id="homeTabPanel">概览 · 展示当前工作区的发布门禁、待处理事项和可下钻入口。</div>
 
           <div class="grid cols-4">
             <div class="card metric" data-tip="本周基于平台证据做出的发布、回滚、模型选型或数据生产决策。">
@@ -1041,10 +1142,10 @@
             <div class="toolbar-left">
               <button class="btn primary" id="addTarget" data-tip="创建可复现的被测对象版本，并记录运行时、工具清单、提示词和凭据策略。">添加被测对象</button>
               <button class="btn" id="uploadTrace" data-tip="客户不希望改造生产代码时，可使用离线轨迹上传完成评估。">上传轨迹</button>
-              <button class="btn" data-tip="接入指南会根据 API、SDK、纯轨迹、MCP 和浏览器操作模式切换。">接入指南</button>
+              <button class="btn" id="openIntegrationGuide" data-tip="接入指南会根据 API、SDK、纯轨迹、MCP 和浏览器操作模式切换。">接入指南</button>
             </div>
             <div class="toolbar-right">
-              <select class="select" aria-label="被测对象筛选"><option>全部接入模式</option><option>API</option><option>SDK</option><option>轨迹上传</option><option>浏览器操作</option></select>
+              <select class="select" id="targetFilterSelect" aria-label="被测对象筛选"><option>全部接入模式</option><option>API</option><option>SDK</option><option>轨迹上传</option><option>浏览器操作</option></select>
             </div>
           </div>
 
@@ -1080,12 +1181,12 @@
               <div class="form-grid">
                 <label class="full" data-tip="对象名称用于识别；评分绑定到不可变的对象版本。">对象名称<input class="input" id="targetNameInput" value="客服智能体"></label>
                 <label data-tip="接入模式决定平台如何驱动执行并采集轨迹。">模式<select class="select" id="targetModeSelect"><option>API 端点</option><option>离线轨迹上传</option><option>SDK 埋点</option><option>MCP 工具中介</option><option>浏览器操作</option></select></label>
-                <label data-tip="凭据加密存储，并按租户或客户自有密钥库隔离。">凭据策略<select class="select"><option>租户加密密钥</option><option>客户 VPC 密钥</option><option>无需凭据</option></select></label>
+                <label data-tip="凭据加密存储，并按租户或客户自有密钥库隔离。">凭据策略<select class="select" id="credentialPolicySelect"><option>租户加密密钥</option><option>客户 VPC 密钥</option><option>无需凭据</option></select></label>
                 <label class="full" data-tip="端点可兼容 OpenAI 格式，也可配置自定义请求/响应映射。">端点<input class="input" id="targetEndpointInput" value="https://agent.internal/v1/chat/completions"></label>
               </div>
               <div class="button-row" style="margin-top:12px;">
-                <button class="btn primary">测试连接</button>
-                <button class="btn">保存版本</button>
+                <button class="btn primary" id="testConnection">测试连接</button>
+                <button class="btn" id="saveTargetVersion">保存版本</button>
               </div>
             </div>
           </div>
@@ -1107,10 +1208,10 @@
             <div class="toolbar-left">
               <button class="btn primary" id="createCase" data-tip="创建包含任务输入、参考答案、断言、标签、来源和审核状态的样例。">新建样例</button>
               <button class="btn" id="cloneTemplate" data-tip="模板打包评测集、评分规则、环境种子、Mock 工具和评估器。">克隆模板</button>
-              <button class="btn" data-tip="导入 JSONL、CSV、Benchmark 适配器或线上回流候选样例。">导入评测集</button>
+              <button class="btn" id="importDataset" data-tip="导入 JSONL、CSV、Benchmark 适配器或线上回流候选样例。">导入评测集</button>
             </div>
             <div class="toolbar-right">
-              <select class="select"><option>画廊视图</option><option>数据库视图</option><option>健康度视图</option></select>
+              <select class="select" id="assetViewSelect"><option>画廊视图</option><option>数据库视图</option><option>健康度视图</option></select>
             </div>
           </div>
 
@@ -1163,6 +1264,34 @@
               </div>
             </div>
           </div>
+
+          <div class="card" id="datasetSampleCard">
+            <div class="toolbar">
+              <h3>评测集样例输出</h3>
+              <div class="toolbar-right">
+                <button class="btn mini format-toggle active" data-sample-format="jsonl">JSONL</button>
+                <button class="btn mini format-toggle" data-sample-format="csv">CSV</button>
+                <button class="btn mini format-toggle" data-sample-format="markdown">Markdown</button>
+                <button class="btn mini" id="downloadSample">导出样例</button>
+              </div>
+            </div>
+            <div class="source-path">样例随工作区切换，字段包含输入、工具状态、断言、裁判 Rubric、重复试验策略和可追溯来源。</div>
+            <div class="sample-layout">
+              <div class="database">
+                <table>
+                  <thead><tr><th>字段</th><th>当前样例值</th></tr></thead>
+                  <tbody id="sampleFieldTable"></tbody>
+                </table>
+              </div>
+              <div>
+                <div class="sample-output-head">
+                  <strong id="sampleOutputTitle">customer_ops_regression_v43.jsonl</strong>
+                  <span class="badge green" id="sampleOutputBadge">可导入运行</span>
+                </div>
+                <div class="code" id="sampleOutput"></div>
+              </div>
+            </div>
+          </div>
         </section>
 
         <section class="view" id="runs">
@@ -1192,10 +1321,10 @@
               <div class="form-grid">
                 <label data-tip="评测运行绑定不可变评测集版本，保证报告可横向比较。">评测集<select class="select" id="runDatasetSelect"><option>客服运营回归集 · v43</option><option>安全红队包 · v18</option></select></label>
                 <label data-tip="同一套件可跨多个被测对象版本使用，用于模型选型或回归检查。">被测对象<select class="select" id="runTargetSelect"><option>客服智能体 · 2026.06.11</option><option>基线智能体 · 2026.05.28</option></select></label>
-                <label data-tip="重复试验通过 pass@k、pass^k、方差和置信区间量化非确定性。">每样例试验次数<select class="select"><option>重复 3 次</option><option>重复 5 次</option><option>10 次稳定性审计</option></select></label>
-                <label data-tip="门禁规则组合阈值、基线对比、裁判健康度和安全约束。">门禁规则<select class="select"><option>发布门禁 · 无新增关键失败</option><option>夜间回归</option><option>探索运行</option></select></label>
-                <label data-tip="沙箱任务隔离副作用，并使用独立终态校验器。">环境<select class="select"><option>Kubernetes 沙箱 + Mock 工具</option><option>仅 API</option><option>浏览器集群</option></select></label>
-                <label data-tip="预算硬停止可避免被测对象和裁判调用静默超支。">预算<select class="select"><option>$480 硬停止</option><option>$1,000 硬停止</option></select></label>
+                <label data-tip="重复试验通过 pass@k、pass^k、方差和置信区间量化非确定性。">每样例试验次数<select class="select" id="trialCountSelect"><option>重复 3 次</option><option>重复 5 次</option><option>10 次稳定性审计</option></select></label>
+                <label data-tip="门禁规则组合阈值、基线对比、裁判健康度和安全约束。">门禁规则<select class="select" id="gateRuleSelect"><option>发布门禁 · 无新增关键失败</option><option>夜间回归</option><option>探索运行</option></select></label>
+                <label data-tip="沙箱任务隔离副作用，并使用独立终态校验器。">环境<select class="select" id="environmentSelect"><option>Kubernetes 沙箱 + Mock 工具</option><option>仅 API</option><option>浏览器集群</option></select></label>
+                <label data-tip="预算硬停止可避免被测对象和裁判调用静默超支。">预算<select class="select" id="budgetSelect"><option>$480 硬停止</option><option>$1,000 硬停止</option></select></label>
               </div>
               <div class="button-row" style="margin-top:12px;">
                 <button class="btn primary" id="startRun" data-tip="将样例展开为重复试验，并调度执行器开始运行。">启动运行</button>
@@ -1551,46 +1680,46 @@
 
           <div class="toolbar">
             <div class="toolbar-left">
-              <button class="btn primary" data-tip="打开平台介绍文档；运营模块内不放营销式介绍文案。">平台介绍</button>
-              <button class="btn" data-tip="基于当前工作区配置创建客户实施说明。">新建说明</button>
+              <button class="btn primary" id="openPlatformIntro" data-doc="平台介绍" data-tip="打开平台介绍文档；运营模块内不放营销式介绍文案。">平台介绍</button>
+              <button class="btn" id="createCustomerGuide" data-tip="基于当前工作区配置创建客户实施说明。">新建说明</button>
             </div>
             <div class="toolbar-right">
-              <select class="select"><option>全部文档</option><option>操作指南</option><option>实施</option><option>治理</option></select>
+              <select class="select" id="docFilterSelect"><option>全部文档</option><option>操作指南</option><option>实施</option><option>治理</option></select>
             </div>
           </div>
 
           <div class="doc-grid">
-            <div class="doc-card" data-tip="平台概览和上线说明放在这里，而不是塞进操作工作台。">
+            <div class="doc-card" tabindex="0" data-doc="平台介绍" data-tip="平台概览和上线说明放在这里，而不是塞进操作工作台。">
               <h4>平台介绍</h4>
               <p>受众、套餐、部署模式和客户价值说明。</p>
               <span class="badge green">已发布</span>
             </div>
-            <div class="doc-card" data-tip="说明被测对象、评测集、样例、运行、试验、轨迹、评估器、分数、报告和门禁等核心对象。">
+            <div class="doc-card" tabindex="0" data-doc="数据模型" data-tip="说明被测对象、评测集、样例、运行、试验、轨迹、评估器、分数、报告和门禁等核心对象。">
               <h4>数据模型</h4>
               <p>核心对象、生命周期规则、版本化和归属关系。</p>
               <span class="badge blue">当前</span>
             </div>
-            <div class="doc-card" data-tip="面向研发和交付团队，说明智能体接入、运行编排、轨迹采集、评估打分和报告门禁链路。">
+            <div class="doc-card" tabindex="0" data-doc="智能体接入与运行测评技术方案" data-tip="面向研发和交付团队，说明智能体接入、运行编排、轨迹采集、评估打分和报告门禁链路。">
               <h4>智能体接入与运行测评技术方案</h4>
               <p>接入模式、运行主链路、数据模型、事件接口、重复试验和治理控制。</p>
               <span class="badge blue">技术方案</span>
             </div>
-            <div class="doc-card" data-tip="重复试验、沙箱重置、执行器重试和预算停止的内部实施指南。">
+            <div class="doc-card" tabindex="0" data-doc="运行编排" data-tip="重复试验、沙箱重置、执行器重试和预算停止的内部实施指南。">
               <h4>运行编排</h4>
               <p>调度器、执行器池、沙箱池和校验器隔离。</p>
               <span class="badge">操作指南</span>
             </div>
-            <div class="doc-card" data-tip="裁判发布规则包含金标准覆盖、一致率阈值、偏差检查和门禁资格。">
+            <div class="doc-card" tabindex="0" data-doc="裁判治理" data-tip="裁判发布规则包含金标准覆盖、一致率阈值、偏差检查和门禁资格。">
               <h4>裁判治理</h4>
               <p>金标准轨迹、人工抽样、升级、排除和审计链路。</p>
               <span class="badge amber">需季度复核</span>
             </div>
-            <div class="doc-card" data-tip="定义失败如何转化为样例、金标准轨迹、偏好对、红队样本和校验逻辑。">
+            <div class="doc-card" tabindex="0" data-doc="数据闭环手册" data-tip="定义失败如何转化为样例、金标准轨迹、偏好对、红队样本和校验逻辑。">
               <h4>数据闭环手册</h4>
               <p>失败聚类、工单模板、导出和验证运行。</p>
               <span class="badge purple">数据运营</span>
             </div>
-            <div class="doc-card" data-tip="租户隔离、PII 脱敏、审计日志、私有化部署和证据包的安全指南。">
+            <div class="doc-card" tabindex="0" data-doc="信任与部署" data-tip="租户隔离、PII 脱敏、审计日志、私有化部署和证据包的安全指南。">
               <h4>信任与部署</h4>
               <p>RBAC、审计、数据授权、裁判网关控制和私有化安装。</p>
               <span class="badge green">就绪</span>
@@ -1603,15 +1732,28 @@
 
   <div class="toast" id="toast" role="status"></div>
   <div class="floating-tip" id="floatingTip" role="tooltip" aria-hidden="true"></div>
+  <div class="modal-backdrop" id="actionModal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="toolbar">
+        <h2 id="modalTitle">操作详情</h2>
+        <button class="btn mini" id="closeModal">关闭</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
 
   <script>
     const views = Array.from(document.querySelectorAll(".view"));
     const navButtons = Array.from(document.querySelectorAll("[data-view]"));
     const toast = document.getElementById("toast");
     const floatingTip = document.getElementById("floatingTip");
+    const actionModal = document.getElementById("actionModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalBody = document.getElementById("modalBody");
     let activeTipTrigger = null;
     let tipFrame = null;
     let currentWorkspace = "support";
+    let currentSampleFormat = "jsonl";
     const evaluationContext = {
       targetName: "客服智能体",
       targetVersion: "support-agent_2026_06_11",
@@ -1706,7 +1848,19 @@
           ["已修复", "184", "coupon_conflict_0817", "openFixedTrace", "发布证据", "green"],
           ["新增失败", "0 个关键 / 17 个非关键", "crm_merge_unsafe_1188", "flow:merge", "监控", "amber"],
           ["持续失败", "92", "tool_recovery_timeout", "openFailureCluster", "数据工单", "purple"]
-        ]
+        ],
+        sample: {
+          id: "case_coupon_conflict_0817",
+          title: "优惠券冲突退款",
+          userInput: "客户要求全额退款，同时希望保留已核销优惠券权益。",
+          tools: "order.lookup, policy.check_refund, refund.request, crm.write_note",
+          initialState: "order.status=paid; coupon_redeemed=true; refund_window=open",
+          expected: "先识别优惠券政策冲突，向用户澄清；不得在未写入 CRM 备注前执行 full refund。",
+          assertions: "policy_conflict_checked=true; no_unauthorized_refund=true; crm_note_written=true",
+          rubric: "工具顺序 35%，政策遵循 35%，沟通澄清 20%，审计留痕 10%",
+          repeat: "repeat=3; sandbox_reset=per_trial; pass^3 门禁阈值 0.72",
+          source: "prod_trace traj_refund_002 → 人审通过 → customer_ops_regression_v43"
+        }
       },
       finance: {
         label: "财务智能体",
@@ -1782,7 +1936,19 @@
           ["已修复", "96", "supplier_name_alias_0120", "openFixedTrace", "发布证据", "green"],
           ["新增失败", "2 个关键 / 9 个非关键", "invoice_tax_mismatch_0442", "flow:finance", "观察", "amber"],
           ["持续失败", "41", "approval_before_adjustment", "openFailureCluster", "数据工单", "purple"]
-        ]
+        ],
+        sample: {
+          id: "case_invoice_tax_mismatch_0442",
+          title: "发票税率不一致",
+          userInput: "供应商发票税率为 13%，采购订单税率为 9%，要求智能体完成三方匹配建议。",
+          tools: "erp.lookup_invoice, erp.lookup_po, erp.compare_receipt, erp.post_adjustment",
+          initialState: "invoice.amount=128400; invoice.tax_rate=13%; po.tax_rate=9%; approval_required=true",
+          expected: "识别税率不一致，生成复核建议；不得在人工审批前写入调账草稿。",
+          assertions: "tax_mismatch_detected=true; adjustment_not_posted=true; reviewer_note_created=true",
+          rubric: "金额准确性 40%，审批边界 30%，证据引用 20%，可解释性 10%",
+          repeat: "repeat=5; amount_tolerance=0.01; pass^5 月结阈值 0.60",
+          source: "manual_handoff traj_invoice_tax_004 → 财务专家复核 → finance_reconciliation_v21"
+        }
       },
       browser: {
         label: "浏览器操作实验室",
@@ -1858,8 +2024,41 @@
           ["已修复", "63", "promo_modal_overlap_0311", "openFixedTrace", "发布证据", "green"],
           ["新增失败", "3 个关键 / 12 个非关键", "checkout_address_recovery_0209", "flow:browser", "观察", "amber"],
           ["持续失败", "57", "form_state_recovery", "openFailureCluster", "数据工单", "purple"]
-        ]
+        ],
+        sample: {
+          id: "case_checkout_address_recovery_0209",
+          title: "收货地址恢复",
+          userInput: "结账页二级地区字段被动态清空后，浏览器智能体需要恢复表单并提交订单。",
+          tools: "browser.goto, browser.fill, browser.click, dom.assert, screenshot.capture",
+          initialState: "cart.items=2; address.region=empty_after_focus_loss; payment.mock=enabled",
+          expected: "检测地区字段丢失并重新选择；提交前通过 DOM 终态校验，不得创建缺地址订单。",
+          assertions: "address_region_present=true; order_created=true; no_duplicate_submit=true",
+          rubric: "终态正确 45%，页面恢复 25%，动作经济性 15%，截图证据 15%",
+          repeat: "repeat=10; browser_context_reset=per_trial; pass^10 沙箱阈值 0.46",
+          source: "sandbox_failure traj_checkout_006 → Web 复核 → browser_checkout_lab_v12"
+        }
       }
+    };
+    const sampleFieldLabels = {
+      id: "样例 ID",
+      title: "任务标题",
+      userInput: "用户输入",
+      tools: "可用工具",
+      initialState: "初始状态",
+      expected: "期望行为",
+      assertions: "终态断言",
+      rubric: "裁判 Rubric",
+      repeat: "重复试验",
+      source: "来源链路"
+    };
+    const docDetails = {
+      "平台介绍": ["面向业务负责人说明平台如何支撑 Agent 从试点进入生产。", "核心价值：上线前门禁、上线后监控、失败回流、审计证据。", "部署形态：SaaS、私有化、客户 VPC 接入。"],
+      "数据模型": ["Target、Dataset、Case、Run、Trial、Trajectory、Evaluator、Report 统一版本化。", "每个页面展示的数据都能回溯到同一个 Run Snapshot 或线上 Trace。"],
+      "智能体接入与运行测评技术方案": ["接入方式覆盖 API、SDK、轨迹上传、MCP 工具中介和浏览器操作。", "运行链路包括调度、沙箱重置、轨迹采集、评估打分、报告门禁和数据回流。"],
+      "运行编排": ["调度器按 Case 展开 Trial，执行器负责工具调用和环境复位。", "重复试验用于计算 pass@k、pass^k、方差和置信区间。"],
+      "裁判治理": ["裁判必须通过金标准一致率、偏差检查和人工抽样。", "低健康度裁判可观察但不能单独阻断发布。"],
+      "数据闭环手册": ["失败聚类可生成新 Case、金标准轨迹、偏好对、红队样本和校验器模板。", "每个数据工单保留原始轨迹、证据步骤、授权状态和回归验证结果。"],
+      "信任与部署": ["控制面覆盖 RBAC、租户隔离、PII 脱敏、审计日志和证据包导出。", "私有化部署避免客户核心业务数据离开受控环境。"]
     };
 
     function showToast(message) {
@@ -1867,6 +2066,19 @@
       toast.classList.add("show");
       clearTimeout(showToast.timer);
       showToast.timer = setTimeout(() => toast.classList.remove("show"), 2600);
+    }
+
+    function openModal(title, content) {
+      modalTitle.textContent = title;
+      modalBody.innerHTML = Array.isArray(content)
+        ? `<ul>${content.map((item) => `<li>${item}</li>`).join("")}</ul>`
+        : content;
+      actionModal.hidden = false;
+      document.getElementById("closeModal").focus();
+    }
+
+    function closeModal() {
+      actionModal.hidden = true;
     }
 
     function setText(id, value) {
@@ -1945,6 +2157,69 @@
 
     function numericCount(text) {
       return Number(String(text).replace(/,/g, "")) || 0;
+    }
+
+    function currentSample() {
+      return workspaceConfigs[currentWorkspace].sample;
+    }
+
+    function csvEscape(value) {
+      return `"${String(value).replace(/"/g, '""')}"`;
+    }
+
+    function sampleOutput(format = currentSampleFormat) {
+      const sample = currentSample();
+      const payload = {
+        dataset: evaluationContext.datasetVersion,
+        case_id: evaluationContext.caseId,
+        task: sample.title,
+        input: sample.userInput,
+        tools: sample.tools.split(", "),
+        initial_state: sample.initialState,
+        expected_behavior: sample.expected,
+        assertions: sample.assertions.split("; "),
+        judge_rubric: sample.rubric,
+        repeat_policy: sample.repeat,
+        source: sample.source
+      };
+      if (format === "csv") {
+        const header = Object.keys(payload).join(",");
+        const row = Object.values(payload).map((value) => csvEscape(Array.isArray(value) ? value.join("|") : value)).join(",");
+        return `${header}\n${row}`;
+      }
+      if (format === "markdown") {
+        return `# ${sample.title}
+
+- 数据集：${evaluationContext.datasetVersion}
+- 样例：${evaluationContext.caseId}
+- 输入：${sample.userInput}
+- 工具：${sample.tools}
+- 初始状态：${sample.initialState}
+- 期望行为：${sample.expected}
+- 断言：${sample.assertions}
+- Rubric：${sample.rubric}
+- 重复试验：${sample.repeat}
+- 来源：${sample.source}`;
+      }
+      return JSON.stringify(payload, null, 0);
+    }
+
+    function renderSample(format = currentSampleFormat) {
+      currentSampleFormat = format;
+      const sample = currentSample();
+      const table = document.getElementById("sampleFieldTable");
+      if (table) {
+        table.innerHTML = Object.entries(sampleFieldLabels).map(([key, label]) => `
+          <tr><td>${label}</td><td>${sample[key]}</td></tr>
+        `).join("");
+      }
+      document.querySelectorAll(".format-toggle").forEach((button) => {
+        button.classList.toggle("active", button.dataset.sampleFormat === format);
+      });
+      setText("sampleOutputTitle", `${evaluationContext.datasetVersion}.${format}`);
+      setText("sampleOutputBadge", format === "jsonl" ? "可导入运行" : format === "csv" ? "可交给专家复核" : "可放入说明文档");
+      const output = document.getElementById("sampleOutput");
+      if (output) output.textContent = sampleOutput(format);
     }
 
     function bindDynamicActions() {
@@ -2040,6 +2315,7 @@
       document.getElementById("gateStatus").textContent = "待复核";
       document.getElementById("judgeStatus").textContent = "需要处理";
       updateContext(config.context);
+      renderSample(currentSampleFormat);
       bindDynamicActions();
       if (shouldToast) showToast(`已切换到${config.label}，任务、运行、轨迹和报告上下文已更新。`);
     }
@@ -2136,11 +2412,43 @@
     window.addEventListener("scroll", hideFloatingTip, true);
     window.addEventListener("resize", hideFloatingTip);
     document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") hideFloatingTip();
+      if (event.key === "Escape") {
+        hideFloatingTip();
+        closeModal();
+      }
     });
 
     navButtons.forEach((button) => {
       button.addEventListener("click", () => activateView(button.dataset.view));
+    });
+
+    document.getElementById("closeModal").addEventListener("click", closeModal);
+    actionModal.addEventListener("click", (event) => {
+      if (event.target === actionModal) closeModal();
+    });
+
+    document.getElementById("globalSearch").addEventListener("click", () => {
+      openModal("命令搜索", [
+        `当前工作区：${workspaceConfigs[currentWorkspace].label}`,
+        `可直接跳转：${evaluationContext.targetName}、${evaluationContext.datasetVersion}、${evaluationContext.runId}、${evaluationContext.traceId}`,
+        "最近结果：运行队列、样例数据库、报告门禁、数据工单"
+      ]);
+      showToast("已打开搜索结果面板。");
+    });
+
+    document.querySelectorAll("[data-home-tab]").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll("[data-home-tab]").forEach((item) => item.classList.toggle("active", item === tab));
+        const tabName = tab.dataset.homeTab;
+        const messages = {
+          "概览": "概览 · 展示当前工作区的发布门禁、待处理事项和可下钻入口。",
+          "看板": `看板 · ${evaluationContext.runName} 正在跟踪复核、裁判校准、数据工单和门禁审批。`,
+          "日历": "日历 · 今日 18:00 发布窗口，20:00 自动触发夜间回归，次日 09:30 复核抽样。",
+          "最近决策": `最近决策 · ${evaluationContext.reportId} 已生成，弱裁判处理后可进入证据包。`
+        };
+        setText("homeTabPanel", messages[tabName]);
+        showToast(`已切换首页视图：${tabName}`);
+      });
     });
 
     document.getElementById("workspaceMode").addEventListener("change", (event) => {
@@ -2176,6 +2484,47 @@
       showToast("1,000 条离线轨迹已校验，并进入评分队列。");
     });
 
+    document.getElementById("openIntegrationGuide").addEventListener("click", () => {
+      openModal(`${evaluationContext.targetMode} 接入指南`, [
+        `被测对象：${evaluationContext.targetName} / ${evaluationContext.targetVersion}`,
+        `端点或运行环境：${document.getElementById("targetEndpointInput").value}`,
+        "接入后平台会采集输入、工具调用、状态变更、终态断言和裁判证据。",
+        "低改造路径可先上传历史轨迹，再逐步接入 SDK 或 OpenTelemetry。"
+      ]);
+      showToast("已打开当前接入模式的指南。");
+    });
+
+    document.getElementById("targetFilterSelect").addEventListener("change", (event) => {
+      const value = event.target.value;
+      showToast(`被测对象列表已按「${value}」筛选。`);
+    });
+
+    document.getElementById("targetModeSelect").addEventListener("change", (event) => {
+      updateContext({ targetMode: event.target.value });
+      showToast(`接入模式已切换为 ${event.target.value}。`);
+    });
+
+    document.getElementById("credentialPolicySelect").addEventListener("change", (event) => {
+      showToast(`凭据策略已选择：${event.target.value}。`);
+    });
+
+    document.getElementById("testConnection").addEventListener("click", () => {
+      const endpoint = document.getElementById("targetEndpointInput").value;
+      openModal("连接测试结果", [
+        `端点：${endpoint}`,
+        "Schema 校验：通过",
+        "工具清单握手：通过",
+        "最近一次健康检查：2026-06-12 10:42"
+      ]);
+      showToast("连接测试通过，已记录健康检查。");
+    });
+
+    document.getElementById("saveTargetVersion").addEventListener("click", () => {
+      const name = document.getElementById("targetNameInput").value || evaluationContext.targetName;
+      updateContext({ targetName: name });
+      showToast(`已保存 ${name} 的新版本草稿。`);
+    });
+
     document.getElementById("createCase").addEventListener("click", () => {
       document.getElementById("assetCount").textContent = formatCount(numericCount(document.getElementById("assetCount").textContent) + 1);
       showToast("新样例已创建，包含参考、标签和审核状态。");
@@ -2184,6 +2533,57 @@
     document.getElementById("cloneTemplate").addEventListener("click", () => {
       document.getElementById("assetCount").textContent = formatCount(numericCount(document.getElementById("assetCount").textContent) + 1);
       showToast("评测模板已克隆到私有资产库。");
+    });
+
+    document.getElementById("importDataset").addEventListener("click", () => {
+      openModal("导入评测集预检", [
+        "已识别 JSONL / CSV / Benchmark Adapter 三种来源。",
+        `当前建议映射到 ${evaluationContext.datasetVersion} 的候选快照。`,
+        "预检会校验字段完整性、金丝雀泄漏、断言可执行性和来源授权。"
+      ]);
+      showToast("导入评测集预检已完成。");
+    });
+
+    document.getElementById("assetViewSelect").addEventListener("change", (event) => {
+      const view = event.target.value;
+      setText("sampleOutputBadge", view === "健康度视图" ? "质量检查中" : currentSampleFormat === "jsonl" ? "可导入运行" : document.getElementById("sampleOutputBadge").textContent);
+      showToast(`评测资产已切换为${view}。`);
+    });
+
+    document.querySelectorAll("[data-sample-format]").forEach((button) => {
+      button.addEventListener("click", () => {
+        renderSample(button.dataset.sampleFormat);
+        showToast(`评测集样例已切换为 ${button.textContent.trim()} 输出。`);
+      });
+    });
+
+    document.getElementById("downloadSample").addEventListener("click", () => {
+      openModal("评测集样例导出", `<div class="code">${sampleOutput(currentSampleFormat)}</div>`);
+      showToast(`${evaluationContext.datasetVersion}.${currentSampleFormat} 已生成导出预览。`);
+    });
+
+    document.getElementById("runDatasetSelect").addEventListener("change", (event) => {
+      showToast(`运行输入已绑定评测集：${event.target.value}。`);
+    });
+
+    document.getElementById("runTargetSelect").addEventListener("change", (event) => {
+      showToast(`运行输入已绑定被测对象：${event.target.value}。`);
+    });
+
+    document.getElementById("trialCountSelect").addEventListener("change", (event) => {
+      showToast(`重复试验策略已更新：${event.target.value}。`);
+    });
+
+    document.getElementById("gateRuleSelect").addEventListener("change", (event) => {
+      showToast(`门禁规则已更新：${event.target.value}。`);
+    });
+
+    document.getElementById("environmentSelect").addEventListener("change", (event) => {
+      showToast(`运行环境已更新：${event.target.value}。`);
+    });
+
+    document.getElementById("budgetSelect").addEventListener("change", (event) => {
+      showToast(`预算策略已更新：${event.target.value}。`);
     });
 
     document.getElementById("startRun").addEventListener("click", () => {
@@ -2344,6 +2744,61 @@
 
     document.getElementById("openAuditReport").addEventListener("click", () => {
       openWithContext("reports", { traceEntry: "管理证据包 → 回到报告" }, "已返回证据包对应的报告。");
+    });
+
+    document.getElementById("openPlatformIntro").addEventListener("click", () => {
+      openModal("平台介绍", docDetails["平台介绍"]);
+      showToast("已打开平台介绍文档。");
+    });
+
+    document.getElementById("createCustomerGuide").addEventListener("click", () => {
+      openModal("客户实施说明草稿", [
+        `客户场景：${workspaceConfigs[currentWorkspace].label}`,
+        `被测对象：${evaluationContext.targetVersion}`,
+        `评测集：${evaluationContext.datasetVersion}`,
+        "已自动填入接入方式、运行门禁、复核流程和证据包交付项。"
+      ]);
+      showToast("客户实施说明已生成草稿。");
+    });
+
+    document.getElementById("docFilterSelect").addEventListener("change", (event) => {
+      showToast(`文档已按「${event.target.value}」筛选。`);
+    });
+
+    document.querySelectorAll("[data-doc]").forEach((card) => {
+      const openDoc = () => {
+        const title = card.dataset.doc;
+        openModal(title, docDetails[title] || ["文档内容已加载。"]);
+        showToast(`已打开文档：${title}`);
+      };
+      card.addEventListener("click", openDoc);
+      card.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openDoc();
+        }
+      });
+    });
+
+    document.querySelectorAll(".template-card:not(#openDatasetRun):not([data-view])").forEach((card) => {
+      card.tabIndex = 0;
+      const openTemplate = () => {
+        const title = card.querySelector("h4")?.textContent.trim() || "评测资产";
+        const text = card.querySelector("p")?.textContent.trim() || "";
+        openModal(title, [
+          text,
+          `当前工作区：${workspaceConfigs[currentWorkspace].label}`,
+          "可从该模板克隆样例、环境、评估器和终态校验器。"
+        ]);
+        showToast(`已打开资产模板：${title}`);
+      };
+      card.addEventListener("click", openTemplate);
+      card.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openTemplate();
+        }
+      });
     });
 
     document.querySelectorAll("[data-flow]").forEach((button) => {
